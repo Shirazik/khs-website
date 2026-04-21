@@ -42,10 +42,14 @@ All React code is inline in a single `<script type="text/babel">` block.
 
 ### Data
 
-- `PROJECTS` array — 6 projects (brand, digital, ux, system, launch, identity)
-- `DEFAULT_POS` — default x/y desktop coordinates for each folder
+- `PROJECTS` array — 6 projects (infatuation, trade, jetcom, pawp, buzzfeed, button)
+- `DEFAULT_POS` — default x/y desktop coordinates for each folder; keys must match `PROJECTS` IDs
 - `TOOLBAR_ICONS` — 8 icons with inline SVG strings and action names
 - `TWEAK_DEFAULTS` — default values for the tweaks panel controls
+
+> **Sync rule:** The `PROJECTS` array (React) and the `.mob-cards` block (static HTML, ~line 344) are **not linked** — they must be updated together manually. Any time a project is added, removed, or renamed in `PROJECTS`, make the equivalent change to the corresponding `.mob-card` in the mobile section. The two sources of truth are:
+> 1. `PROJECTS` array → drives desktop folder labels and `OSWindow` content
+> 2. `.mob-cards` HTML block → drives mobile project cards
 
 ### Desktop Interaction Model
 
