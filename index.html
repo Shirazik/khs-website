@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="colors_and_type.css">
+<link rel="stylesheet" href="mobile.css">
 
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -295,6 +296,208 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
 </head>
 <body>
 <div id="root"></div>
+
+<!-- ── Mobile layout (hidden on desktop via mobile.css) ───── -->
+<div class="mobile-layout">
+
+  <header class="mob-header">
+    <img class="mob-header-logo" src="assets/khs-logo-transparent.png" alt="KHS">
+    <span class="mob-header-wordmark">KHS Consulting</span>
+    <div class="mob-status-dot"></div>
+  </header>
+
+  <div class="mob-ticker">
+    <div class="mob-ticker-inner">
+      <span class="mob-ticker-text">STRATEGY · PRODUCT · SYSTEMS · KHS CONSULTING · EST. 2024 · AVAILABLE FOR NEW PROJECTS · STRATEGY · PRODUCT · SYSTEMS · KHS CONSULTING · EST. 2024 · AVAILABLE FOR NEW PROJECTS ·</span>
+      <span class="mob-ticker-text" aria-hidden="true">STRATEGY · PRODUCT · SYSTEMS · KHS CONSULTING · EST. 2024 · AVAILABLE FOR NEW PROJECTS · STRATEGY · PRODUCT · SYSTEMS · KHS CONSULTING · EST. 2024 · AVAILABLE FOR NEW PROJECTS ·</span>
+    </div>
+  </div>
+
+  <section class="mob-hero">
+    <img class="mob-hero-logo" src="assets/khs-logo-transparent.png" alt="KHS Consulting">
+    <div class="mob-hero-role">Strategy · Product · Systems</div>
+    <p class="mob-hero-bio">I help companies build more delightful products, sharper brands, and stronger teams. Working at the intersection of strategy and product since 2012.</p>
+    <div class="mob-hero-availability">
+      <div class="mob-status-dot"></div>
+      Available for new projects — 2026
+    </div>
+  </section>
+
+  <div class="mob-skills">
+    <span class="mob-skill">Product Strategy</span>
+    <span class="mob-skill">Team Building</span>
+    <span class="mob-skill">UX Research</span>
+    <span class="mob-skill">0-1 Products</span>
+    <span class="mob-skill">1-10 Products</span>
+    <span class="mob-skill">Design Thinking</span>
+  </div>
+
+  <section class="mob-section">
+    <div class="mob-section-label">Selected Work</div>
+    <div class="mob-section-title">Projects</div>
+    <div class="mob-cards">
+
+      <div class="mob-card">
+        <div class="mob-card-titlebar">
+          <div class="mob-card-tl mob-card-tl-red"></div>
+          <div class="mob-card-tl mob-card-tl-yel"></div>
+          <div class="mob-card-tl mob-card-tl-grn"></div>
+          <div class="mob-card-wintitle">Brand Strategy</div>
+        </div>
+        <div class="mob-card-body">
+          <div class="mob-card-meta">
+            <span class="mob-card-tag">Identity</span>
+            <span class="mob-card-year">2024</span>
+          </div>
+          <div class="mob-card-title">Brand Strategy</div>
+          <div class="mob-card-desc">End-to-end identity work for a Series A fintech. Positioning, naming, visual language, and a full design system.</div>
+          <div class="mob-card-divider"></div>
+          <div class="mob-card-deliverables">
+            <div class="mob-card-deliv">Brand audit &amp; competitive analysis</div>
+            <div class="mob-card-deliv">Naming and positioning framework</div>
+            <div class="mob-card-deliv">Visual identity system</div>
+            <div class="mob-card-deliv">Design system (tokens + components)</div>
+          </div>
+          <a class="mob-card-cta" href="#">View Case Study →</a>
+        </div>
+      </div>
+
+      <div class="mob-card">
+        <div class="mob-card-titlebar">
+          <div class="mob-card-tl mob-card-tl-red"></div>
+          <div class="mob-card-tl mob-card-tl-yel"></div>
+          <div class="mob-card-tl mob-card-tl-grn"></div>
+          <div class="mob-card-wintitle">Digital Transformation</div>
+        </div>
+        <div class="mob-card-body">
+          <div class="mob-card-meta">
+            <span class="mob-card-tag">Consulting</span>
+            <span class="mob-card-year">2023</span>
+          </div>
+          <div class="mob-card-title">Digital Transformation</div>
+          <div class="mob-card-desc">Led digital transformation for a 200-person professional services firm. Process redesign, tooling, and culture change.</div>
+          <div class="mob-card-divider"></div>
+          <div class="mob-card-deliverables">
+            <div class="mob-card-deliv">Current-state process mapping</div>
+            <div class="mob-card-deliv">Technology stack evaluation</div>
+            <div class="mob-card-deliv">Change management framework</div>
+            <div class="mob-card-deliv">Implementation roadmap</div>
+          </div>
+          <a class="mob-card-cta" href="#">View Case Study →</a>
+        </div>
+      </div>
+
+      <div class="mob-card">
+        <div class="mob-card-titlebar">
+          <div class="mob-card-tl mob-card-tl-red"></div>
+          <div class="mob-card-tl mob-card-tl-yel"></div>
+          <div class="mob-card-tl mob-card-tl-grn"></div>
+          <div class="mob-card-wintitle">UX Research Program</div>
+        </div>
+        <div class="mob-card-body">
+          <div class="mob-card-meta">
+            <span class="mob-card-tag">Research</span>
+            <span class="mob-card-year">2023</span>
+          </div>
+          <div class="mob-card-title">UX Research Program</div>
+          <div class="mob-card-desc">Built a research practice from scratch: 40+ interviews, synthesis framework, measurable product roadmap impact.</div>
+          <div class="mob-card-divider"></div>
+          <div class="mob-card-deliverables">
+            <div class="mob-card-deliv">Research ops setup</div>
+            <div class="mob-card-deliv">40+ user interviews</div>
+            <div class="mob-card-deliv">Synthesis &amp; insight framework</div>
+            <div class="mob-card-deliv">3 major roadmap pivots</div>
+          </div>
+          <a class="mob-card-cta" href="#">View Case Study →</a>
+        </div>
+      </div>
+
+      <div class="mob-card">
+        <div class="mob-card-titlebar">
+          <div class="mob-card-tl mob-card-tl-red"></div>
+          <div class="mob-card-tl mob-card-tl-yel"></div>
+          <div class="mob-card-tl mob-card-tl-grn"></div>
+          <div class="mob-card-wintitle">KHS Design System</div>
+        </div>
+        <div class="mob-card-body">
+          <div class="mob-card-meta">
+            <span class="mob-card-tag">Systems</span>
+            <span class="mob-card-year">2024</span>
+          </div>
+          <div class="mob-card-title">KHS Design System</div>
+          <div class="mob-card-desc">This design system — built from blank canvas to full living style guide with tokens, components, and documentation.</div>
+          <div class="mob-card-divider"></div>
+          <div class="mob-card-deliverables">
+            <div class="mob-card-deliv">Token architecture (colors, type, spacing)</div>
+            <div class="mob-card-deliv">10+ component library</div>
+            <div class="mob-card-deliv">Interactive style guide</div>
+            <div class="mob-card-deliv">Icon library</div>
+          </div>
+          <a class="mob-card-cta" href="#">View Case Study →</a>
+        </div>
+      </div>
+
+      <div class="mob-card">
+        <div class="mob-card-titlebar">
+          <div class="mob-card-tl mob-card-tl-red"></div>
+          <div class="mob-card-tl mob-card-tl-yel"></div>
+          <div class="mob-card-tl mob-card-tl-grn"></div>
+          <div class="mob-card-wintitle">Product Launch</div>
+        </div>
+        <div class="mob-card-body">
+          <div class="mob-card-meta">
+            <span class="mob-card-tag">Strategy</span>
+            <span class="mob-card-year">2022</span>
+          </div>
+          <div class="mob-card-title">Product Launch</div>
+          <div class="mob-card-desc">Go-to-market strategy for a B2B SaaS product. Zero to first 50 customers in 90 days.</div>
+          <div class="mob-card-divider"></div>
+          <div class="mob-card-deliverables">
+            <div class="mob-card-deliv">Market segmentation</div>
+            <div class="mob-card-deliv">Pricing architecture</div>
+            <div class="mob-card-deliv">Launch campaign</div>
+            <div class="mob-card-deliv">Sales enablement</div>
+            <div class="mob-card-deliv">Marketing automation</div>
+          </div>
+          <a class="mob-card-cta" href="#">View Case Study →</a>
+        </div>
+      </div>
+
+      <div class="mob-card">
+        <div class="mob-card-titlebar">
+          <div class="mob-card-tl mob-card-tl-red"></div>
+          <div class="mob-card-tl mob-card-tl-yel"></div>
+          <div class="mob-card-tl mob-card-tl-grn"></div>
+          <div class="mob-card-wintitle">Visual Identity</div>
+        </div>
+        <div class="mob-card-body">
+          <div class="mob-card-meta">
+            <span class="mob-card-tag">Design</span>
+            <span class="mob-card-year">2022</span>
+          </div>
+          <div class="mob-card-title">Visual Identity</div>
+          <div class="mob-card-desc">Complete rebrand for a climate-tech startup. Logo system, brand guidelines, website, and investor deck.</div>
+          <div class="mob-card-divider"></div>
+          <div class="mob-card-deliverables">
+            <div class="mob-card-deliv">Logo design and system</div>
+            <div class="mob-card-deliv">Brand guidelines</div>
+            <div class="mob-card-deliv">Website design</div>
+            <div class="mob-card-deliv">Investor pitch deck</div>
+          </div>
+          <a class="mob-card-cta" href="#">View Case Study →</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <footer class="mob-footer">
+    <div class="mob-footer-wordmark">KHS Consulting</div>
+    <div class="mob-footer-copy">© 2024 · Strategy · Product · Systems</div>
+  </footer>
+
+</div>
+<!-- ── End mobile layout ───────────────────────────────────── -->
 
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
