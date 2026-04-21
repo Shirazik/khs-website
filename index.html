@@ -298,6 +298,9 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
 .tweak-o:last-child { border-right: none; }
 .tweak-o.on { background: var(--color-ink); color: var(--color-ink-inv); }
 .tweak-o:hover:not(.on) { background: var(--bg-sunken); }
+.btn { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; padding: 9px 20px; border: 2px solid var(--color-ink); cursor: pointer; display: inline-block; transition: transform 80ms, box-shadow 80ms; line-height: 1; text-decoration: none; }
+.btn-ghost { background: transparent; color: var(--color-ink); border: 2px dashed var(--color-ink-2); box-shadow: none; }
+.btn-ghost:hover { background: var(--color-bg-sunken); }
 </style>
 </head>
 <body>
@@ -503,7 +506,26 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
   <div id="mob-writing"></div>
   <div id="mob-contact"></div>
   <div id="mob-services"></div>
-  <div id="mob-resume"></div>
+  <section class="mob-section" id="mob-resume">
+    <div class="mob-section-label">CV</div>
+    <div class="mob-section-title">Resume</div>
+    <div class="mob-cards">
+      <div class="mob-card">
+        <div class="mob-card-titlebar">
+          <div class="mob-card-tl mob-card-tl-red"></div>
+          <div class="mob-card-tl mob-card-tl-yel"></div>
+          <div class="mob-card-tl mob-card-tl-grn"></div>
+          <div class="mob-card-wintitle">Resume — Kareem Shirazi</div>
+        </div>
+        <div class="mob-card-body" style="text-align:center; padding: 24px 20px;">
+          <div class="mob-card-title">Kareem Shirazi</div>
+          <div class="mob-card-desc">Product · UX · Strategy</div>
+          <div class="mob-card-divider"></div>
+          <a href="assets/resume.pdf" download class="btn btn-ghost">Download CV</a>
+        </div>
+      </div>
+    </div>
+  </section>
   <div id="mob-awards"></div>
 
   <footer class="mob-footer">
@@ -781,6 +803,21 @@ function AboutContent() {
       </div>
     </div>);
 
+}
+
+// ─── Resume content ───────────────────────────────────────
+function ResumeContent() {
+  return (
+    <div style={{ textAlign: 'center', padding: '16px 0' }}>
+      <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--color-ink-3)', marginBottom: 8 }}>Kareem Shirazi</div>
+      <div style={{ fontFamily: "'Playfair Display'", fontSize: 20, fontWeight: 700, color: 'var(--color-ink)', marginBottom: 4 }}>Resume</div>
+      <div className="about-divider" style={{ margin: '12px auto', width: 40 }} />
+      <div style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--color-ink-3)', marginBottom: 20, lineHeight: 1.6 }}>
+        Product · UX · Strategy
+      </div>
+      <a href="assets/resume.pdf" download className="btn btn-ghost">Download CV</a>
+    </div>
+  );
 }
 
 // ─── Toolbar icons (subset, inline) ──────────────────────
@@ -1079,6 +1116,13 @@ function App() {
   const handleToolbarAction = useCallback((action) => {
     if (action === 'about') {openAbout();return;}
     if (action === 'home') {setWindows([]);return;}
+    if (action === 'resume') {
+      winCounter++;
+      const win = { id: `resume-${Date.now()}`, type: 'resume', title: 'Resume', x: 180, y: 110, width: 320, z: winCounter };
+      setWindows((ws) => [...ws, win]);
+      setFocusedWin(win.id);
+      return;
+    }
     if (action === 'portfolio') {
       PROJECTS.forEach((p, i) => setTimeout(() => openProject(p), i * 80));
       return;
@@ -1150,6 +1194,7 @@ function App() {
           }}>
           
             {win.type === 'about' && <AboutContent />}
+            {win.type === 'resume' && <ResumeContent />}
             {win.type === 'project' &&
           <ProjectContent project={PROJECTS.find((p) => p.id === win.projectId)} />
           }
