@@ -248,7 +248,7 @@
     var(--color-ink) 3px,
     var(--color-ink) 4px
   );
-  opacity: 0.12;
+  opacity: 0.15;
 }
 
 .khs-hatch-strong {
@@ -259,7 +259,7 @@
     var(--color-ink) 2px,
     var(--color-ink) 3px
   );
-  opacity: 0.18;
+  opacity: 0.25;
 }
 
 /* Dot-grid background */

@@ -211,11 +211,14 @@
   .mob-card-tag {
     font-family: 'IBM Plex Mono', monospace;
     font-size: 9px;
-    letter-spacing: 0.16em;
+    font-weight: 500;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
-    padding: 3px 8px;
-    border: 1px solid var(--color-ink);
+    padding: 3px 9px;
+    border: var(--border);
     color: var(--color-ink);
+    display: inline-block;
+    line-height: 1.5;
   }
   .mob-card-year {
     font-family: 'IBM Plex Mono', monospace;
@@ -281,12 +284,18 @@
     cursor: pointer;
     display: inline-block;
     text-decoration: none;
-    transition: background 80ms, color 80ms;
+    box-shadow: 5px 5px 0 var(--color-ink);
+    transition: background 80ms, color 80ms, box-shadow 80ms linear, transform 80ms linear;
   }
-  .mob-card-cta:hover,
+  .mob-card-cta:hover {
+    box-shadow: 7px 7px 0 var(--color-ink);
+    transform: translate(-1px, -1px);
+  }
   .mob-card-cta:active {
     background: var(--color-ink);
     color: var(--color-ink-inv);
+    box-shadow: 2px 2px 0 var(--color-ink);
+    transform: translate(3px, 3px);
   }
 
   /* ── Footer ──────────────────────────────────────────────── */
@@ -412,7 +421,6 @@
     border-top: 2px solid rgba(255,255,255,0.55);
     border-left: 1px solid rgba(255,255,255,0.4);
     transition: background 80ms;
-    box-shadow: inset 1px 1px 0 rgba(255,255,255,0.5), inset -1px -1px 0 rgba(0,0,0,0.1);
   }
   .mob-menu-cell:nth-child(4n) {
     border-right: none;
@@ -420,7 +428,6 @@
   .mob-menu-cell:active {
     background: var(--bg-sunken);
     border-top-color: rgba(0,0,0,0.15);
-    box-shadow: inset 1px 1px 0 rgba(0,0,0,0.1);
   }
   .mob-menu-cell svg {
     width: 44px;

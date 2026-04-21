@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="terminal">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KHS Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="colors_and_type.css">
+
+<style>
+/* ── Reset ──────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg-base);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  transition: background 200ms, color 200ms;
+}
+
+/* ── Dot grid background ────────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: radial-gradient(circle, var(--color-ink) 1px, transparent 1px);
+  background-size: 24px 24px;
+  opacity: 0.04;
+}
+
+/* ── Layout ─────────────────────────────────────────────── */
+.site-wrap { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 0 32px 128px; }
+
+/* ── Nav ─────────────────────────────────────────────────── */
+.site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg-base);
+  border-bottom: var(--border-2);
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 0;
+}
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  border-right: var(--border-2);
+}
+.nav-logo img { height: 24px; width: auto; max-width: 120px; filter: var(--logo-filter, none); }
+.nav-wordmark { font-family: var(--font-mono); font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-ink); }
+.nav-links { display: flex; gap: 0; flex: 1; }
+.nav-link {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-ink-2);
+  padding: 0 18px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  border-right: var(--border);
+  transition: color 80ms, background 80ms;
+}
+.nav-link:hover { color: var(--color-ink); background: var(--bg-sunken); }
+.nav-theme { margin-left: auto; display: flex; align-items: center; }
+.theme-btn {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0 16px;
+  height: 52px;
+  border: none;
+  border-left: var(--border-2);
+  background: var(--bg-base);
+  color: var(--color-ink-2);
+  cursor: pointer;
+  transition: background 80ms, color 80ms;
+}
+.theme-btn:hover { background: var(--bg-sunken); color: var(--color-ink); }
+.theme-btn.active { background: var(--color-ink); color: var(--color-ink-inv); }
+
+/* ── Section structure ──────────────────────────────────── */
+.section { padding: 64px 0 48px; }
+.section + .section { border-top: var(--border-2); }
+
+.section-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-ink-3);
+  margin-bottom: 6px;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  color: var(--color-ink);
+  margin-bottom: 32px;
+}
+
+/* ── Hero ────────────────────────────────────────────────── */
+.hero {
+  padding: 80px 0 64px;
+  border-bottom: var(--border-2);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 32px;
+  align-items: end;
+}
+.hero-display {
+  font-family: var(--font-display);
+  font-size: clamp(60px, 10vw, 120px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 0.9;
+  color: var(--color-ink);
+}
+.hero-display em { font-style: italic; color: var(--color-accent); }
+.hero-meta { text-align: right; }
+.hero-meta .version { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-ink-3); margin-bottom: 4px; }
+.hero-meta .date { font-family: var(--font-mono); font-size: 22px; font-weight: 600; color: var(--color-ink-2); }
+
+/* ── Hatching band ──────────────────────────────────────── */
+.hatch-band {
+  height: 12px;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    var(--color-ink) 2px,
+    var(--color-ink) 3px
+  );
+  opacity: 0.15;
+  margin: 0;
+}
+
+/* ── Color section ──────────────────────────────────────── */
+.color-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: var(--border-2); }
+.color-col { border-right: var(--border-2); }
+.color-col:last-child { border-right: none; }
+.color-col-header {
+  padding: 16px;
+  border-bottom: var(--border-2);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-ink-2);
+}
+.swatch-row { display: flex; height: 56px; border-bottom: var(--border); }
+.swatch-row:last-child { border-bottom: none; }
+.swatch-block { flex: 1; }
+.swatch-info { padding: 12px 16px; display: flex; flex-direction: column; justify-content: flex-end; gap: 3px; }
+.sw-name { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; }
+.sw-val { font-family: var(--font-mono); font-size: 8px; opacity: 0.6; }
+
+/* ── Type section ───────────────────────────────────────── */
+.type-scale { border: var(--border-2); }
+.type-row {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  border-bottom: var(--border);
+  align-items: center;
+  min-height: 56px;
+}
+.type-row:last-child { border-bottom: none; }
+.type-row:first-child { border-bottom: var(--border-2); }
+.type-meta {
+  padding: 12px 14px;
+  border-right: var(--border-2);
+  font-family: var(--font-mono);
+  font-size: 8px;
+  line-height: 1.7;
+  letter-spacing: 0.06em;
+  color: var(--color-ink-3);
+  text-transform: uppercase;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.type-sample { padding: 14px 20px; }
+
+/* ── Motifs section ─────────────────────────────────────── */
+.motif-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: var(--border-2); }
+.motif-cell {
+  border-right: var(--border-2);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.motif-cell:last-child { border-right: none; }
+.motif-demo { height: 80px; border-bottom: var(--border); }
+.motif-label { font-family: var(--font-mono); font-size: 8px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-ink-3); padding: 8px 12px; }
+
+/* ── Component section ──────────────────────────────────── */
+.comp-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 20px 0; border-bottom: var(--border); }
+.comp-row:last-child { border-bottom: none; }
+.comp-label { font-family: var(--font-mono); font-size: 8px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-ink-3); width: 88px; flex-shrink: 0; }
+
+/* ── Buttons ─────────────────────────────────────────────── */
+.btn {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: var(--border-2);
+  padding: 9px 20px;
+  cursor: pointer;
+  display: inline-block;
+  text-decoration: none;
+  transition: transform 80ms linear, box-shadow 80ms linear;
+  line-height: 1;
+}
+.btn-primary { background: var(--color-ink); color: var(--color-ink-inv); box-shadow: 5px 5px 0 var(--color-accent); }
+.btn-primary:hover { box-shadow: 7px 7px 0 var(--color-accent); transform: translate(-1px,-1px); }
+.btn-primary:active { box-shadow: 2px 2px 0 var(--color-accent); transform: translate(3px,3px); }
+.btn-secondary { background: var(--bg-base); color: var(--color-ink); box-shadow: 5px 5px 0 var(--color-ink); }
+.btn-secondary:hover { box-shadow: 7px 7px 0 var(--color-ink); transform: translate(-1px,-1px); }
+.btn-secondary:active { box-shadow: 2px 2px 0 var(--color-ink); transform: translate(3px,3px); }
+.btn-accent { background: var(--color-accent); color: #fff; border-color: var(--color-accent-dark); box-shadow: 5px 5px 0 var(--color-ink); }
+.btn-accent:hover { box-shadow: 7px 7px 0 var(--color-ink); transform: translate(-1px,-1px); }
+.btn-ghost { background: transparent; color: var(--color-ink); border: 2px dashed var(--color-ink-2); box-shadow: none; }
+.btn-ghost:hover { background: var(--bg-sunken); }
+.btn-sm { font-size: 9px; padding: 6px 14px; }
+
+/* ── Badges ──────────────────────────────────────────────── */
+.badge {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border: var(--border);
+  display: inline-block;
+  line-height: 1.5;
+}
+.badge-solid   { background: var(--color-ink); color: var(--color-ink-inv); border-color: var(--color-ink); }
+.badge-outline { background: transparent; color: var(--color-ink); }
+.badge-accent  { background: var(--color-accent); color: #fff; border-color: var(--color-accent-dark); }
+.badge-light   { background: var(--color-accent-light); color: var(--color-accent-dark); border-color: var(--color-accent); }
+.badge-ghost   { background: var(--bg-sunken); color: var(--color-ink-2); border-color: var(--color-ink-3); }
+.badge-dashed  { background: transparent; color: var(--color-ink-2); border: 1px dashed var(--color-ink-3); }
+
+/* ── Inputs ──────────────────────────────────────────────── */
+.field-group { display: flex; flex-direction: column; gap: 5px; }
+.field-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-ink-2); }
+input[type="text"], input[type="email"], textarea, select {
+  font-family: var(--font-mono); font-size: 13px;
+  background: var(--bg-base); border: var(--border-2);
+  padding: 9px 12px; color: var(--color-ink); width: 100%;
+  outline: none; border-radius: 0; appearance: none;
+}
+input:focus, textarea:focus { box-shadow: 4px 4px 0 var(--color-ink); }
+input::placeholder, textarea::placeholder { color: var(--color-ink-3); font-style: italic; }
+.input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 600px; border: var(--border-2); padding: 20px; }
+
+/* ── Cards ───────────────────────────────────────────────── */
+.card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: var(--border-2); }
+.card-item { border-right: var(--border-2); }
+.card-item:last-child { border-right: none; }
+.card-head {
+  padding: 16px 18px;
+  border-bottom: var(--border-2);
+  position: relative;
+  overflow: hidden;
+}
+.card-head::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(0deg,transparent,transparent 3px,var(--color-ink) 3px,var(--color-ink) 4px);
+  opacity: 0.07;
+  pointer-events: none;
+}
+.card-eyebrow { font-family: var(--font-mono); font-size: 8px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-ink-3); margin-bottom: 4px; }
+.card-name { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--color-ink); }
+.card-body-inner { padding: 16px 18px; }
+.card-body-inner p { font-family: var(--font-body); font-size: 13px; line-height: 1.55; color: var(--color-ink-2); }
+.card-inv .card-head { background: var(--bg-inverse); border-bottom-color: rgba(255,255,255,0.12); }
+.card-inv .card-eyebrow { color: rgba(255,255,255,0.45); }
+.card-inv .card-name { color: var(--color-ink-inv); }
+.card-acc .card-head { background: var(--color-accent); border-bottom-color: var(--color-accent-dark); }
+.card-acc .card-eyebrow { color: rgba(255,255,255,0.6); }
+.card-acc .card-name { color: #fff; }
+
+/* ── Spacing viz ─────────────────────────────────────────── */
+.space-row { display: flex; align-items: flex-end; gap: 0; border: var(--border-2); height: 88px; }
+.space-col { border-right: var(--border); flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 8px; gap: 4px; height: 100%; }
+.space-col:last-child { border-right: none; }
+.space-bar { background: var(--color-ink); width: 100%; }
+.space-val { font-family: var(--font-mono); font-size: 7px; letter-spacing: 0.08em; color: var(--color-ink-3); text-align: center; }
+.space-tok { font-family: var(--font-mono); font-size: 6px; color: var(--color-ink-3); opacity: 0.7; }
+
+/* ── Tweaks panel ────────────────────────────────────────── */
+#tweaks-panel {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 220px;
+  background: var(--bg-base);
+  border: var(--border-2);
+  box-shadow: var(--shadow-lg);
+  z-index: 999;
+  display: none;
+  flex-direction: column;
+}
+#tweaks-panel.visible { display: flex; }
+.tweaks-header {
+  padding: 10px 14px;
+  border-bottom: var(--border-2);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+  background: var(--bg-sunken);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.tweaks-body { padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+.tweak-row { display: flex; flex-direction: column; gap: 5px; }
+.tweak-label { font-family: var(--font-mono); font-size: 8px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-ink-3); }
+.tweak-options { display: flex; gap: 0; border: var(--border); }
+.tweak-opt {
+  flex: 1;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 6px 4px;
+  text-align: center;
+  cursor: pointer;
+  border-right: var(--border);
+  color: var(--color-ink-2);
+  transition: background 80ms;
+}
+.tweak-opt:last-child { border-right: none; }
+.tweak-opt.active { background: var(--color-ink); color: var(--color-ink-inv); }
+.tweak-opt:hover:not(.active) { background: var(--bg-sunken); }
+</style>
+</head>
+
+<body>
+
+<!-- ── Navigation ──────────────────────────────────────── -->
+<nav class="site-nav">
+  <div class="nav-logo">
+    <img src="assets/khs-logo-transparent.png" alt="KHS" id="nav-logo-img">
+    <span class="nav-wordmark">Design System</span>
+  </div>
+  <div class="nav-links">
+    <a href="#colors" class="nav-link">Colors</a>
+    <a href="#typography" class="nav-link">Type</a>
+    <a href="#motifs" class="nav-link">Motifs</a>
+    <a href="#components" class="nav-link">Components</a>
+    <a href="#spacing" class="nav-link">Spacing</a>
+  </div>
+  <div class="nav-theme">
+    <button class="theme-btn active" data-t="terminal" onclick="setTheme('terminal',this)">Terminal</button>
+    <button class="theme-btn" data-t="amber" onclick="setTheme('amber',this)">Amber</button>
+    <button class="theme-btn" data-t="blueprint" onclick="setTheme('blueprint',this)">Blueprint</button>
+  </div>
+</nav>
+
+<!-- ── Hatch Band ─────────────────────────────────────── -->
+<div class="hatch-band"></div>
+
+<div class="site-wrap">
+
+  <!-- ── Hero ─────────────────────────────────────────── -->
+  <section class="hero">
+    <div>
+      <div class="hero-display">KHS<br><em>Design</em><br>System</div>
+    </div>
+    <div class="hero-meta">
+      <div class="version">version</div>
+      <div class="date">v1.0</div>
+      <div class="version" style="margin-top:12px">year</div>
+      <div class="date">2024</div>
+    </div>
+  </section>
+
+  <!-- ── Colors ────────────────────────────────────────── -->
+  <section class="section" id="colors">
+    <div class="section-eyebrow">01 — Foundations</div>
+    <div class="section-title">Color</div>
+
+    <div class="color-grid">
+      <!-- Backgrounds -->
+      <div class="color-col">
+        <div class="color-col-header">Backgrounds</div>
+        <div class="swatch-row">
+          <div class="swatch-block" style="background:var(--bg-base)"></div>
+          <div class="swatch-info">
+            <div class="sw-name">bg-base</div>
+            <div class="sw-val">--bg-base</div>
+          </div>
+        </div>
+        <div class="swatch-row">
+          <div class="swatch-block" style="background:var(--bg-surface)"></div>
+          <div class="swatch-info">
+            <div class="sw-name">bg-surface</div>
+            <div class="sw-val">--bg-surface</div>
+          </div>
+        </div>
+        <div class="swatch-row">
+          <div class="swatch-block" style="background:var(--bg-sunken)"></div>
+          <div class="swatch-info">
+            <div class="sw-name">bg-sunken</div>
+            <div class="sw-val">--bg-sunken</div>
+          </div>
+        </div>
+        <div class="swatch-row">
+          <div class="swatch-block" style="background:var(--bg-inverse)"></div>
+          <div class="swatch-info" style="background:var(--bg-inverse)">
+            <div class="sw-name" style="color:var(--color-ink-inv)">bg-inverse</div>
+            <div class="sw-val" style="color:rgba(255,255,255,0.4)">--bg-inverse</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accent -->
+      <div class="color-col">
+        <div class="color-col-header">Accent</div>
+        <div class="swatch-row">
+          <div class="swatch-block" style="background:var(--color-accent-light)"></div>
+          <div class="swatch-info">
+            <div class="sw-name">accent-light</div>
+            <div class="sw-val">--color-accent-light</div>
+          </div>
+        </div>
+        <div class="swatch-row">
+          <div class="swatch-block" style="background:var(--color-accent)"></div>
+          <div class="swatch-info" style="background:var(--color-accent)">
+            <div class="sw-name" style="color:#fff">accent</div>
+            <div class="sw-val" style="color:rgba(255,255,255,0.5)">--color-accent</div>
+          </div>
+        </div>
+        <div class="swatch-row">
+          <div class="swatch-block" style="background:var(--color-accent-dark)"></div>
+          <div class="swatch-info" style="background:var(--color-accent-dark)">
+            <div class="sw-name" style="color:#fff">accent-dark</div>
+            <div class="sw-val" style="color:rgba(255,255,255,0.5)">--color-accent-dark</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ink -->
+      <div class="color-col">
+        <div class="color-col-header">Ink Scale</div>
+        <div class="swatch-row">
+          <div class="swatch-block" style="background:var(--color-ink)"></div>
+          <div class="swatch-info" style="background:var(--color-ink)">
+            <div class="sw-name" style="color:var(--color-ink-inv)">ink</div>
+            <div class="sw-val" style="color:rgba(255,255,255,0.4)">--color-ink</div>
+          </div>
+        </div>
+        <div class="swatch-row">
+          <div class="swatch-block" style="background:var(--color-ink-2)"></div>
+          <div class="swatch-info" style="background:var(--color-ink-2)">
+            <div class="sw-name" style="color:#fff">ink-2</div>
+            <div class="sw-val" style="color:rgba(255,255,255,0.4)">--color-ink-2</div>
+          </div>
+        </div>
+        <div class="swatch-row">
+          <div class="swatch-block" style="background:var(--color-ink-3)"></div>
+          <div class="swatch-info">
+            <div class="sw-name">ink-3</div>
+            <div class="sw-val">--color-ink-3</div>
+          </div>
+        </div>
+        <div class="swatch-row" style="height:auto">
+          <div style="flex:1;background:var(--color-error)"></div>
+          <div style="flex:1;background:var(--color-success)"></div>
+          <div style="flex:1;background:var(--color-warning)"></div>
+          <div class="swatch-info" style="min-width:120px">
+            <div class="sw-name">Semantic</div>
+            <div class="sw-val">error / success / warning</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Typography ────────────────────────────────────── -->
+  <section class="section" id="typography">
+    <div class="section-eyebrow">02 — Foundations</div>
+    <div class="section-title">Typography</div>
+
+    <div class="type-scale">
+      <div class="type-row">
+        <div class="type-meta">Font<br>Families</div>
+        <div class="type-sample" style="display:flex;flex-direction:column;gap:8px;padding:16px 20px">
+          <div style="font-family:var(--font-display);font-size:18px;font-weight:700">Playfair Display — Display & Headings</div>
+          <div style="font-family:var(--font-mono);font-size:14px">IBM Plex Mono — UI Labels & Code</div>
+          <div style="font-family:var(--font-body);font-size:15px">Source Sans 3 — Body & Running Text</div>
+        </div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">H1<br>80px / 900<br>−4% track</div>
+        <div class="type-sample" style="font-family:var(--font-display);font-size:clamp(40px,6vw,80px);font-weight:900;letter-spacing:-0.04em;line-height:0.95">KHS Consulting</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">H2<br>48px / 700<br>−2% track</div>
+        <div class="type-sample" style="font-family:var(--font-display);font-size:clamp(28px,4vw,48px);font-weight:700;letter-spacing:-0.02em;line-height:1.05">Selected Work</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">H3<br>31px / 700</div>
+        <div class="type-sample" style="font-family:var(--font-display);font-size:clamp(22px,3vw,31px);font-weight:700;line-height:1.2">Strategy &amp; Design</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">H3 Italic<br>31px / 400</div>
+        <div class="type-sample" style="font-family:var(--font-display);font-size:clamp(22px,3vw,31px);font-weight:400;font-style:italic;line-height:1.2;color:var(--color-ink-2)">A time machine with modern rails.</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">Mono Label<br>12px / 500<br>+12% track</div>
+        <div class="type-sample" style="font-family:var(--font-mono);font-size:12px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--color-ink-2)">Section Label · view_project →</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">Body<br>16px / 400<br>lead 1.6</div>
+        <div class="type-sample" style="font-family:var(--font-body);font-size:16px;line-height:1.6;max-width:560px;color:var(--color-ink)">KHS Consulting works at the intersection of technology and design. We build systems, strategies, and experiences that hold up under pressure.</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">Caption<br>12px / 300<br>lead 1.6</div>
+        <div class="type-sample" style="font-family:var(--font-body);font-size:12px;font-weight:300;line-height:1.6;color:var(--color-ink-3)">Est. 2024 — All rights reserved. Built with intention.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Motifs & Texture ──────────────────────────────── -->
+  <section class="section" id="motifs">
+    <div class="section-eyebrow">03 — Foundations</div>
+    <div class="section-title">Motifs &amp; Texture</div>
+
+    <div class="motif-grid">
+      <div class="motif-cell">
+        <div class="motif-demo" style="background-image:repeating-linear-gradient(0deg,transparent,transparent 3px,var(--color-ink) 3px,var(--color-ink) 4px);opacity:0.15;background-color:var(--bg-sunken)"></div>
+        <div class="motif-label">hatch-light<br><span style="opacity:0.6;font-size:7px">from logo motif</span></div>
+      </div>
+      <div class="motif-cell">
+        <div class="motif-demo" style="background-image:repeating-linear-gradient(0deg,transparent,transparent 2px,var(--color-ink) 2px,var(--color-ink) 3px);opacity:0.25;background-color:var(--bg-sunken)"></div>
+        <div class="motif-label">hatch-heavy</div>
+      </div>
+      <div class="motif-cell">
+        <div class="motif-demo" style="background:var(--bg-sunken);background-image:radial-gradient(circle,var(--color-ink) 1px,transparent 1px);background-size:14px 14px;opacity:0.7"></div>
+        <div class="motif-label">dot-grid</div>
+      </div>
+      <div class="motif-cell" style="border-right:none">
+        <div class="motif-demo" style="display:flex;align-items:center;justify-content:center;background:var(--bg-surface)">
+          <div style="background:var(--bg-base);border:var(--border-2);box-shadow:6px 6px 0 var(--color-accent);width:60%;height:50%"></div>
+        </div>
+        <div class="motif-label">hard shadow<br><span style="opacity:0.6;font-size:7px">no blur, offset only</span></div>
+      </div>
+    </div>
+
+    <!-- Hexagon motif from logo -->
+    <div style="margin-top:0;border:var(--border-2);border-top:none;padding:24px;display:flex;align-items:center;gap:24px;flex-wrap:wrap">
+      <div style="font-family:var(--font-mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-ink-3);width:80px;flex-shrink:0">Hexagon<br>mark</div>
+      <svg width="180" height="60" viewBox="0 0 180 60">
+        <defs>
+          <pattern id="hlines" patternUnits="userSpaceOnUse" width="4" height="4" patternTransform="rotate(90)">
+            <line x1="0" y1="0" x2="0" y2="4" stroke="currentColor" stroke-width="0.8"/>
+          </pattern>
+        </defs>
+        <g fill="url(#hlines)" stroke="currentColor" stroke-width="2">
+          <polygon points="30,4 56,4 68,26 56,48 30,48 18,26" color="var(--color-ink)"/>
+          <polygon points="90,4 116,4 128,26 116,48 90,48 78,26" color="var(--color-ink)"/>
+          <polygon points="150,4 176,4 188,26 176,48 150,48 138,26" color="var(--color-ink)"/>
+        </g>
+        <text x="43" y="31" font-family="var(--font-mono)" font-size="16" font-weight="600" fill="var(--bg-base)" text-anchor="middle" dominant-baseline="middle">K</text>
+        <text x="103" y="31" font-family="var(--font-mono)" font-size="16" font-weight="600" fill="var(--bg-base)" text-anchor="middle" dominant-baseline="middle">H</text>
+        <text x="163" y="31" font-family="var(--font-mono)" font-size="16" font-weight="600" fill="var(--bg-base)" text-anchor="middle" dominant-baseline="middle">S</text>
+      </svg>
+      <div style="font-family:var(--font-mono);font-size:9px;color:var(--color-ink-3);line-height:1.7">
+        Horizontal hatching + bold grotesque<br>
+        Angular hexagon = brand shape unit<br>
+        Use for decorative marks only
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Components ────────────────────────────────────── -->
+  <section class="section" id="components">
+    <div class="section-eyebrow">04 — Components</div>
+    <div class="section-title">Components</div>
+
+    <!-- Buttons -->
+    <div style="border:var(--border-2);margin-bottom:32px">
+      <div style="padding:12px 16px;border-bottom:var(--border-2);font-family:var(--font-mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--color-ink-2);background:var(--bg-sunken)">Buttons</div>
+      <div style="padding:20px 20px;display:flex;flex-direction:column;gap:0">
+        <div class="comp-row" style="border-top:none">
+          <div class="comp-label">primary</div>
+          <button class="btn btn-primary">View Project</button>
+          <button class="btn btn-primary btn-sm">View Project</button>
+        </div>
+        <div class="comp-row">
+          <div class="comp-label">secondary</div>
+          <button class="btn btn-secondary">Learn More</button>
+          <button class="btn btn-secondary btn-sm">Learn More</button>
+        </div>
+        <div class="comp-row">
+          <div class="comp-label">accent</div>
+          <button class="btn btn-accent">Get in Touch</button>
+        </div>
+        <div class="comp-row" style="border-bottom:none">
+          <div class="comp-label">ghost</div>
+          <button class="btn btn-ghost">Download CV</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Badges -->
+    <div style="border:var(--border-2);margin-bottom:32px">
+      <div style="padding:12px 16px;border-bottom:var(--border-2);font-family:var(--font-mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--color-ink-2);background:var(--bg-sunken)">Badges</div>
+      <div style="padding:20px;display:flex;flex-direction:column;gap:0">
+        <div class="comp-row" style="border-top:none">
+          <div class="comp-label">solid</div>
+          <span class="badge badge-solid">Consulting</span>
+          <span class="badge badge-solid">Design</span>
+          <span class="badge badge-solid">2024</span>
+        </div>
+        <div class="comp-row">
+          <div class="comp-label">outline</div>
+          <span class="badge badge-outline">Strategy</span>
+          <span class="badge badge-outline">Brand</span>
+          <span class="badge badge-outline">Systems</span>
+        </div>
+        <div class="comp-row">
+          <div class="comp-label">accent</div>
+          <span class="badge badge-accent">Featured</span>
+          <span class="badge badge-light">Active</span>
+        </div>
+        <div class="comp-row" style="border-bottom:none">
+          <div class="comp-label">status</div>
+          <span class="badge badge-ghost">Draft</span>
+          <span class="badge badge-dashed">Pending</span>
+          <span class="badge" style="background:var(--color-error);color:#fff;border-color:oklch(38% 0.16 25)">Archived</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cards -->
+    <div style="border:var(--border-2);margin-bottom:32px">
+      <div style="padding:12px 16px;border-bottom:var(--border-2);font-family:var(--font-mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--color-ink-2);background:var(--bg-sunken)">Cards</div>
+      <div class="card-grid">
+        <div class="card-item">
+          <div class="card-head">
+            <div class="card-eyebrow">Project / 2024</div>
+            <div class="card-name">Brand Strategy</div>
+          </div>
+          <div class="card-body-inner">
+            <p>End-to-end identity work for a Series A fintech. Positioning, naming, visual language.</p>
+          </div>
+        </div>
+        <div class="card-item card-inv">
+          <div class="card-head">
+            <div class="card-eyebrow">Case Study</div>
+            <div class="card-name">System Design</div>
+          </div>
+          <div class="card-body-inner">
+            <p style="color:oklch(68% 0.02 100)">A design system built from scratch in 6 weeks. Tokens, components, docs.</p>
+          </div>
+        </div>
+        <div class="card-item card-acc" style="border-right:none">
+          <div class="card-head">
+            <div class="card-eyebrow">Featured</div>
+            <div class="card-name">KHS System</div>
+          </div>
+          <div class="card-body-inner">
+            <p>Three themes, full component library, Radix-inspired architecture.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inputs -->
+    <div style="border:var(--border-2)">
+      <div style="padding:12px 16px;border-bottom:var(--border-2);font-family:var(--font-mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--color-ink-2);background:var(--bg-sunken)">Form Inputs</div>
+      <div style="padding:20px;display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:640px">
+        <div class="field-group">
+          <div class="field-label">Full Name</div>
+          <input type="text" placeholder="Jane Smith">
+        </div>
+        <div class="field-group">
+          <div class="field-label">Email</div>
+          <input type="email" value="hello@khs.co">
+        </div>
+        <div class="field-group" style="grid-column:1/-1">
+          <div class="field-label">Message</div>
+          <textarea rows="3" placeholder="Tell me about your project..."></textarea>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Discipline</div>
+          <select><option>Strategy</option><option>Design</option><option>Both</option></select>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;justify-content:center">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+            <input type="checkbox" checked style="width:16px;height:16px;border:2px solid var(--color-ink);background:var(--bg-base);appearance:none;flex-shrink:0;cursor:pointer" id="cb1">
+            <span style="font-family:var(--font-mono);font-size:11px;color:var(--color-ink)">Strategy</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+            <input type="checkbox" style="width:16px;height:16px;border:2px solid var(--color-ink);background:var(--bg-base);appearance:none;flex-shrink:0;cursor:pointer" id="cb2">
+            <span style="font-family:var(--font-mono);font-size:11px;color:var(--color-ink)">Design</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ── Spacing ────────────────────────────────────────── -->
+  <section class="section" id="spacing">
+    <div class="section-eyebrow">05 — Foundations</div>
+    <div class="section-title">Spacing</div>
+
+    <div class="space-row">
+      <div class="space-col"><div class="space-bar" style="height:4px"></div><div class="space-val">4px</div><div class="space-tok">--space-1</div></div>
+      <div class="space-col"><div class="space-bar" style="height:8px"></div><div class="space-val">8px</div><div class="space-tok">--space-2</div></div>
+      <div class="space-col"><div class="space-bar" style="height:12px"></div><div class="space-val">12px</div><div class="space-tok">--space-3</div></div>
+      <div class="space-col"><div class="space-bar" style="height:16px"></div><div class="space-val">16px</div><div class="space-tok">--space-4</div></div>
+      <div class="space-col"><div class="space-bar" style="height:24px"></div><div class="space-val">24px</div><div class="space-tok">--space-5</div></div>
+      <div class="space-col"><div class="space-bar" style="height:32px"></div><div class="space-val">32px</div><div class="space-tok">--space-6</div></div>
+      <div class="space-col"><div class="space-bar" style="height:48px"></div><div class="space-val">48px</div><div class="space-tok">--space-7</div></div>
+      <div class="space-col"><div class="space-bar" style="height:64px"></div><div class="space-val">64px</div><div class="space-tok">--space-8</div></div>
+      <div class="space-col" style="border-right:none"><div class="space-bar" style="height:80px"></div><div class="space-val">96px</div><div class="space-tok">--space-9</div></div>
+    </div>
+
+    <!-- Border radius + shadow tokens -->
+    <div style="margin-top:0;border:var(--border-2);border-top:none;display:grid;grid-template-columns:1fr 1fr;gap:0">
+      <div style="border-right:var(--border-2);padding:20px;display:flex;flex-direction:column;gap:12px">
+        <div style="font-family:var(--font-mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-ink-3);margin-bottom:4px">Border Radius — Angular</div>
+        <div style="display:flex;gap:16px;align-items:center">
+          <div style="width:48px;height:48px;background:var(--bg-sunken);border:var(--border-2);border-radius:0"></div>
+          <div style="font-family:var(--font-mono);font-size:10px;color:var(--color-ink-2)">0px — default</div>
+        </div>
+        <div style="display:flex;gap:16px;align-items:center">
+          <div style="width:48px;height:48px;background:var(--bg-sunken);border:var(--border-2);border-radius:2px"></div>
+          <div style="font-family:var(--font-mono);font-size:10px;color:var(--color-ink-2)">2px — inputs only</div>
+        </div>
+      </div>
+      <div style="padding:20px;display:flex;flex-direction:column;gap:12px">
+        <div style="font-family:var(--font-mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-ink-3);margin-bottom:4px">Shadows — Hard Offset</div>
+        <div style="display:flex;gap:16px;align-items:center">
+          <div style="width:48px;height:32px;background:var(--bg-base);border:var(--border-2);box-shadow:3px 3px 0 var(--color-ink)"></div>
+          <div style="font-family:var(--font-mono);font-size:10px;color:var(--color-ink-2)">shadow-sm</div>
+        </div>
+        <div style="display:flex;gap:16px;align-items:center">
+          <div style="width:48px;height:32px;background:var(--bg-base);border:var(--border-2);box-shadow:5px 5px 0 var(--color-ink)"></div>
+          <div style="font-family:var(--font-mono);font-size:10px;color:var(--color-ink-2)">shadow-md</div>
+        </div>
+        <div style="display:flex;gap:16px;align-items:center">
+          <div style="width:48px;height:32px;background:var(--bg-base);border:var(--border-2);box-shadow:5px 5px 0 var(--color-accent)"></div>
+          <div style="font-family:var(--font-mono);font-size:10px;color:var(--color-ink-2)">shadow-accent</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /site-wrap -->
+
+<!-- ── Tweaks Panel ──────────────────────────────────────── -->
+<div id="tweaks-panel">
+  <div class="tweaks-header">
+    <span>Tweaks</span>
+  </div>
+  <div class="tweaks-body">
+    <div class="tweak-row">
+      <div class="tweak-label">Color Theme</div>
+      <div class="tweak-options">
+        <div class="tweak-opt active" onclick="setThemeFromTweak('terminal',this)">Terminal</div>
+        <div class="tweak-opt" onclick="setThemeFromTweak('amber',this)">Amber</div>
+        <div class="tweak-opt" onclick="setThemeFromTweak('blueprint',this)">Blueprint</div>
+      </div>
+    </div>
+    <div class="tweak-row">
+      <div class="tweak-label">Logo Filter</div>
+      <div class="tweak-options">
+        <div class="tweak-opt active" onclick="setLogoFilter('none',this)">Default</div>
+        <div class="tweak-opt" onclick="setLogoFilter('invert(1)',this)">Invert</div>
+        <div class="tweak-opt" onclick="setLogoFilter('opacity(0.3)',this)">Ghost</div>
+      </div>
+    </div>
+    <div class="tweak-row">
+      <div class="tweak-label">Hatch Intensity</div>
+      <div class="tweak-options">
+        <div class="tweak-opt" onclick="setHatch(0.06,this)">Low</div>
+        <div class="tweak-opt active" onclick="setHatch(0.15,this)">Med</div>
+        <div class="tweak-opt" onclick="setHatch(0.30,this)">High</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Theme switching ────────────────────────────────────────
+const THEMES = ['terminal','amber','blueprint'];
+
+function setTheme(t, btn) {
+  document.documentElement.setAttribute('data-theme', t);
+  // Sync nav buttons
+  document.querySelectorAll('.theme-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.t === t);
+  });
+  // Sync tweak buttons
+  document.querySelectorAll('#tweaks-panel .tweak-options').item(0)
+    ?.querySelectorAll('.tweak-opt').forEach(o => {
+      o.classList.toggle('active', o.textContent.trim().toLowerCase() === t);
+    });
+  localStorage.setItem('khs-theme', t);
+}
+
+function setThemeFromTweak(t, el) {
+  el.closest('.tweak-options').querySelectorAll('.tweak-opt').forEach(o => o.classList.remove('active'));
+  el.classList.add('active');
+  setTheme(t, null);
+}
+
+// ── Logo filter ───────────────────────────────────────────
+function setLogoFilter(f, el) {
+  el.closest('.tweak-options').querySelectorAll('.tweak-opt').forEach(o => o.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('nav-logo-img').style.filter = f;
+  localStorage.setItem('khs-logo-filter', f);
+}
+
+// ── Hatch intensity ───────────────────────────────────────
+function setHatch(val, el) {
+  el.closest('.tweak-options').querySelectorAll('.tweak-opt').forEach(o => o.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.hatch-band').forEach(h => h.style.opacity = val);
+  localStorage.setItem('khs-hatch', val);
+}
+
+// ── Checkbox interactivity ────────────────────────────────
+document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+  cb.addEventListener('change', () => {
+    cb.style.background = cb.checked ? 'var(--color-ink)' : 'var(--bg-base)';
+  });
+  cb.style.background = cb.checked ? 'var(--color-ink)' : 'var(--bg-base)';
+});
+
+// ── Tweaks panel ──────────────────────────────────────────
+window.addEventListener('message', e => {
+  if (e.data?.type === '__activate_edit_mode') {
+    document.getElementById('tweaks-panel').classList.add('visible');
+  }
+  if (e.data?.type === '__deactivate_edit_mode') {
+    document.getElementById('tweaks-panel').classList.remove('visible');
+  }
+});
+window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+
+// ── Restore from localStorage ─────────────────────────────
+const savedTheme = localStorage.getItem('khs-theme');
+if (savedTheme) setTheme(savedTheme, null);
+
+const savedFilter = localStorage.getItem('khs-logo-filter');
+if (savedFilter) {
+  document.getElementById('nav-logo-img').style.filter = savedFilter;
+}
+
+const savedHatch = localStorage.getItem('khs-hatch');
+if (savedHatch) {
+  document.querySelectorAll('.hatch-band').forEach(h => h.style.opacity = savedHatch);
+}
+</script>
+
+<template id="__bundler_thumbnail">
+  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <rect width="100" height="100" fill="#f5f0e8"/>
+    <polygon points="30,20 50,20 58,35 50,50 30,50 22,35" fill="none" stroke="#1a1a1a" stroke-width="2"/>
+    <polygon points="50,20 70,20 78,35 70,50 50,50 42,35" fill="none" stroke="#1a1a1a" stroke-width="2"/>
+    <polygon points="70,20 90,20 98,35 90,50 70,50 62,35" fill="none" stroke="#1a1a1a" stroke-width="2"/>
+    <text x="40" y="38" font-size="10" font-weight="700" fill="#1a1a1a" text-anchor="middle">K</text>
+    <text x="60" y="38" font-size="10" font-weight="700" fill="#1a1a1a" text-anchor="middle">H</text>
+    <text x="80" y="38" font-size="10" font-weight="700" fill="#1a1a1a" text-anchor="middle">S</text>
+    <text x="50" y="70" font-size="6" font-family="monospace" fill="#888" text-anchor="middle" letter-spacing="2">DESIGN SYSTEM</text>
+  </svg>
+</template>
+</body>
+</html>

@@ -134,7 +134,7 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
   transition: opacity 80ms;
 }
 .folder-label-inner {
-  font-family: var(--font-mono); font-size: 9px;
+  font-family: var(--font-mono); font-size: 12px;
   letter-spacing: 0.04em; line-height: 1.35;
   color: var(--color-ink); padding: 2px 4px;
   display: inline-block;
@@ -157,7 +157,13 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
   background: var(--bg-inverse); height: 28px;
   display: flex; align-items: center; gap: 8px; padding: 0 10px;
   cursor: grab; border-bottom: 2px solid var(--color-ink);
-  user-select: none;
+  user-select: none; position: relative; overflow: hidden;
+}
+.os-titlebar::after {
+  content: '';
+  position: absolute; inset: 0; pointer-events: none;
+  background-image: repeating-linear-gradient(0deg, transparent, transparent 3px, var(--color-ink) 3px, var(--color-ink) 4px);
+  opacity: 0.07;
 }
 .os-titlebar:active { cursor: grabbing; }
 .traffic-lights { display: flex; gap: 5px; flex-shrink: 0; }
@@ -252,7 +258,6 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
 .toolbar {
   display: inline-flex; border: 2px solid var(--color-ink);
   background: var(--bg-surface);
-  box-shadow: inset 1px 1px 0 rgba(255,255,255,0.7), inset -1px -1px 0 rgba(0,0,0,0.15);
 }
 .tb-cell {
   width: 64px; padding: 5px 0 4px; display: flex; flex-direction: column;
@@ -617,18 +622,23 @@ const TICKER = 'STRATEGY · PRODUCT · SYSTEMS · KHS CONSULTING · EST. 2025 ·
 
 // ─── Folder SVG ───────────────────────────────────────────
 function FolderSVG({ selected }) {
+  const body      = selected ? 'var(--color-accent)'       : 'var(--color-accent-light)';
+  const tab       = selected ? 'var(--color-accent-dark)'  : 'var(--color-accent)';
+  const highlight = 'var(--color-accent-light)';
+  const spine     = 'var(--color-accent-dark)';
+  const bottom    = 'var(--color-accent-dark)';
+  const ink       = 'var(--color-ink)';
   return (
     <svg viewBox="0 0 56 48" style={{ width: 56, height: 48 }} shapeRendering="crispEdges">
-      <rect x="1" y="6" width="20" height="6" fill={selected ? '#c89438' : '#d4a860'} stroke="#1c1c14" strokeWidth="1" />
-      <rect x="1" y="6" width="7" height="6" fill={selected ? '#e8c060' : '#e8c078'} />
-      <rect x="1" y="11" width="54" height="36" fill={selected ? '#e8c060' : '#ecd090'} stroke="#1c1c14" strokeWidth="1.5" />
-      <rect x="1" y="11" width="9" height="36" fill={selected ? '#c89438' : '#c8a840'} />
-      <rect x="1" y="11" width="54" height="5" fill={selected ? '#f0d070' : '#f4dc90'} />
-      <rect x="1" y="43" width="54" height="4" fill={selected ? '#a87818' : '#b89030'} />
-      <rect x="14" y="27" width="28" height="2" fill="#a07818" opacity="0.4" />
-      <rect x="14" y="33" width="20" height="2" fill="#a07818" opacity="0.4" />
+      <rect x="1" y="6" width="20" height="6" style={{fill: tab}} stroke={ink} strokeWidth="1" />
+      <rect x="1" y="6" width="7" height="6" style={{fill: highlight}} />
+      <rect x="1" y="11" width="54" height="36" style={{fill: body}} stroke={ink} strokeWidth="1.5" />
+      <rect x="1" y="11" width="9" height="36" style={{fill: spine}} />
+      <rect x="1" y="11" width="54" height="5" style={{fill: highlight}} />
+      <rect x="1" y="43" width="54" height="4" style={{fill: bottom}} />
+      <rect x="14" y="27" width="28" height="2" style={{fill: ink}} opacity="0.15" />
+      <rect x="14" y="33" width="20" height="2" style={{fill: ink}} opacity="0.15" />
     </svg>);
-
 }
 
 // ─── Hexagon logo mark ────────────────────────────────────
@@ -991,7 +1001,7 @@ function App() {
 
   const [windows, setWindows] = useState([{
     id: 'about-initial', type: 'about', title: 'About KHS',
-    x: Math.min(900, Math.max(50, (window.innerWidth || 1200) / 2 - 160)),
+    x: Math.min((window.innerWidth || 1200) - 340, Math.max(50, (window.innerWidth || 1200) * 2 / 3)),
     y: 80, width: 320, z: 200
   }]);
   const [focusedWin, setFocusedWin] = useState('about-initial');
