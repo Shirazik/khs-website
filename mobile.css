@@ -298,7 +298,44 @@
     transform: translate(3px, 3px);
   }
 
-  /* ── Footer ──────────────────────────────────────────────── */
+  /* ── Contact rows ─────────────────────────────────── */
+  .mob-contact-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 0 auto;
+    max-width: 320px;
+  }
+  .mob-contact-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    padding: 10px 12px;
+    border: 1px solid var(--color-ink);
+    text-decoration: none;
+    color: var(--color-ink);
+    transition: background 80ms, transform 80ms;
+  }
+  .mob-contact-row:active {
+    background: var(--bg-sunken);
+    transform: translate(1px, 1px);
+  }
+  .mob-contact-lbl {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+  }
+  .mob-contact-val {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--color-ink);
+    letter-spacing: 0.02em;
+  }
+
+  /* ── Footer ────────────────────────────────────────────── */
   .mob-footer {
     padding: 24px 20px;
     text-align: center;
