@@ -1,0 +1,270 @@
+/* ============================================================
+   KHS DESIGN SYSTEM — Color & Type Tokens
+   Retro-internet era, modernly refined.
+   ============================================================ */
+
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@300;400;600&display=swap');
+
+/* ============================================================
+   THEME: Terminal Green (default)
+   ============================================================ */
+:root,
+[data-theme="terminal"] {
+  /* Backgrounds */
+  --bg-base:        oklch(96% 0.015 100);   /* warm cream */
+  --bg-surface:     oklch(93% 0.018 100);   /* slightly darker cream */
+  --bg-sunken:      oklch(89% 0.02 100);    /* inset / well */
+  --bg-inverse:     oklch(14% 0.02 140);    /* near-black, green-tinged */
+
+  /* Ink / Foreground */
+  --color-ink:      oklch(12% 0.01 140);    /* near-black */
+  --color-ink-2:    oklch(35% 0.015 140);   /* secondary text */
+  --color-ink-3:    oklch(58% 0.012 140);   /* muted / placeholder */
+  --color-ink-inv:  oklch(96% 0.015 100);   /* text on dark bg */
+
+  /* Accent — Forest Green */
+  --color-accent:       oklch(44% 0.16 145);    /* primary accent */
+  --color-accent-light: oklch(88% 0.08 145);    /* light tint */
+  --color-accent-dark:  oklch(30% 0.14 145);    /* pressed / hover dark */
+
+  /* Borders */
+  --border-color:   var(--color-ink);
+  --border:         1px solid var(--border-color);
+  --border-2:       2px solid var(--border-color);
+
+  /* Semantic */
+  --color-error:    oklch(50% 0.18 25);
+  --color-success:  var(--color-accent);
+  --color-warning:  oklch(68% 0.18 80);
+  --color-info:     oklch(50% 0.16 220);
+
+  /* Theme label */
+  --theme-name: "Terminal Green";
+}
+
+/* ============================================================
+   THEME: Warm Amber
+   ============================================================ */
+[data-theme="amber"] {
+  --bg-base:        oklch(97% 0.018 88);
+  --bg-surface:     oklch(93% 0.022 88);
+  --bg-sunken:      oklch(88% 0.025 88);
+  --bg-inverse:     oklch(16% 0.025 60);
+
+  --color-ink:      oklch(14% 0.015 60);
+  --color-ink-2:    oklch(36% 0.018 60);
+  --color-ink-3:    oklch(58% 0.012 60);
+  --color-ink-inv:  oklch(97% 0.018 88);
+
+  --color-accent:       oklch(62% 0.19 68);     /* amber / gold */
+  --color-accent-light: oklch(91% 0.08 68);
+  --color-accent-dark:  oklch(44% 0.17 68);
+
+  --border-color:   var(--color-ink);
+  --border:         1px solid var(--border-color);
+  --border-2:       2px solid var(--border-color);
+
+  --color-error:    oklch(50% 0.18 25);
+  --color-success:  oklch(44% 0.16 145);
+  --color-warning:  var(--color-accent);
+  --color-info:     oklch(50% 0.16 220);
+}
+
+/* ============================================================
+   THEME: Blueprint Navy
+   ============================================================ */
+[data-theme="blueprint"] {
+  --bg-base:        oklch(97% 0.008 230);    /* cool white */
+  --bg-surface:     oklch(93% 0.012 230);
+  --bg-sunken:      oklch(88% 0.015 230);
+  --bg-inverse:     oklch(22% 0.06 240);     /* deep navy */
+
+  --color-ink:      oklch(18% 0.04 240);
+  --color-ink-2:    oklch(38% 0.04 240);
+  --color-ink-3:    oklch(60% 0.02 240);
+  --color-ink-inv:  oklch(97% 0.008 230);
+
+  --color-accent:       oklch(42% 0.18 240);    /* blueprint blue */
+  --color-accent-light: oklch(88% 0.08 240);
+  --color-accent-dark:  oklch(28% 0.16 240);
+
+  --border-color:   var(--color-ink);
+  --border:         1px solid var(--border-color);
+  --border-2:       2px solid var(--border-color);
+
+  --color-error:    oklch(50% 0.18 25);
+  --color-success:  oklch(44% 0.16 145);
+  --color-warning:  oklch(68% 0.18 80);
+  --color-info:     var(--color-accent);
+}
+
+/* ============================================================
+   SPACING SCALE — 8px base
+   ============================================================ */
+:root {
+  --space-1:   4px;
+  --space-2:   8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  24px;
+  --space-6:  32px;
+  --space-7:  48px;
+  --space-8:  64px;
+  --space-9:  96px;
+  --space-10: 128px;
+}
+
+/* ============================================================
+   TYPOGRAPHY SCALE
+   ============================================================ */
+:root {
+  /* Font families */
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-mono:    'IBM Plex Mono', 'Courier New', monospace;
+  --font-body:    'Source Sans 3', Helvetica, Arial, sans-serif;
+
+  /* Size scale (modular — Major Third 1.25×) */
+  --text-xs:   0.64rem;   /* 10.24px */
+  --text-sm:   0.8rem;    /* 12.8px  */
+  --text-base: 1rem;      /* 16px    */
+  --text-md:   1.25rem;   /* 20px    */
+  --text-lg:   1.563rem;  /* 25px    */
+  --text-xl:   1.953rem;  /* 31.25px */
+  --text-2xl:  2.441rem;  /* 39px    */
+  --text-3xl:  3.052rem;  /* 48.8px  */
+  --text-4xl:  3.815rem;  /* 61px    */
+  --text-5xl:  5rem;      /* 80px    */
+
+  /* Line heights */
+  --leading-tight:  1.15;
+  --leading-snug:   1.35;
+  --leading-normal: 1.6;
+  --leading-loose:  1.9;
+
+  /* Letter spacing */
+  --tracking-tight:  -0.03em;
+  --tracking-normal:  0em;
+  --tracking-wide:    0.06em;
+  --tracking-wider:   0.12em;
+  --tracking-widest:  0.2em;
+
+  /* Border radius — angular by default */
+  --radius-none: 0px;
+  --radius-sm:   2px;     /* inputs only */
+  --radius-md:   4px;     /* never */
+
+  /* Shadows — hard offset only */
+  --shadow-sm:  3px 3px 0px var(--color-ink);
+  --shadow-md:  5px 5px 0px var(--color-ink);
+  --shadow-lg:  8px 8px 0px var(--color-ink);
+  --shadow-accent: 5px 5px 0px var(--color-accent);
+}
+
+/* ============================================================
+   SEMANTIC TYPE STYLES
+   ============================================================ */
+
+/* h1: Large editorial display */
+.khs-h1 {
+  font-family: var(--font-display);
+  font-size: var(--text-5xl);
+  font-weight: 900;
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-ink);
+}
+
+/* h2: Section heading */
+.khs-h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  font-weight: 700;
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-ink);
+}
+
+/* h3: Subsection */
+.khs-h3 {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  line-height: var(--leading-snug);
+  color: var(--color-ink);
+}
+
+/* Label / UI chrome */
+.khs-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-ink-2);
+}
+
+/* Mono display — for large numbers, dates, codes */
+.khs-mono-display {
+  font-family: var(--font-mono);
+  font-size: var(--text-3xl);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+}
+
+/* Body text */
+.khs-body {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: var(--color-ink);
+}
+
+/* Small body / captions */
+.khs-caption {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
+  color: var(--color-ink-2);
+}
+
+/* Code inline */
+.khs-code {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  background: var(--bg-sunken);
+  border: var(--border);
+  padding: 1px 5px;
+}
+
+/* ============================================================
+   HATCHING PATTERN UTILITY (from logo motif)
+   ============================================================ */
+.khs-hatch {
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    var(--color-ink) 3px,
+    var(--color-ink) 4px
+  );
+  opacity: 0.12;
+}
+
+.khs-hatch-strong {
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    var(--color-ink) 2px,
+    var(--color-ink) 3px
+  );
+  opacity: 0.18;
+}
+
+/* Dot-grid background */
+.khs-dot-grid {
+  background-image: radial-gradient(circle, var(--color-ink) 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.06;
+}

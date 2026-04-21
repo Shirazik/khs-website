@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="terminal">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KHS Consulting</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="colors_and_type.css">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var(--bg-base); }
+
+/* ── App layout ──────────────────────────────────────────── */
+.app { display: flex; flex-direction: column; height: 100vh; width: 100vw; overflow: hidden; }
+
+/* ── Menu bar ────────────────────────────────────────────── */
+.menu-bar {
+  height: 30px; background: var(--bg-inverse); display: flex; align-items: center;
+  padding: 0; flex-shrink: 0; z-index: 9999; gap: 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.menu-logo {
+  display: flex; align-items: center; gap: 8px;
+  padding: 0 14px 0 12px; height: 100%;
+  border-right: 1px solid rgba(255,255,255,0.1); cursor: pointer;
+}
+.menu-hex { flex-shrink: 0; }
+.menu-wordmark {
+  font-family: var(--font-mono); font-size: 10px; font-weight: 600;
+  letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.9);
+}
+.menu-item {
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em;
+  color: rgba(255,255,255,0.55); padding: 0 14px; height: 100%;
+  display: flex; align-items: center; cursor: default;
+  transition: color 80ms, background 80ms;
+  border-right: 1px solid rgba(255,255,255,0.06);
+}
+.menu-item:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.9); }
+.menu-spacer { flex: 1; }
+.menu-right {
+  display: flex; align-items: center; height: 100%;
+  border-left: 1px solid rgba(255,255,255,0.1);
+}
+.menu-clock {
+  font-family: var(--font-mono); font-size: 10px; font-weight: 500;
+  color: rgba(255,255,255,0.8); padding: 0 16px;
+  letter-spacing: 0.06em;
+}
+.menu-date {
+  font-family: var(--font-mono); font-size: 9px;
+  color: rgba(255,255,255,0.4); padding: 0 14px;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  border-left: 1px solid rgba(255,255,255,0.08);
+}
+
+/* ── Ticker ──────────────────────────────────────────────── */
+.ticker-bar {
+  height: 26px; background: var(--bg-surface); flex-shrink: 0;
+  border-bottom: 2px solid var(--color-ink); overflow: hidden;
+  display: flex; align-items: center;
+}
+.ticker-inner {
+  display: inline-flex; white-space: nowrap; gap: 0;
+  animation: ticker 28s linear infinite;
+}
+@keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+.ticker-item {
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--color-ink-2);
+  padding: 0 20px; display: flex; align-items: center; gap: 20px;
+}
+.ticker-dot { width: 4px; height: 4px; background: var(--color-accent); flex-shrink: 0; }
+
+/* ── Desktop ─────────────────────────────────────────────── */
+.desktop {
+  flex: 1; position: relative; overflow: hidden;
+  background-color: var(--bg-base);
+  background-image: radial-gradient(circle, var(--color-ink) 1px, transparent 1px);
+  background-size: 24px 24px;
+  --dot-opacity: 0.04;
+}
+.desktop::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background-image: radial-gradient(circle, var(--color-ink) 1px, transparent 1px);
+  background-size: 24px 24px; opacity: var(--dot-opacity);
+}
+
+/* Ghost background text */
+.ghost-layer {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none; user-select: none;
+  text-align: center; white-space: nowrap; z-index: 0;
+}
+.ghost-main {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(100px, 16vw, 200px);
+  font-weight: 900; letter-spacing: -0.04em;
+  color: var(--color-ink); opacity: 0.04; line-height: 0.9;
+  display: block;
+}
+.ghost-sub {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: clamp(10px, 1.2vw, 16px);
+  letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--color-ink); opacity: 0.07; display: block;
+  margin-top: 12px;
+}
+.ghost-italic {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(32px, 5vw, 64px);
+  font-weight: 400; font-style: italic;
+  color: var(--color-accent); opacity: 0.12; display: block;
+  margin-top: 4px; letter-spacing: -0.02em;
+}
+
+/* ── Folder ──────────────────────────────────────────────── */
+.folder {
+  position: absolute; display: flex; flex-direction: column;
+  align-items: center; gap: 4px; cursor: default;
+  user-select: none; width: 76px; z-index: 10;
+}
+.folder:hover .folder-label { opacity: 0.85; }
+.folder.selected .folder-label-inner {
+  background: var(--color-accent); color: #fff;
+}
+.folder-label {
+  width: 100%; text-align: center; opacity: 0.75;
+  transition: opacity 80ms;
+}
+.folder-label-inner {
+  font-family: var(--font-mono); font-size: 9px;
+  letter-spacing: 0.04em; line-height: 1.35;
+  color: var(--color-ink); padding: 2px 4px;
+  display: inline-block;
+}
+.folder-year {
+  font-family: var(--font-mono); font-size: 8px;
+  color: var(--color-ink-3); letter-spacing: 0.06em;
+  text-align: center; margin-top: -2px; opacity: 0.7;
+}
+
+/* ── OS Window ───────────────────────────────────────────── */
+.os-window {
+  position: absolute; background: var(--bg-base);
+  border: 2px solid var(--color-ink);
+  box-shadow: 6px 6px 0 var(--color-ink);
+  z-index: 200; min-width: 300px;
+}
+.os-window.focused { box-shadow: 6px 6px 0 var(--color-accent); z-index: 300; }
+.os-titlebar {
+  background: var(--bg-inverse); height: 28px;
+  display: flex; align-items: center; gap: 8px; padding: 0 10px;
+  cursor: grab; border-bottom: 2px solid var(--color-ink);
+  user-select: none;
+}
+.os-titlebar:active { cursor: grabbing; }
+.traffic-lights { display: flex; gap: 5px; flex-shrink: 0; }
+.tl {
+  width: 11px; height: 11px; border: 1px solid rgba(0,0,0,0.3);
+  cursor: pointer; flex-shrink: 0; display: flex;
+  align-items: center; justify-content: center;
+}
+.tl-close { background: #ff5f57; }
+.tl-close:hover::after { content: '×'; font-size: 8px; color: rgba(0,0,0,0.6); }
+.tl-min { background: #febc2e; }
+.tl-max { background: #28c840; }
+.os-wintitle {
+  font-family: var(--font-mono); font-size: 10px;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgba(255,255,255,0.7); flex: 1; text-align: center;
+  margin-left: -30px; pointer-events: none;
+}
+.os-body { padding: 20px; }
+
+/* ── Project window content ──────────────────────────────── */
+.win-tag {
+  font-family: var(--font-mono); font-size: 8px; letter-spacing: 0.16em;
+  text-transform: uppercase; padding: 2px 8px; border: 1px solid var(--color-ink);
+  display: inline-block; margin-bottom: 10px;
+}
+.win-year {
+  font-family: var(--font-mono); font-size: 9px; color: var(--color-ink-3);
+  letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px;
+}
+.win-title {
+  font-family: 'Playfair Display', serif; font-size: 24px;
+  font-weight: 700; letter-spacing: -0.02em; line-height: 1.15;
+  color: var(--color-ink); margin-bottom: 12px;
+}
+.win-desc {
+  font-family: 'Source Sans 3', sans-serif; font-size: 13px;
+  line-height: 1.6; color: var(--color-ink-2); margin-bottom: 16px;
+}
+.win-deliverables { display: flex; flex-direction: column; gap: 4px; margin-bottom: 18px; }
+.win-deliv-item {
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.06em;
+  color: var(--color-ink-2); display: flex; align-items: center; gap: 8px;
+}
+.win-deliv-item::before { content: '→'; color: var(--color-accent); }
+.win-divider { height: 1px; background: var(--color-ink); margin-bottom: 14px; }
+.win-cta {
+  font-family: var(--font-mono); font-size: 9px; font-weight: 500;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 7px 14px; border: 2px solid var(--color-ink);
+  background: transparent; color: var(--color-ink); cursor: pointer;
+  display: inline-block; transition: background 80ms, color 80ms;
+}
+.win-cta:hover { background: var(--color-ink); color: var(--color-ink-inv); }
+
+/* About window */
+.about-hex { display: flex; justify-content: center; margin-bottom: 14px; }
+.about-name {
+  font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 900;
+  letter-spacing: -0.03em; color: var(--color-ink); text-align: center;
+  margin-bottom: 4px; line-height: 1;
+}
+.about-role {
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--color-accent);
+  text-align: center; margin-bottom: 14px;
+}
+.about-divider { height: 2px; background: var(--color-ink); margin-bottom: 14px; }
+.about-bio {
+  font-family: 'Source Sans 3', sans-serif; font-size: 13px; line-height: 1.65;
+  color: var(--color-ink-2); margin-bottom: 16px; text-align: center;
+}
+.about-skills { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 14px; }
+.about-skill {
+  font-family: var(--font-mono); font-size: 8px; letter-spacing: 0.14em;
+  text-transform: uppercase; padding: 3px 8px; border: 1px solid var(--color-ink);
+  color: var(--color-ink-2);
+}
+.about-status {
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.08em;
+  color: var(--color-ink-3); text-align: center;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.status-dot { width: 6px; height: 6px; background: var(--color-accent); flex-shrink: 0; }
+
+/* ── Toolbar ─────────────────────────────────────────────── */
+.toolbar-wrap {
+  height: 68px; display: flex; align-items: center; justify-content: center;
+  background: var(--bg-base); border-top: 2px solid var(--color-ink);
+  flex-shrink: 0; z-index: 9999;
+}
+.toolbar {
+  display: inline-flex; border: 2px solid var(--color-ink);
+  background: var(--bg-surface);
+  box-shadow: inset 1px 1px 0 rgba(255,255,255,0.7), inset -1px -1px 0 rgba(0,0,0,0.15);
+}
+.tb-cell {
+  width: 64px; padding: 5px 0 4px; display: flex; flex-direction: column;
+  align-items: center; gap: 3px; border-right: 1px solid rgba(0,0,0,0.12);
+  cursor: pointer;
+  border-top: 2px solid rgba(255,255,255,0.65);
+  border-left: 0; border-bottom: 2px solid rgba(0,0,0,0.12);
+  background: transparent; transition: background 80ms;
+}
+.tb-cell:first-child { border-left: 2px solid rgba(255,255,255,0.65); }
+.tb-cell:last-child { border-right: 2px solid rgba(0,0,0,0.12); }
+.tb-cell:hover { background: var(--color-accent-light); }
+.tb-cell:active { 
+  border-top: 2px solid rgba(0,0,0,0.15); 
+  border-left-color: rgba(0,0,0,0.1);
+  background: var(--bg-sunken); 
+}
+.tb-cell svg { width: 36px; height: 36px; }
+.tb-label {
+  font-family: var(--font-mono); font-size: 7.5px; letter-spacing: 0.03em;
+  color: var(--color-ink); text-align: center; line-height: 1.2;
+  pointer-events: none;
+}
+
+/* ── Tweaks panel ────────────────────────────────────────── */
+#tweaks-panel {
+  position: fixed; bottom: 88px; right: 20px; width: 200px;
+  background: var(--bg-base); border: 2px solid var(--color-ink);
+  box-shadow: 5px 5px 0 var(--color-ink); z-index: 9999;
+  display: none; flex-direction: column;
+}
+#tweaks-panel.visible { display: flex; }
+.tweaks-header { padding: 8px 12px; border-bottom: 2px solid var(--color-ink); font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; background: var(--bg-sunken); }
+.tweaks-body { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.tweak-lbl { font-size: 8px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-ink-3); margin-bottom: 4px; font-family: var(--font-mono); }
+.tweak-opts { display: flex; border: 1px solid var(--color-ink); }
+.tweak-o { flex: 1; font-family: var(--font-mono); font-size: 8px; letter-spacing: 0.04em; text-transform: uppercase; padding: 5px 4px; text-align: center; cursor: pointer; border-right: 1px solid var(--color-ink); color: var(--color-ink-2); }
+.tweak-o:last-child { border-right: none; }
+.tweak-o.on { background: var(--color-ink); color: var(--color-ink-inv); }
+.tweak-o:hover:not(.on) { background: var(--bg-sunken); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel">
+
+
+
+const { useState, useEffect, useRef, useCallback } = React;
+
+// ─── Data ──────────────────────────────────────────────────
+const PROJECTS = [
+{ id: 'brand', name: 'Brand Strategy', year: '2024', tag: 'Identity',
+  desc: 'End-to-end identity work for a Series A fintech. Positioning, naming, visual language, and a full design system.',
+  deliverables: ['Brand audit & competitive analysis', 'Naming and positioning framework', 'Visual identity system', 'Design system (tokens + components)'] },
+{ id: 'digital', name: 'Digital Transformation', year: '2023', tag: 'Consulting',
+  desc: 'Led digital transformation for a 200-person professional services firm. Process redesign, tooling, and culture change.',
+  deliverables: ['Current-state process mapping', 'Technology stack evaluation', 'Change management framework', 'Implementation roadmap'] },
+{ id: 'ux', name: 'UX Research Program', year: '2023', tag: 'Research',
+  desc: 'Built a research practice from scratch: 40+ interviews, synthesis framework, measurable product roadmap impact.',
+  deliverables: ['Research ops setup', '40+ user interviews', 'Synthesis & insight framework', '3 major roadmap pivots'] },
+{ id: 'system', name: 'KHS Design System', year: '2024', tag: 'Systems',
+  desc: 'This design system — built from blank canvas to full living style guide with tokens, components, and documentation.',
+  deliverables: ['Token architecture (colors, type, spacing)', '10+ component library', 'Interactive style guide', 'Icon library'] },
+{ id: 'launch', name: 'Product Launch', year: '2022', tag: 'Strategy',
+  desc: 'Go-to-market strategy for a B2B SaaS product. Zero to first 50 customers in 90 days.',
+  deliverables: ['Market segmentation', 'Pricing architecture', 'Launch campaign', 'Sales enablement', 'Marketing automation'] },
+{ id: 'identity', name: 'Visual Identity', year: '2022', tag: 'Design',
+  desc: 'Complete rebrand for a climate-tech startup. Logo system, brand guidelines, website, and investor deck.',
+  deliverables: ['Logo design and system', 'Brand guidelines', 'Website design', 'Investor pitch deck'] }];
+
+
+const DEFAULT_POS = {
+  brand: { x: 72, y: 64 },
+  digital: { x: 280, y: 44 },
+  ux: { x: 520, y: 80 },
+  system: { x: 130, y: 260 },
+  launch: { x: 400, y: 240 },
+  identity: { x: 680, y: 155 }
+};
+
+const TICKER = 'STRATEGY · PRODUCT · SYSTEMS · KHS CONSULTING · EST. 2024 · AVAILABLE FOR NEW PROJECTS · ';
+
+// ─── Folder SVG ───────────────────────────────────────────
+function FolderSVG({ selected }) {
+  return (
+    <svg viewBox="0 0 56 48" style={{ width: 56, height: 48 }} shapeRendering="crispEdges">
+      <rect x="1" y="6" width="20" height="6" fill={selected ? '#c89438' : '#d4a860'} stroke="#1c1c14" strokeWidth="1" />
+      <rect x="1" y="6" width="7" height="6" fill={selected ? '#e8c060' : '#e8c078'} />
+      <rect x="1" y="11" width="54" height="36" fill={selected ? '#e8c060' : '#ecd090'} stroke="#1c1c14" strokeWidth="1.5" />
+      <rect x="1" y="11" width="9" height="36" fill={selected ? '#c89438' : '#c8a840'} />
+      <rect x="1" y="11" width="54" height="5" fill={selected ? '#f0d070' : '#f4dc90'} />
+      <rect x="1" y="43" width="54" height="4" fill={selected ? '#a87818' : '#b89030'} />
+      <rect x="14" y="27" width="28" height="2" fill="#a07818" opacity="0.4" />
+      <rect x="14" y="33" width="20" height="2" fill="#a07818" opacity="0.4" />
+    </svg>);
+
+}
+
+// ─── Hexagon logo mark ────────────────────────────────────
+function HexMark({ size = 18, color = 'rgba(255,255,255,0.9)' }) {
+  const s = size;
+  return (
+    <svg width={s * 3.2} height={s} viewBox="0 0 96 30" shapeRendering="crispEdges">
+      <defs>
+        <pattern id="hlines-mark" patternUnits="userSpaceOnUse" width="3" height="3" patternTransform="rotate(90)">
+          <line x1="0" y1="0" x2="0" y2="3" stroke={color} strokeWidth="0.5" opacity="0.4" />
+        </pattern>
+      </defs>
+      {[0, 32, 64].map((ox, i) =>
+      <g key={i}>
+          <polygon points={`${ox + 16},2 ${ox + 28},2 ${ox + 34},15 ${ox + 28},28 ${ox + 16},28 ${ox + 10},15`}
+        fill={`url(#hlines-mark)`} stroke={color} strokeWidth="1.5" />
+          <text x={ox + 22} y={15} textAnchor="middle" dominantBaseline="middle"
+        fontFamily="'IBM Plex Mono', monospace" fontSize="11" fontWeight="600" fill={color}>
+            {['K', 'H', 'S'][i]}
+          </text>
+        </g>
+      )}
+    </svg>);
+
+}
+
+// ─── Menu Bar ─────────────────────────────────────────────
+function MenuBar({ time, onAbout }) {
+  const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+  const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+  const d = time;
+  const dateStr = `${days[d.getDay()]} ${String(d.getDate()).padStart(2, '0')} ${months[d.getMonth()]} ${d.getFullYear()}`;
+  const timeStr = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+
+  return (
+    <div className="menu-bar">
+      <div className="menu-logo" onClick={onAbout}>
+        <img src="assets/khs-logo-transparent.png" alt="KHS" style={{ filter: 'invert(1)', display: 'block', width: "35px", height: "33px", objectFit: "contain" }} />
+      </div>
+      {['File', 'View', 'Go', 'Help'].map((m) =>
+      <div key={m} className="menu-item">{m}</div>
+      )}
+      <div className="menu-spacer" />
+      <div className="menu-right">
+        <div className="menu-date">{dateStr}</div>
+        <div className="menu-clock">{timeStr}</div>
+      </div>
+    </div>);
+
+}
+
+// ─── Ticker ───────────────────────────────────────────────
+function TickerBar() {
+  const t = TICKER.repeat(6);
+  return (
+    <div className="ticker-bar">
+      <div className="ticker-inner">
+        {[0, 1].map((n) =>
+        <span key={n} className="ticker-item">
+            {t.split('·').map((seg, i) =>
+          <React.Fragment key={i}>
+                {i > 0 && <span className="ticker-dot" />}
+                {seg.trim()}
+              </React.Fragment>
+          )}
+          </span>
+        )}
+      </div>
+    </div>);
+
+}
+
+// ─── OS Window ────────────────────────────────────────────
+function OSWindow({ win, focused, onClose, onFocus, onTitleBarDown, children }) {
+  return (
+    <div
+      className={`os-window${focused ? ' focused' : ''}`}
+      style={{ left: win.x, top: win.y, width: win.width || 340, zIndex: win.z }}
+      onMouseDown={onFocus}>
+      
+      <div className="os-titlebar" onMouseDown={onTitleBarDown}>
+        <div className="traffic-lights">
+          <div className="tl tl-close" onMouseDown={(e) => e.stopPropagation()} onClick={onClose} />
+          <div className="tl tl-min" />
+          <div className="tl tl-max" />
+        </div>
+        <div className="os-wintitle">{win.title}</div>
+      </div>
+      <div className="os-body">{children}</div>
+    </div>);
+
+}
+
+// ─── Project content ──────────────────────────────────────
+function ProjectContent({ project }) {
+  return (
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
+        <span className="win-tag">{project.tag}</span>
+        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.1em', color: 'var(--color-ink-3)', textTransform: 'uppercase' }}>{project.year}</span>
+      </div>
+      <div className="win-title">{project.name}</div>
+      <div className="win-desc">{project.desc}</div>
+      <div className="win-divider" />
+      <div className="win-deliverables">
+        {project.deliverables.map((d, i) =>
+        <div key={i} className="win-deliv-item">{d}</div>
+        )}
+      </div>
+      <button className="win-cta">View Case Study →</button>
+    </div>);
+
+}
+
+// ─── About content ────────────────────────────────────────
+function AboutContent() {
+  return (
+    <div>
+      <div className="about-hex">
+        <img src="assets/khs-logo-transparent.png" alt="KHS Consulting"
+        style={{ width: 200, height: 'auto', display: 'block', margin: '0 auto' }} />
+      </div>
+      <div className="about-name" style={{ display: 'none' }}>KHS Consulting</div>
+      <div className="about-role">STRATEGY · PRODUCT · SYSTEMS</div>
+      <div className="about-divider" />
+      <div className="about-bio">
+        I help companies build more delightful products, sharper brands, and stronger teams. Working at the intersection of strategy and product since 2012.
+      </div>
+      <div className="about-skills">
+        {['Product Strategy', 'Team Building', 'UX Research', '0-1 Products', '1-10 products', 'Design Thinking'].map((s) =>
+        <span key={s} className="about-skill">{s}</span>
+        )}
+      </div>
+      <div className="about-divider" />
+      <div className="about-status">
+        <span className="status-dot" />
+        Available for new projects — 2026
+      </div>
+    </div>);
+
+}
+
+// ─── Toolbar icons (subset, inline) ──────────────────────
+const TOOLBAR_ICONS = [
+{ label: 'Home', action: 'home', svg: `<svg viewBox="0 0 64 64" shape-rendering="crispEdges"><rect x="41" y="10" width="6" height="22" fill="#6b4020"/><rect x="41" y="10" width="2" height="22" fill="#9a6040"/><rect x="40" y="9" width="8" height="3" fill="#1c1c14"/><polygon points="32,8 58,30 32,30" fill="#8c4820"/><polygon points="32,8 6,30 32,30" fill="#b46030"/><polygon points="32,8 10,30 32,14" fill="#cc8050"/><polygon points="32,8 6,30 58,30" fill="none" stroke="#1c1c14" stroke-width="1.5" stroke-linejoin="miter"/><rect x="8" y="29" width="48" height="28" fill="#f0e4c0"/><rect x="8" y="29" width="7" height="28" fill="#c8b880"/><rect x="15" y="29" width="41" height="3" fill="#f8f0d8"/><rect x="11" y="33" width="14" height="11" fill="#a8d0e0"/><rect x="11" y="33" width="5" height="11" fill="#c4dce8"/><rect x="18" y="33" width="1" height="11" fill="#1c1c14"/><rect x="11" y="38" width="14" height="1" fill="#1c1c14"/><rect x="11" y="33" width="14" height="11" fill="none" stroke="#1c1c14" stroke-width="1"/><rect x="39" y="33" width="14" height="11" fill="#a8d0e0"/><rect x="39" y="33" width="5" height="11" fill="#c4dce8"/><rect x="46" y="33" width="1" height="11" fill="#1c1c14"/><rect x="39" y="38" width="14" height="1" fill="#1c1c14"/><rect x="39" y="33" width="14" height="11" fill="none" stroke="#1c1c14" stroke-width="1"/><rect x="27" y="41" width="10" height="16" fill="#8c5820"/><rect x="27" y="41" width="3" height="16" fill="#a87040"/><rect x="35" y="50" width="2" height="2" fill="#e8c040"/><rect x="27" y="41" width="10" height="16" fill="none" stroke="#1c1c14" stroke-width="1"/><rect x="8" y="29" width="48" height="28" fill="none" stroke="#1c1c14" stroke-width="1.5"/><rect x="23" y="57" width="18" height="4" fill="#c8b880"/><rect x="23" y="57" width="18" height="1" fill="#e8d898"/><rect x="23" y="57" width="18" height="4" fill="none" stroke="#1c1c14" stroke-width="1"/></svg>` },
+{ label: 'Portfolio', action: 'portfolio', svg: `<svg viewBox="0 0 64 64" shape-rendering="crispEdges"><rect x="22" y="10" width="3" height="10" fill="#6b4020"/><rect x="22" y="10" width="1" height="10" fill="#9a6040"/><rect x="39" y="10" width="3" height="10" fill="#6b4020"/><rect x="39" y="10" width="1" height="10" fill="#9a6040"/><rect x="22" y="10" width="20" height="3" fill="#6b4020"/><rect x="22" y="10" width="20" height="1" fill="#9a6040"/><rect x="22" y="9" width="20" height="4" fill="none" stroke="#1c1c14" stroke-width="1"/><rect x="6" y="19" width="52" height="36" fill="#c89438"/><rect x="6" y="19" width="8" height="36" fill="#9a7020"/><rect x="14" y="19" width="44" height="5" fill="#e8c060"/><rect x="6" y="36" width="52" height="2" fill="#8a6018"/><rect x="22" y="30" width="20" height="10" fill="#7a5418"/><rect x="22" y="30" width="20" height="3" fill="#b08828"/><rect x="22" y="30" width="20" height="10" fill="none" stroke="#1c1c14" stroke-width="1"/><rect x="29" y="35" width="6" height="4" fill="#604010"/><rect x="30" y="34" width="4" height="2" fill="#c0a030"/><rect x="6" y="51" width="52" height="4" fill="#8a6018"/><rect x="6" y="51" width="52" height="1" fill="#c09030"/><rect x="6" y="19" width="52" height="36" fill="none" stroke="#1c1c14" stroke-width="1.5"/><rect x="22" y="19" width="3" height="2" fill="#1c1c14"/><rect x="39" y="19" width="3" height="2" fill="#1c1c14"/></svg>` },
+{ label: 'Writing', action: 'writing', svg: `<svg viewBox="0 0 64 64" shape-rendering="crispEdges"><rect x="18" y="4" width="28" height="16" fill="#f8f4ec"/><rect x="18" y="4" width="4" height="16" fill="#e4e0d4"/><rect x="18" y="4" width="28" height="16" fill="none" stroke="#1c1c14" stroke-width="1"/><rect x="23" y="8" width="18" height="1.5" fill="#a0a898"/><rect x="23" y="12" width="14" height="1.5" fill="#a0a898"/><rect x="10" y="18" width="44" height="8" fill="#3c3830"/><rect x="10" y="18" width="44" height="3" fill="#605c54"/><rect x="10" y="18" width="44" height="8" fill="none" stroke="#1c1c14" stroke-width="1.5"/><rect x="6" y="25" width="52" height="30" fill="#3c3830"/><rect x="6" y="25" width="52" height="5" fill="#585450"/><rect x="6" y="25" width="7" height="30" fill="#504c48"/><rect x="11" y="32" width="42" height="18" fill="#282820"/><rect x="13" y="34" width="4" height="4" fill="#504c48"/><rect x="18" y="34" width="4" height="4" fill="#504c48"/><rect x="23" y="34" width="4" height="4" fill="#504c48"/><rect x="28" y="34" width="4" height="4" fill="#504c48"/><rect x="33" y="34" width="4" height="4" fill="#504c48"/><rect x="38" y="34" width="4" height="4" fill="#504c48"/><rect x="43" y="34" width="4" height="4" fill="#504c48"/><rect x="15" y="40" width="4" height="4" fill="#504c48"/><rect x="20" y="40" width="4" height="4" fill="#504c48"/><rect x="25" y="40" width="4" height="4" fill="#504c48"/><rect x="30" y="40" width="4" height="4" fill="#504c48"/><rect x="35" y="40" width="4" height="4" fill="#504c48"/><rect x="40" y="40" width="4" height="4" fill="#504c48"/><rect x="21" y="46" width="22" height="3" fill="#504c48"/><rect x="6" y="25" width="52" height="30" fill="none" stroke="#1c1c14" stroke-width="1.5"/></svg>` },
+{ label: 'Contact', action: 'contact', svg: `<svg viewBox="0 0 64 64" shape-rendering="crispEdges"><rect x="20" y="6" width="24" height="14" fill="#3c3830"/><rect x="20" y="6" width="8" height="14" fill="#504c48"/><rect x="20" y="6" width="24" height="5" fill="#585450"/><rect x="20" y="6" width="24" height="14" fill="none" stroke="#1c1c14" stroke-width="1.5"/><rect x="25" y="9" width="3" height="1" fill="#282820"/><rect x="29" y="9" width="3" height="1" fill="#282820"/><rect x="33" y="9" width="3" height="1" fill="#282820"/><rect x="25" y="12" width="3" height="1" fill="#282820"/><rect x="29" y="12" width="3" height="1" fill="#282820"/><rect x="33" y="12" width="3" height="1" fill="#282820"/><rect x="24" y="19" width="16" height="26" fill="#3c3830"/><rect x="24" y="19" width="5" height="26" fill="#504c48"/><rect x="24" y="19" width="16" height="26" fill="none" stroke="#1c1c14" stroke-width="1"/><rect x="27" y="32" width="4" height="5" fill="#282820"/><rect x="27" y="32" width="4" height="5" fill="none" stroke="#1c1c14" stroke-width="1"/><rect x="20" y="44" width="24" height="14" fill="#3c3830"/><rect x="20" y="44" width="8" height="14" fill="#504c48"/><rect x="20" y="53" width="24" height="5" fill="#2a2820"/><rect x="20" y="44" width="24" height="14" fill="none" stroke="#1c1c14" stroke-width="1.5"/><rect x="25" y="48" width="3" height="1" fill="#282820"/><rect x="29" y="48" width="3" height="1" fill="#282820"/><rect x="33" y="48" width="3" height="1" fill="#282820"/><rect x="25" y="51" width="3" height="1" fill="#282820"/><rect x="29" y="51" width="3" height="1" fill="#282820"/><rect x="33" y="51" width="3" height="1" fill="#282820"/></svg>` },
+{ label: 'Services', action: 'services', svg: `<svg viewBox="0 0 64 64" shape-rendering="crispEdges"><rect x="24" y="8" width="3" height="10" fill="#7a7870"/><rect x="37" y="8" width="3" height="10" fill="#7a7870"/><rect x="24" y="8" width="16" height="3" fill="#7a7870"/><rect x="24" y="7" width="16" height="4" fill="none" stroke="#1c1c14" stroke-width="1"/><rect x="24" y="10" width="3" height="8" fill="none" stroke="#1c1c14" stroke-width="1"/><rect x="37" y="10" width="3" height="8" fill="none" stroke="#1c1c14" stroke-width="1"/><rect x="4" y="17" width="56" height="38" fill="#9c9890"/><rect x="4" y="17" width="8" height="38" fill="#787470"/><rect x="12" y="17" width="48" height="5" fill="#c0bcb4"/><rect x="4" y="28" width="56" height="2" fill="#605c58"/><rect x="4" y="28" width="56" height="1" fill="#a0a0a0"/><rect x="8" y="24" width="10" height="6" fill="#c89438"/><rect x="8" y="24" width="10" height="2" fill="#e8c060"/><rect x="8" y="24" width="10" height="6" fill="none" stroke="#1c1c14" stroke-width="1"/><rect x="46" y="24" width="10" height="6" fill="#c89438"/><rect x="46" y="24" width="10" height="2" fill="#e8c060"/><rect x="46" y="24" width="10" height="6" fill="none" stroke="#1c1c14" stroke-width="1"/><rect x="4" y="17" width="56" height="38" fill="none" stroke="#1c1c14" stroke-width="1.5"/></svg>` },
+{ label: 'Resume', action: 'resume', svg: `<svg viewBox="0 0 64 64" shape-rendering="crispEdges"><rect x="14" y="10" width="38" height="50" fill="#c0bcb0"/><rect x="10" y="8" width="38" height="50" fill="#f8f4ec"/><rect x="10" y="8" width="5" height="50" fill="#e4e0d4"/><rect x="15" y="8" width="33" height="3" fill="#ffffff"/><polygon points="38,8 48,8 48,18" fill="#d0ccc0"/><polygon points="38,8 48,18 38,18" fill="#e8e4d8"/><line x1="38" y1="8" x2="48" y2="18" stroke="#1c1c14" stroke-width="1"/><rect x="14" y="13" width="24" height="5" fill="#3c3830"/><rect x="14" y="13" width="24" height="2" fill="#585450"/><rect x="39" y="13" width="6" height="6" fill="#9c9890"/><rect x="14" y="22" width="30" height="1" fill="#c0bcb0"/><rect x="14" y="25" width="28" height="2" fill="#a0a898"/><rect x="14" y="29" width="22" height="2" fill="#c0bcb4"/><rect x="14" y="33" width="26" height="2" fill="#c0bcb4"/><rect x="14" y="38" width="30" height="1" fill="#c0bcb0"/><rect x="14" y="41" width="24" height="2" fill="#a0a898"/><rect x="14" y="45" width="20" height="2" fill="#c0bcb4"/><rect x="14" y="49" width="28" height="2" fill="#c0bcb4"/><rect x="14" y="53" width="4" height="4" fill="#4e7850"/><rect x="19" y="53" width="4" height="4" fill="#4e7850"/><rect x="24" y="53" width="4" height="4" fill="#4e7850"/><rect x="29" y="53" width="4" height="4" fill="#4e7850"/><rect x="34" y="53" width="4" height="4" fill="#c0bcb4"/><rect x="10" y="8" width="38" height="50" fill="none" stroke="#1c1c14" stroke-width="1.5"/></svg>` },
+{ label: 'About', action: 'about', svg: `<svg viewBox="0 0 64 64" shape-rendering="crispEdges"><rect x="10" y="10" width="48" height="48" fill="#283828"/><rect x="8" y="8" width="10" height="48" fill="#304830"/><rect x="8" y="8" width="4" height="48" fill="#4e7850"/><rect x="8" y="8" width="10" height="48" fill="none" stroke="#1c1c14" stroke-width="1"/><rect x="17" y="8" width="40" height="48" fill="#4e7850"/><rect x="17" y="8" width="40" height="6" fill="#6a9860"/><rect x="17" y="16" width="40" height="1" fill="#3e6040"/><rect x="17" y="20" width="40" height="1" fill="#3e6040"/><rect x="17" y="24" width="40" height="1" fill="#3e6040"/><rect x="20" y="28" width="34" height="12" fill="#c89438"/><rect x="20" y="28" width="34" height="3" fill="#e8c060"/><rect x="20" y="28" width="34" height="12" fill="none" stroke="#1c1c14" stroke-width="1"/><rect x="23" y="30" width="2" height="8" fill="#1c1c14"/><rect x="25" y="30" width="3" height="3" fill="#1c1c14"/><rect x="25" y="35" width="3" height="3" fill="#1c1c14"/><rect x="30" y="30" width="2" height="8" fill="#1c1c14"/><rect x="32" y="33" width="2" height="2" fill="#1c1c14"/><rect x="34" y="30" width="2" height="8" fill="#1c1c14"/><rect x="38" y="30" width="5" height="2" fill="#1c1c14"/><rect x="38" y="33" width="5" height="2" fill="#1c1c14"/><rect x="38" y="36" width="5" height="2" fill="#1c1c14"/><rect x="38" y="30" width="2" height="4" fill="#1c1c14"/><rect x="41" y="34" width="2" height="4" fill="#1c1c14"/><rect x="50" y="7" width="4" height="16" fill="#a82828"/><rect x="50" y="7" width="4" height="4" fill="#cc4444"/><polygon points="50,23 54,23 52,27" fill="#a82828"/><rect x="56" y="10" width="3" height="44" fill="#e8e4d8"/><rect x="56" y="10" width="1" height="44" fill="#f8f4ec"/><rect x="17" y="8" width="40" height="48" fill="none" stroke="#1c1c14" stroke-width="1.5"/></svg>` },
+{ label: 'Awards', action: 'awards', svg: `<svg viewBox="0 0 64 64" shape-rendering="crispEdges"><rect x="17" y="59" width="32" height="4" fill="#8a6018"/><rect x="14" y="56" width="36" height="6" fill="#c89438"/><rect x="14" y="56" width="36" height="2" fill="#e8c060"/><rect x="14" y="56" width="36" height="6" fill="none" stroke="#1c1c14" stroke-width="1.5"/><rect x="28" y="46" width="8" height="12" fill="#c89438"/><rect x="28" y="46" width="3" height="12" fill="#e8c060"/><rect x="22" y="52" width="20" height="4" fill="#c89438"/><rect x="22" y="52" width="20" height="2" fill="#e8c060"/><polygon points="38,10 50,16 46,46 32,46" fill="#8a6018"/><polygon points="26,10 14,16 18,46 32,46" fill="#e8c060"/><polygon points="26,10 38,10 46,46 18,46" fill="#c89438"/><polygon points="26,10 38,10 36,16 28,16" fill="#f0d060"/><rect x="22" y="8" width="20" height="5" fill="#c89438"/><rect x="22" y="8" width="20" height="2" fill="#f0d060"/><rect x="22" y="8" width="20" height="5" fill="none" stroke="#1c1c14" stroke-width="1.5"/><polygon points="32,22 33.5,27 38.5,27 34.5,30 36,35 32,32 28,35 29.5,30 25.5,27 30.5,27" fill="#f8f060"/><polygon points="26,10 38,10 46,46 18,46" fill="none" stroke="#1c1c14" stroke-width="1.5"/></svg>` }];
+
+
+// ─── Toolbar ──────────────────────────────────────────────
+function DockToolbar({ onAction }) {
+  return (
+    <div className="toolbar-wrap">
+      <div className="toolbar">
+        {TOOLBAR_ICONS.map((icon) =>
+        <div key={icon.action} className="tb-cell" onClick={() => onAction(icon.action)}>
+            <div dangerouslySetInnerHTML={{ __html: icon.svg }} style={{ width: 36, height: 36, flexShrink: 0 }} />
+            <div className="tb-label">{icon.label}</div>
+          </div>
+        )}
+      </div>
+    </div>);
+
+}
+
+// ─── Tweaks Panel ────────────────────────────────────────
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "theme": "terminal",
+  "dotGrid": true,
+  "tickerSpeed": "slow",
+  "ghostOpacity": "low",
+  "windowStyle": "classic",
+  "folderDensity": "scattered",
+  "menubarStyle": "dark",
+  "shadowColor": "ink",
+  "dockPosition": "bottom",
+  "logoFilter": "invert"
+}/*EDITMODE-END*/;
+
+function TweaksPanel({ setFolderPos }) {
+  const [vals, setVals] = React.useState(() => {
+    try { return { ...TWEAK_DEFAULTS, ...JSON.parse(localStorage.getItem('khs-tweaks') || '{}') }; }
+    catch { return { ...TWEAK_DEFAULTS }; }
+  });
+
+  const apply = (key, val) => {
+    const next = { ...vals, [key]: val };
+    setVals(next);
+    localStorage.setItem('khs-tweaks', JSON.stringify(next));
+    window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { [key]: val } }, '*');
+
+    // Live effects
+    if (key === 'theme') {
+      document.documentElement.setAttribute('data-theme', val);
+    }
+    if (key === 'dotGrid') {
+      document.querySelector('.desktop')?.style.setProperty('--dot-opacity', val ? '0.05' : '0');
+    }
+    if (key === 'tickerSpeed') {
+      const speeds = { slow: '50s', normal: '28s', fast: '14s', off: '0s' };
+      document.querySelector('.ticker-inner')?.style.setProperty('animation-duration', speeds[val]);
+      document.querySelector('.ticker-bar')?.style.setProperty('display', val === 'off' ? 'none' : 'flex');
+    }
+    if (key === 'ghostOpacity') {
+      const ops = { off: 0, low: 0.06, med: 0.12, high: 0.22 };
+      const ghost = document.querySelector('.ghost-layer img');
+      if (ghost) ghost.style.opacity = ops[val];
+    }
+    if (key === 'menubarStyle') {
+      const bar = document.querySelector('.menu-bar');
+      if (bar) {
+        bar.style.background = val === 'dark' ? 'var(--bg-inverse)' : val === 'transparent' ? 'rgba(0,0,0,0.4)' : 'var(--color-accent-dark)';
+      }
+    }
+    if (key === 'shadowColor') {
+      const wins = document.querySelectorAll('.os-window.focused');
+      document.documentElement.style.setProperty('--shadow-accent-override',
+        val === 'accent' ? 'var(--color-accent)' : val === 'ink' ? 'var(--color-ink)' : 'transparent');
+    }
+    if (key === 'logoFilter') {
+      const filters = { invert: 'invert(1)', normal: 'none', sepia: 'sepia(0.8)', ghost: 'invert(1) opacity(0.4)' };
+      document.querySelectorAll('.menu-logo img').forEach(i => i.style.filter = filters[val] || 'none');
+    }
+    if (key === 'folderDensity') {
+      if (val === 'grid') {
+        const keys = Object.keys(DEFAULT_POS);
+        const cols = 3, gap = 120, startX = 40, startY = 50;
+        const newPos = {};
+        keys.forEach((k, i) => { newPos[k] = { x: startX + (i % cols) * gap, y: startY + Math.floor(i / cols) * 110 }; });
+        setFolderPos(newPos);
+      } else if (val === 'scattered') {
+        localStorage.removeItem('khs-folder-pos');
+        setFolderPos({ ...DEFAULT_POS });
+      } else if (val === 'tight') {
+        const keys = Object.keys(DEFAULT_POS);
+        const newPos = {};
+        keys.forEach((k, i) => { newPos[k] = { x: 16 + (i % 6) * 88, y: 24 + Math.floor(i / 6) * 90 }; });
+        setFolderPos(newPos);
+      }
+    }
+  };
+
+  // Restore on mount
+  React.useEffect(() => {
+    Object.entries(vals).forEach(([k, v]) => apply(k, v));
+  }, []);
+
+  const Opt = ({ k, v, label }) => (
+    <div className={`tweak-o${vals[k] === v ? ' on' : ''}`} onClick={() => apply(k, v)}>{label || v}</div>
+  );
+
+  const Row = ({ label, children }) => (
+    <div style={{marginBottom:10}}>
+      <div className="tweak-lbl">{label}</div>
+      <div className="tweak-opts">{children}</div>
+    </div>
+  );
+
+  return (
+    <div id="tweaks-panel">
+      <div className="tweaks-header" style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+        <span>Tweaks</span>
+        <span style={{fontSize:8,opacity:0.5,letterSpacing:'0.06em'}}>{Object.keys(vals).length} controls</span>
+      </div>
+      <div className="tweaks-body" style={{maxHeight:'70vh',overflowY:'auto'}}>
+
+        <div style={{fontFamily:'var(--font-mono)',fontSize:7,letterSpacing:'0.14em',textTransform:'uppercase',color:'var(--color-ink-3)',marginBottom:8,borderBottom:'1px solid var(--color-ink)',paddingBottom:4}}>— Palette —</div>
+
+        <Row label="Color Theme">
+          <Opt k="theme" v="terminal" label="Term"/>
+          <Opt k="theme" v="amber" label="Amber"/>
+          <Opt k="theme" v="blueprint" label="Blue"/>
+        </Row>
+
+        <Row label="Menu Bar">
+          <Opt k="menubarStyle" v="dark" label="Dark"/>
+          <Opt k="menubarStyle" v="accent" label="Accent"/>
+          <Opt k="menubarStyle" v="transparent" label="Glass"/>
+        </Row>
+
+        <Row label="Logo Filter">
+          <Opt k="logoFilter" v="invert" label="White"/>
+          <Opt k="logoFilter" v="normal" label="Black"/>
+          <Opt k="logoFilter" v="sepia" label="Sepia"/>
+          <Opt k="logoFilter" v="ghost" label="Ghost"/>
+        </Row>
+
+        <div style={{fontFamily:'var(--font-mono)',fontSize:7,letterSpacing:'0.14em',textTransform:'uppercase',color:'var(--color-ink-3)',margin:'12px 0 8px',borderBottom:'1px solid var(--color-ink)',paddingBottom:4}}>— Desktop —</div>
+
+        <Row label="Dot Grid">
+          <Opt k="dotGrid" v={true} label="On"/>
+          <Opt k="dotGrid" v={false} label="Off"/>
+        </Row>
+
+        <Row label="Ghost Logo">
+          <Opt k="ghostOpacity" v="off" label="Off"/>
+          <Opt k="ghostOpacity" v="low" label="Low"/>
+          <Opt k="ghostOpacity" v="med" label="Med"/>
+          <Opt k="ghostOpacity" v="high" label="High"/>
+        </Row>
+
+        <Row label="Folder Layout">
+          <Opt k="folderDensity" v="scattered" label="Free"/>
+          <Opt k="folderDensity" v="grid" label="Grid"/>
+          <Opt k="folderDensity" v="tight" label="Tight"/>
+        </Row>
+
+        <div style={{fontFamily:'var(--font-mono)',fontSize:7,letterSpacing:'0.14em',textTransform:'uppercase',color:'var(--color-ink-3)',margin:'12px 0 8px',borderBottom:'1px solid var(--color-ink)',paddingBottom:4}}>— Windows —</div>
+
+        <Row label="Focused Shadow">
+          <Opt k="shadowColor" v="accent" label="Accent"/>
+          <Opt k="shadowColor" v="ink" label="Ink"/>
+          <Opt k="shadowColor" v="none" label="None"/>
+        </Row>
+
+        <div style={{fontFamily:'var(--font-mono)',fontSize:7,letterSpacing:'0.14em',textTransform:'uppercase',color:'var(--color-ink-3)',margin:'12px 0 8px',borderBottom:'1px solid var(--color-ink)',paddingBottom:4}}>— Ticker —</div>
+
+        <Row label="Ticker Speed">
+          <Opt k="tickerSpeed" v="slow" label="Slow"/>
+          <Opt k="tickerSpeed" v="normal" label="Norm"/>
+          <Opt k="tickerSpeed" v="fast" label="Fast"/>
+          <Opt k="tickerSpeed" v="off" label="Off"/>
+        </Row>
+
+        <div style={{marginTop:12,borderTop:'1px solid var(--color-ink)',paddingTop:10}}>
+          <div className="tweak-lbl" style={{marginBottom:6}}>Reset</div>
+          <div style={{display:'flex',gap:6}}>
+            <div className="tweak-o" style={{flex:1,textAlign:'center',cursor:'pointer'}} onClick={() => {
+              localStorage.removeItem('khs-folder-pos');
+              setFolderPos({...DEFAULT_POS});
+            }}>Folders</div>
+            <div className="tweak-o" style={{flex:1,textAlign:'center',cursor:'pointer'}} onClick={() => {
+              localStorage.removeItem('khs-tweaks');
+              setVals({...TWEAK_DEFAULTS});
+              Object.entries(TWEAK_DEFAULTS).forEach(([k,v]) => apply(k,v));
+            }}>All</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
+}
+
+// ─── App ──────────────────────────────────────────────────
+let winCounter = 300;
+
+function App() {
+  const [time, setTime] = useState(new Date());
+  const [selectedFolder, setSelectedFolder] = useState(null);
+  const [folderPos, setFolderPos] = useState(() => {
+    try {const s = localStorage.getItem('khs-folder-pos');return s ? JSON.parse(s) : DEFAULT_POS;}
+    catch {return DEFAULT_POS;}
+  });
+
+  const [windows, setWindows] = useState([{
+    id: 'about-initial', type: 'about', title: 'About KHS',
+    x: Math.min(900, Math.max(50, (window.innerWidth || 1200) / 2 - 160)),
+    y: 80, width: 320, z: 200
+  }]);
+  const [focusedWin, setFocusedWin] = useState('about-initial');
+
+  // dragging state
+  const dragging = useRef(null);
+
+  // Clock
+  useEffect(() => {
+    const t = setInterval(() => setTime(new Date()), 10000);
+    return () => clearInterval(t);
+  }, []);
+
+  // Global drag handlers
+  useEffect(() => {
+    const onMove = (e) => {
+      if (!dragging.current) return;
+      const { type, id, ox, oy } = dragging.current;
+      const nx = e.clientX - ox;
+      const ny = e.clientY - oy;
+      if (type === 'folder') {
+        setFolderPos((p) => ({ ...p, [id]: { x: Math.max(0, nx), y: Math.max(0, ny) } }));
+      } else {
+        setWindows((ws) => ws.map((w) => w.id === id ? { ...w, x: Math.max(0, nx), y: Math.max(0, ny) } : w));
+      }
+    };
+    const onUp = () => {
+      if (dragging.current?.type === 'folder') {
+        setFolderPos((p) => {localStorage.setItem('khs-folder-pos', JSON.stringify(p));return p;});
+      }
+      dragging.current = null;
+    };
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+    return () => {document.removeEventListener('mousemove', onMove);document.removeEventListener('mouseup', onUp);};
+  }, []);
+
+  const focusWindow = useCallback((id) => {
+    winCounter++;
+    setFocusedWin(id);
+    setWindows((ws) => ws.map((w) => w.id === id ? { ...w, z: winCounter } : w));
+  }, []);
+
+  const openProject = useCallback((project) => {
+    const existing = windows.find((w) => w.projectId === project.id);
+    if (existing) {focusWindow(existing.id);return;}
+    winCounter++;
+    const newWin = {
+      id: `proj-${project.id}-${Date.now()}`,
+      type: 'project', projectId: project.id,
+      title: project.name,
+      x: 80 + windows.length % 5 * 30,
+      y: 60 + windows.length % 4 * 24,
+      width: 340, z: winCounter
+    };
+    setWindows((ws) => [...ws, newWin]);
+    setFocusedWin(newWin.id);
+  }, [windows, focusWindow]);
+
+  const openAbout = useCallback(() => {
+    const existing = windows.find((w) => w.type === 'about');
+    if (existing) {focusWindow(existing.id);return;}
+    winCounter++;
+    const newWin = { id: 'about-' + Date.now(), type: 'about', title: 'About KHS', x: 200, y: 80, width: 320, z: winCounter };
+    setWindows((ws) => [...ws, newWin]);
+    setFocusedWin(newWin.id);
+  }, [windows, focusWindow]);
+
+  const closeWindow = useCallback((id) => {
+    setWindows((ws) => ws.filter((w) => w.id !== id));
+  }, []);
+
+  const handleToolbarAction = useCallback((action) => {
+    if (action === 'about') {openAbout();return;}
+    if (action === 'home') {setWindows([]);return;}
+    if (action === 'portfolio') {
+      PROJECTS.forEach((p, i) => setTimeout(() => openProject(p), i * 80));
+      return;
+    }
+    // Open a placeholder window for other actions
+    winCounter++;
+    const win = {
+      id: `${action}-${Date.now()}`, type: 'placeholder',
+      title: action.charAt(0).toUpperCase() + action.slice(1),
+      x: 150, y: 100, width: 300, z: winCounter
+    };
+    setWindows((ws) => [...ws, win]);
+    setFocusedWin(win.id);
+  }, [openAbout, openProject]);
+
+  return (
+    <div className="app">
+      <MenuBar time={time} onAbout={openAbout} />
+      <TickerBar />
+      <div
+        className="desktop"
+        onMouseDown={(e) => {
+          if (e.target === e.currentTarget) setSelectedFolder(null);
+        }}>
+        
+        {/* Ghost background logo */}
+        <div className="ghost-layer">
+          <img src="assets/khs-logo-transparent.png" alt="KHS"
+          style={{ width: 'min(600px, 70vw)', height: 'auto', opacity: 0.06, display: 'block', margin: '0 auto', pointerEvents: 'none' }} />
+        </div>
+
+        {/* Project folders */}
+        {PROJECTS.map((project) => {
+          const pos = folderPos[project.id] || DEFAULT_POS[project.id];
+          const isSelected = selectedFolder === project.id;
+          return (
+            <div
+              key={project.id}
+              className={`folder${isSelected ? ' selected' : ''}`}
+              style={{ left: pos.x, top: pos.y }}
+              onMouseDown={(e) => {
+                e.preventDefault();
+                setSelectedFolder(project.id);
+                dragging.current = { type: 'folder', id: project.id, ox: e.clientX - pos.x, oy: e.clientY - pos.y };
+              }}
+              onDoubleClick={() => openProject(project)}>
+              
+              <FolderSVG selected={isSelected} />
+              <div className="folder-label">
+                <span className="folder-label-inner">{project.name}</span>
+              </div>
+              <div className="folder-year">{project.year}</div>
+            </div>);
+
+        })}
+
+        {/* Windows */}
+        {windows.map((win) =>
+        <OSWindow
+          key={win.id}
+          win={win}
+          focused={focusedWin === win.id}
+          onClose={() => closeWindow(win.id)}
+          onFocus={() => focusWindow(win.id)}
+          onTitleBarDown={(e) => {
+            e.preventDefault();
+            focusWindow(win.id);
+            dragging.current = { type: 'window', id: win.id, ox: e.clientX - win.x, oy: e.clientY - win.y };
+          }}>
+          
+            {win.type === 'about' && <AboutContent />}
+            {win.type === 'project' &&
+          <ProjectContent project={PROJECTS.find((p) => p.id === win.projectId)} />
+          }
+            {win.type === 'placeholder' &&
+          <div style={{ textAlign: 'center', padding: '20px 0' }}>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--color-ink-3)', marginBottom: 12 }}>Coming Soon</div>
+                <div style={{ fontFamily: "'Playfair Display'", fontSize: 22, fontWeight: 700, color: 'var(--color-ink)' }}>
+                  {win.title}
+                </div>
+                <div style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--color-ink-3)', marginTop: 10, lineHeight: 1.6 }}>
+                  This section is in progress.
+                </div>
+              </div>
+          }
+          </OSWindow>
+        )}
+      </div>
+
+      <DockToolbar onAction={handleToolbarAction} />
+
+      {/* Tweaks Panel */}
+      <TweaksPanel setFolderPos={setFolderPos} />
+    </div>);
+
+}
+
+// Tweaks host messaging
+window.addEventListener('message', (e) => {
+  if (e.data?.type === '__activate_edit_mode') document.getElementById('tweaks-panel').classList.add('visible');
+  if (e.data?.type === '__deactivate_edit_mode') document.getElementById('tweaks-panel').classList.remove('visible');
+});
+window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+
+// Restore theme
+const t = localStorage.getItem('khs-theme');
+if (t) document.documentElement.setAttribute('data-theme', t);
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+
+<template id="__bundler_thumbnail">
+  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <rect width="100" height="100" fill="#f5f0e8"/>
+    <rect width="100" height="8" fill="#1c1c14"/>
+    <rect y="8" width="100" height="4" fill="#e8e0c8"/>
+    <text x="50" y="45" font-family="serif" font-size="28" font-weight="900" fill="#1c1c14" text-anchor="middle" opacity="0.08">KHS</text>
+    <rect x="22" y="30" width="24" height="20" fill="#e8c060" stroke="#1c1c14" stroke-width="1"/>
+    <rect x="22" y="28" width="10" height="4" fill="#d4a860" stroke="#1c1c14" stroke-width="1"/>
+    <rect x="55" y="25" width="28" height="22" fill="#f5f0e8" stroke="#1c1c14" stroke-width="1.5"/>
+    <rect x="55" y="25" width="28" height="5" fill="#1c1c14"/>
+    <rect y="88" width="100" height="12" fill="#f0e8d0"/>
+    <rect y="88" width="100" height="12" fill="none" stroke="#1c1c14" stroke-width="1.5"/>
+  </svg>
+</template>
+</body>
+</html>
