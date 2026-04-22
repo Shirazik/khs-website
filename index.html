@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="terminal">
+<html lang="en" data-theme="amber">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -144,12 +144,12 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
   align-items: center; gap: 4px; cursor: default;
   user-select: none; width: 76px; z-index: 10;
 }
-.folder:hover .folder-label { opacity: 0.85; }
+.folder:hover .folder-label { opacity: 1; }
 .folder.selected .folder-label-inner {
   background: var(--color-accent); color: #fff;
 }
 .folder-label {
-  width: 100%; text-align: center; opacity: 0.75;
+  width: 100%; text-align: center; opacity: 1;
   transition: opacity 80ms;
 }
 .folder-label-inner {
@@ -157,6 +157,7 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
   letter-spacing: 0.04em; line-height: 1.35;
   color: var(--color-ink); padding: 2px 4px;
   display: inline-block;
+  background: color-mix(in oklch, var(--color-accent-light) 72%, var(--bg-base));
 }
 .folder-year {
   font-family: var(--font-mono); font-size: 8px;
@@ -1097,7 +1098,7 @@ function DockToolbar({ onAction }) {
 
 // ─── Tweaks Panel ────────────────────────────────────────
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
-  "theme": "terminal",
+  "theme": "amber",
   "dotGrid": true,
   "tickerSpeed": "slow",
   "ghostOpacity": "low",
@@ -1304,7 +1305,7 @@ function App() {
   }, []);
 
   const cycleTheme = useCallback(() => {
-    const current = document.documentElement.getAttribute('data-theme') || 'terminal';
+    const current = document.documentElement.getAttribute('data-theme') || 'amber';
     const next = THEMES[(THEMES.indexOf(current) + 1) % THEMES.length];
     document.documentElement.setAttribute('data-theme', next);
     localStorage.setItem('khs-theme', next);
