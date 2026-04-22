@@ -41,6 +41,10 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
   border-right: 1px solid rgba(255,255,255,0.06);
 }
 .menu-item:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.9); }
+.menu-item.active { color: var(--color-accent); opacity: 1; }
+.about-inner-menu { margin: -20px -20px 20px; border-top: none; border-bottom: 2px solid var(--color-ink); z-index: 1; background: #202020; }
+.about-inner-menu .menu-item { cursor: pointer; }
+.about-me-placeholder { padding: 60px 20px; text-align: center; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; color: var(--color-ink); opacity: 0.45; }
 .menu-spacer { flex: 1; }
 .menu-right {
   display: flex; align-items: center; height: 100%;
@@ -183,6 +187,11 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
   margin-left: -30px; pointer-events: none;
 }
 .os-body { padding: 20px; }
+.os-body code {
+  font-family: var(--font-mono); font-size: 11px;
+  background: var(--color-surface-2, rgba(0,0,0,0.06));
+  padding: 1px 4px; border-radius: 2px;
+}
 
 /* ── Project window content ──────────────────────────────── */
 .win-tag {
@@ -344,7 +353,7 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
   <section class="mob-hero" id="mob-hero">
     <img class="mob-hero-logo" src="assets/khs-logo-transparent.png" alt="KHS Consulting">
     <div class="mob-hero-role">Product · UX · Strategy</div>
-    <p class="mob-hero-bio">Product executive with 11+ years building consumer products at Jet.com, Buzzfeed, Trade, and The Infatuation. Deep expertise in e-commerce, marketplaces, media, and subscription businesses.</p>
+    <p class="mob-hero-bio">Product exec and builder with 12+ years building consumer products at Jet.com, Buzzfeed, Trade, and The Infatuation. Deep expertise in e-commerce, marketplaces, media, and subscription businesses.</p>
     <div class="mob-hero-availability">
       <div class="mob-status-dot"></div>
       Available for new projects — 2026
@@ -363,8 +372,8 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
   </div>
 
   <section class="mob-section" id="mob-projects-section">
-    <div class="mob-section-label">Selected Work</div>
-    <div class="mob-section-title">Projects</div>
+    <div class="mob-section-label">Work History</div>
+    <div class="mob-section-title">Career</div>
     <div class="mob-cards">
 
       <div class="mob-card">
@@ -521,8 +530,68 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
     </div>
   </section>
 
+  <section class="mob-section" id="mob-ai-projects">
+    <div class="mob-section-label">Side Projects</div>
+    <div class="mob-section-title">AI Projects</div>
+    <div class="mob-cards">
+
+      <div class="mob-card">
+        <div class="mob-card-titlebar">
+          <div class="mob-card-tl mob-card-tl-red"></div>
+          <div class="mob-card-tl mob-card-tl-yel"></div>
+          <div class="mob-card-tl mob-card-tl-grn"></div>
+          <div class="mob-card-wintitle">Marketing Claims Analyzer</div>
+        </div>
+        <div class="mob-card-body">
+          <div class="mob-card-meta">
+            <span class="mob-card-tag">Side Project</span>
+            <span class="mob-card-year">2025</span>
+          </div>
+          <div class="mob-card-title">Marketing Claims Analyzer</div>
+          <div class="mob-card-desc">A browser extension that brings AI-powered transparency to online shopping — evaluating every marketing claim on any product page with verdicts of Supported, Misleading, or Unverified. BYOK via OpenAI, no data collection, under a penny per analysis.</div>
+          <div class="mob-card-divider"></div>
+          <div class="mob-card-deliverables">
+            <div class="mob-card-deliv">Works on Amazon, Shopify, and any product page</div>
+            <div class="mob-card-deliv">Verdicts: Supported · Misleading · Unverified</div>
+            <div class="mob-card-deliv">Ingredient-aware scientific reasoning</div>
+            <div class="mob-card-deliv">BYOK via OpenAI — no data collection, no tracking</div>
+            <div class="mob-card-deliv">Under a penny per analysis</div>
+          </div>
+          <a class="mob-card-cta" href="https://chromewebstore.google.com/detail/ncnnfdcljpfbchhmhhplahafnamlfhih?utm_source=item-share-cb" target="_blank" rel="noopener noreferrer">View Project →</a>
+        </div>
+      </div>
+
+      <div class="mob-card">
+        <div class="mob-card-titlebar">
+          <div class="mob-card-tl mob-card-tl-red"></div>
+          <div class="mob-card-tl mob-card-tl-yel"></div>
+          <div class="mob-card-tl mob-card-tl-grn"></div>
+          <div class="mob-card-wintitle">FPL Transfer Analyzer</div>
+        </div>
+        <div class="mob-card-body">
+          <div class="mob-card-meta">
+            <span class="mob-card-tag">Side Project</span>
+            <span class="mob-card-year">2025</span>
+          </div>
+          <div class="mob-card-title">FPL Transfer Analyzer</div>
+          <div class="mob-card-desc">A web app that gives Fantasy Premier League managers mathematically optimal transfer recommendations, using a Mixed Integer Linear Program solved with PuLP and HiGHS. Built with Next.js 15, TypeScript, Tailwind CSS, and a Python optimizer on Vercel.</div>
+          <div class="mob-card-divider"></div>
+          <div class="mob-card-deliverables">
+            <div class="mob-card-deliv">MILP solver via PuLP + HiGHS</div>
+            <div class="mob-card-deliv">Live squad data from the official FPL API</div>
+            <div class="mob-card-deliv">Next.js 15 · TypeScript · Tailwind CSS</div>
+            <div class="mob-card-deliv">Python optimizer via Next.js API routes</div>
+            <div class="mob-card-deliv">Deployed on Vercel</div>
+          </div>
+          <a class="mob-card-cta" href="https://fpl-optimizer-three.vercel.app/" target="_blank" rel="noopener noreferrer">View Project →</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
   <!-- Placeholder scroll anchors for future sections -->
-  <div id="mob-writing"></div>
+  <div id="mob-philosophies"></div>
   <section class="mob-section" id="mob-contact">
     <div class="mob-section-label">Get in Touch</div>
     <div class="mob-section-title">Contact</div>
@@ -574,7 +643,25 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
       </div>
     </div>
   </section>
-  <div id="mob-awards"></div>
+  <section class="mob-section" id="mob-aboutsite">
+    <div class="mob-section-label">Meta</div>
+    <div class="mob-section-title">About This Site</div>
+    <div class="mob-cards">
+      <div class="mob-card">
+        <div class="mob-card-titlebar">
+          <div class="mob-card-tl mob-card-tl-red"></div>
+          <div class="mob-card-tl mob-card-tl-yel"></div>
+          <div class="mob-card-tl mob-card-tl-grn"></div>
+          <div class="mob-card-wintitle">About This Site</div>
+        </div>
+        <div class="mob-card-body" style="padding: 20px;">
+          <div class="mob-card-desc">This site is a hand-written static website — just <code>index.html</code> plus two CSS files (<code>colors_and_type.css</code> for the design tokens and typography, and <code>mobile.css</code> for the responsive layout), with no build step, bundler, or JavaScript framework in the way.</div>
+          <div class="mob-card-divider"></div>
+          <div class="mob-card-desc">Source lives in a GitHub repo (<code>shirazik/khs-website</code>) and is deployed via GitHub Pages, which serves the files straight from the <code>main</code> branch; a <code>CNAME</code> file in the repo points the deployment at the custom domain <code>kareemshirazi.com</code>, so every push to <code>main</code> is effectively a production release.</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <footer class="mob-footer">
     <div class="mob-footer-wordmark">KHS Consulting</div>
@@ -612,9 +699,9 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
           <span class="mob-menu-cell-label">Portfolio</span>
         </button>
 
-        <button class="mob-menu-cell" onclick="mobNavigate('writing')">
+        <button class="mob-menu-cell" onclick="mobNavigate('philosophies')">
           <svg viewBox="0 0 64 64" shape-rendering="crispEdges" width="44" height="44"><rect x="18" y="4" width="28" height="16" fill="#f8f4ec"/><rect x="18" y="4" width="4" height="16" fill="#e4e0d4"/><rect x="18" y="4" width="28" height="16" fill="none" stroke="#1c1c14" stroke-width="1"/><rect x="23" y="8" width="18" height="1.5" fill="#a0a898"/><rect x="23" y="12" width="14" height="1.5" fill="#a0a898"/><rect x="10" y="18" width="44" height="8" fill="#3c3830"/><rect x="10" y="18" width="44" height="3" fill="#605c54"/><rect x="10" y="18" width="44" height="8" fill="none" stroke="#1c1c14" stroke-width="1.5"/><rect x="6" y="25" width="52" height="30" fill="#3c3830"/><rect x="6" y="25" width="52" height="5" fill="#585450"/><rect x="6" y="25" width="7" height="30" fill="#504c48"/><rect x="11" y="32" width="42" height="18" fill="#282820"/><rect x="13" y="34" width="4" height="4" fill="#504c48"/><rect x="18" y="34" width="4" height="4" fill="#504c48"/><rect x="23" y="34" width="4" height="4" fill="#504c48"/><rect x="28" y="34" width="4" height="4" fill="#504c48"/><rect x="33" y="34" width="4" height="4" fill="#504c48"/><rect x="38" y="34" width="4" height="4" fill="#504c48"/><rect x="43" y="34" width="4" height="4" fill="#504c48"/><rect x="15" y="40" width="4" height="4" fill="#504c48"/><rect x="20" y="40" width="4" height="4" fill="#504c48"/><rect x="25" y="40" width="4" height="4" fill="#504c48"/><rect x="30" y="40" width="4" height="4" fill="#504c48"/><rect x="35" y="40" width="4" height="4" fill="#504c48"/><rect x="40" y="40" width="4" height="4" fill="#504c48"/><rect x="21" y="46" width="22" height="3" fill="#504c48"/><rect x="6" y="25" width="52" height="30" fill="none" stroke="#1c1c14" stroke-width="1.5"/></svg>
-          <span class="mob-menu-cell-label">Writing</span>
+          <span class="mob-menu-cell-label">Philosophies</span>
         </button>
 
         <button class="mob-menu-cell" onclick="mobNavigate('contact')">
@@ -635,11 +722,6 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
         <button class="mob-menu-cell" onclick="mobNavigate('about')">
           <svg viewBox="0 0 64 64" shape-rendering="crispEdges" width="44" height="44"><rect x="10" y="10" width="48" height="48" fill="#283828"/><rect x="8" y="8" width="10" height="48" fill="#304830"/><rect x="8" y="8" width="4" height="48" fill="#4e7850"/><rect x="8" y="8" width="10" height="48" fill="none" stroke="#1c1c14" stroke-width="1"/><rect x="17" y="8" width="40" height="48" fill="#4e7850"/><rect x="17" y="8" width="40" height="6" fill="#6a9860"/><rect x="17" y="16" width="40" height="1" fill="#3e6040"/><rect x="17" y="20" width="40" height="1" fill="#3e6040"/><rect x="17" y="24" width="40" height="1" fill="#3e6040"/><rect x="20" y="28" width="34" height="12" fill="#c89438"/><rect x="20" y="28" width="34" height="3" fill="#e8c060"/><rect x="20" y="28" width="34" height="12" fill="none" stroke="#1c1c14" stroke-width="1"/><rect x="23" y="30" width="2" height="8" fill="#1c1c14"/><rect x="25" y="30" width="3" height="3" fill="#1c1c14"/><rect x="25" y="35" width="3" height="3" fill="#1c1c14"/><rect x="30" y="30" width="2" height="8" fill="#1c1c14"/><rect x="32" y="33" width="2" height="2" fill="#1c1c14"/><rect x="34" y="30" width="2" height="8" fill="#1c1c14"/><rect x="38" y="30" width="5" height="2" fill="#1c1c14"/><rect x="38" y="33" width="5" height="2" fill="#1c1c14"/><rect x="38" y="36" width="5" height="2" fill="#1c1c14"/><rect x="38" y="30" width="2" height="4" fill="#1c1c14"/><rect x="41" y="34" width="2" height="4" fill="#1c1c14"/><rect x="50" y="7" width="4" height="16" fill="#a82828"/><rect x="50" y="7" width="4" height="4" fill="#cc4444"/><polygon points="50,23 54,23 52,27" fill="#a82828"/><rect x="56" y="10" width="3" height="44" fill="#e8e4d8"/><rect x="56" y="10" width="1" height="44" fill="#f8f4ec"/><rect x="17" y="8" width="40" height="48" fill="none" stroke="#1c1c14" stroke-width="1.5"/></svg>
           <span class="mob-menu-cell-label">About</span>
-        </button>
-
-        <button class="mob-menu-cell" onclick="mobNavigate('awards')">
-          <svg viewBox="0 0 64 64" shape-rendering="crispEdges" width="44" height="44"><rect x="17" y="59" width="32" height="4" fill="#8a6018"/><rect x="14" y="56" width="36" height="6" fill="#c89438"/><rect x="14" y="56" width="36" height="2" fill="#e8c060"/><rect x="14" y="56" width="36" height="6" fill="none" stroke="#1c1c14" stroke-width="1.5"/><rect x="28" y="46" width="8" height="12" fill="#c89438"/><rect x="28" y="46" width="3" height="12" fill="#e8c060"/><rect x="22" y="52" width="20" height="4" fill="#c89438"/><rect x="22" y="52" width="20" height="2" fill="#e8c060"/><polygon points="38,10 50,16 46,46 32,46" fill="#8a6018"/><polygon points="26,10 14,16 18,46 32,46" fill="#e8c060"/><polygon points="26,10 38,10 46,46 18,46" fill="#c89438"/><polygon points="26,10 38,10 36,16 28,16" fill="#f0d060"/><rect x="22" y="8" width="20" height="5" fill="#c89438"/><rect x="22" y="8" width="20" height="2" fill="#f0d060"/><rect x="22" y="8" width="20" height="5" fill="none" stroke="#1c1c14" stroke-width="1.5"/><polygon points="32,22 33.5,27 38.5,27 34.5,30 36,35 32,32 28,35 29.5,30 25.5,27 30.5,27" fill="#f8f060"/><polygon points="26,10 38,10 46,46 18,46" fill="none" stroke="#1c1c14" stroke-width="1.5"/></svg>
-          <span class="mob-menu-cell-label">Awards</span>
         </button>
 
       </div>
@@ -678,7 +760,15 @@ const PROJECTS = [
   deliverables: ['Homepage redesign at 60–80M monthly visits', 'First redesign since 2016', 'KPI dashboards and measurement framework', 'Lean team: 3 engineers, 1 designer, 1 data analyst'] },
 { id: 'button', name: 'Button', year: 'Jul\'18–Aug\'19', tag: 'Sr. Product Manager',
   desc: 'Led mobile experience at a commerce enablement platform. Built partner conversion features, ran a team process refresh, and instituted a culture of prototyping and data-informed iteration.',
-  deliverables: ['Mobile partner conversion optimization', 'OKR framework for team focus', 'Team process refresh — less thrash, higher output', 'Tooling and operating culture improvements'] }];
+  deliverables: ['Mobile partner conversion optimization', 'OKR framework for team focus', 'Team process refresh — less thrash, higher output', 'Tooling and operating culture improvements'] },
+{ id: 'chrome-extension', name: 'Marketing Claims Analyzer', year: '2025', tag: 'Side Project',
+  url: 'https://chromewebstore.google.com/detail/ncnnfdcljpfbchhmhhplahafnamlfhih?utm_source=item-share-cb',
+  desc: 'A browser extension that brings AI-powered transparency to online shopping. It analyzes any product page — Amazon listings, Shopify stores, or any website — and evaluates every marketing claim it finds, returning a verdict of Supported, Misleading, or Unverified alongside plain-English explanations and ingredient-aware scientific reasoning. Built with a privacy-first architecture (BYOK via OpenAI, no data collection, no tracking) at under a penny per analysis.',
+  deliverables: ['Works on Amazon, Shopify, and any product page', 'Verdicts: Supported · Misleading · Unverified', 'Product-aware: builds ingredient context before drawing conclusions', 'BYOK via OpenAI — no data collection, no tracking', 'Under a penny per analysis'] },
+{ id: 'fpl-analyzer', name: 'FPL Transfer Analyzer', year: '2025', tag: 'Side Project',
+  url: 'https://fpl-optimizer-three.vercel.app/',
+  desc: 'A web app that gives Fantasy Premier League managers mathematically optimal transfer recommendations. Enter your team ID and it pulls your squad from the official FPL API, then solves a Mixed Integer Linear Program to maximize expected points over the next three gameweeks — accounting for budget, squad composition, club limits, selling prices, and the -4 hit for extra transfers.',
+  deliverables: ['MILP solver via PuLP + HiGHS', 'Live squad data from the official FPL API', 'Next.js 15 · TypeScript · Tailwind CSS frontend', 'Python optimizer called via Next.js API routes', 'Deployed on Vercel with on-demand Python execution'] }];
 
 
 const DEFAULT_POS = {
@@ -687,7 +777,10 @@ const DEFAULT_POS = {
   jetcom: { x: 520, y: 80 },
   pawp: { x: 130, y: 260 },
   buzzfeed: { x: 400, y: 240 },
-  button: { x: 680, y: 155 }
+  button: { x: 680, y: 155 },
+  aboutsite: { x: 30, y: 560 },
+  'chrome-extension': { x: 160, y: 560 },
+  'fpl-analyzer': { x: 300, y: 560 }
 };
 
 const TICKER = 'STRATEGY · PRODUCT · SYSTEMS · KHS CONSULTING · EST. 2025 · AVAILABLE FOR NEW PROJECTS · ';
@@ -711,6 +804,48 @@ function FolderSVG({ selected }) {
       <rect x="14" y="27" width="28" height="2" style={{fill: ink}} opacity="0.15" />
       <rect x="14" y="33" width="20" height="2" style={{fill: ink}} opacity="0.15" />
     </svg>);
+}
+
+// ─── Gear icon (Services desktop icon) ───────────────────
+function GearIconSVG() {
+  return (
+    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" shapeRendering="crispEdges" style={{ width: 56, height: 56 }}>
+      <rect x="26" y="4" width="12" height="10" fill="#9c9890"/>
+      <rect x="26" y="4" width="4" height="10" fill="#c0bcb4"/>
+      <rect x="26" y="4" width="12" height="10" fill="none" stroke="#1c1c14" strokeWidth="1"/>
+      <rect x="26" y="50" width="12" height="10" fill="#9c9890"/>
+      <rect x="26" y="50" width="4" height="10" fill="#c0bcb4"/>
+      <rect x="26" y="50" width="12" height="10" fill="none" stroke="#1c1c14" strokeWidth="1"/>
+      <rect x="4" y="26" width="10" height="12" fill="#9c9890"/>
+      <rect x="4" y="26" width="10" height="4" fill="#c0bcb4"/>
+      <rect x="4" y="26" width="10" height="12" fill="none" stroke="#1c1c14" strokeWidth="1"/>
+      <rect x="50" y="26" width="10" height="12" fill="#9c9890"/>
+      <rect x="50" y="26" width="10" height="4" fill="#c0bcb4"/>
+      <rect x="50" y="26" width="10" height="12" fill="none" stroke="#1c1c14" strokeWidth="1"/>
+      <rect x="44" y="8" width="10" height="10" fill="#9c9890"/>
+      <rect x="44" y="8" width="4" height="10" fill="#c0bcb4"/>
+      <rect x="44" y="8" width="10" height="10" fill="none" stroke="#1c1c14" strokeWidth="1"/>
+      <rect x="44" y="46" width="10" height="10" fill="#9c9890"/>
+      <rect x="44" y="46" width="4" height="10" fill="#c0bcb4"/>
+      <rect x="44" y="46" width="10" height="10" fill="none" stroke="#1c1c14" strokeWidth="1"/>
+      <rect x="10" y="8" width="10" height="10" fill="#9c9890"/>
+      <rect x="10" y="8" width="4" height="10" fill="#c0bcb4"/>
+      <rect x="10" y="8" width="10" height="10" fill="none" stroke="#1c1c14" strokeWidth="1"/>
+      <rect x="10" y="46" width="10" height="10" fill="#9c9890"/>
+      <rect x="10" y="46" width="4" height="10" fill="#c0bcb4"/>
+      <rect x="10" y="46" width="10" height="10" fill="none" stroke="#1c1c14" strokeWidth="1"/>
+      <rect x="10" y="10" width="44" height="44" rx="10" fill="#9c9890"/>
+      <rect x="10" y="10" width="8" height="44" rx="4" fill="#b4b0a8"/>
+      <rect x="10" y="10" width="44" height="8" rx="4" fill="#c0bcb4"/>
+      <rect x="10" y="10" width="44" height="44" rx="10" fill="none" stroke="#1c1c14" strokeWidth="1.5"/>
+      <rect x="20" y="20" width="24" height="24" rx="8" fill="#7a7870"/>
+      <rect x="20" y="20" width="24" height="8" rx="4" fill="#908c84"/>
+      <rect x="20" y="20" width="24" height="24" rx="8" fill="none" stroke="#1c1c14" strokeWidth="1"/>
+      <rect x="26" y="26" width="12" height="12" rx="4" fill="#3c3830"/>
+      <rect x="26" y="26" width="6" height="4" rx="2" fill="#504c48"/>
+      <rect x="26" y="26" width="12" height="12" rx="4" fill="none" stroke="#1c1c14" strokeWidth="1"/>
+    </svg>
+  );
 }
 
 // ─── Hexagon logo mark ────────────────────────────────────
@@ -738,7 +873,7 @@ function HexMark({ size = 18, color = 'rgba(255,255,255,0.9)' }) {
 }
 
 // ─── Menu Bar ─────────────────────────────────────────────
-function MenuBar({ time, onAbout }) {
+function MenuBar({ time, onAbout, onThemeCycle }) {
   const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
   const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
   const d = time;
@@ -751,7 +886,7 @@ function MenuBar({ time, onAbout }) {
         <img src="assets/khs-logo-transparent.png" alt="KHS" style={{ filter: 'invert(1)', display: 'block', width: "35px", height: "33px", objectFit: "contain" }} />
       </div>
       {['File', 'View', 'Go', 'Help'].map((m) =>
-      <div key={m} className="menu-item">{m}</div>
+      <div key={m} className="menu-item" onClick={m === 'View' ? onThemeCycle : undefined}>{m}</div>
       )}
       <div className="menu-spacer" />
       <div className="menu-right">
@@ -820,37 +955,53 @@ function ProjectContent({ project }) {
         <div key={i} className="win-deliv-item">{d}</div>
         )}
       </div>
-      <button className="win-cta">View Case Study →</button>
+      {project.url
+        ? <a href={project.url} target="_blank" rel="noopener noreferrer" className="win-cta" style={{display:'block',textAlign:'center',textDecoration:'none'}}>View Project →</a>
+        : <button className="win-cta">View Case Study →</button>}
     </div>);
 
 }
 
 // ─── About content ────────────────────────────────────────
 function AboutContent() {
+  const [activeTab, setActiveTab] = React.useState('work');
   return (
     <div>
-      <div className="about-hex">
-        <img src="assets/khs-logo-transparent.png" alt="KHS Consulting"
-        style={{ width: 200, height: 'auto', display: 'block', margin: '0 auto' }} />
+      <div className="menu-bar about-inner-menu">
+        <span
+          className={`menu-item${activeTab === 'work' ? ' active' : ''}`}
+          onClick={() => setActiveTab('work')}>WORK</span>
+        <span
+          className={`menu-item${activeTab === 'me' ? ' active' : ''}`}
+          onClick={() => setActiveTab('me')}>ME</span>
       </div>
-      <div className="about-name" style={{ display: 'none' }}>KHS Consulting</div>
-      <div className="about-role">PRODUCT · UX · STRATEGY</div>
-      <div className="about-divider" />
-      <div className="about-bio">
-        Product executive with 11+ years building and scaling consumer products at high-growth companies — Jet.com, Buzzfeed, Trade, and The Infatuation. Deep expertise in e-commerce, marketplaces, media, and subscription businesses. After starting in entertainment at CAA and Fullscreen, I've spent the last decade working at the intersection of strategy, product, and design.
-      </div>
-      <div className="about-skills">
-        {['Product Strategy', 'UX Research', 'Team Building', 'Experimentation', '0→1 Products', 'Subscriptions', 'E-commerce', 'Design Thinking', 'Figma', 'Amplitude', 'SQL', 'Mixpanel'].map((s) =>
-        <span key={s} className="about-skill">{s}</span>
-        )}
-      </div>
-      <div className="about-divider" />
-      <div className="about-status">
-        <span className="status-dot" />
-        Available for new projects — 2026
-      </div>
+      {activeTab === 'work' ? (
+        <div>
+          <div className="about-hex">
+            <img src="assets/khs-logo-transparent.png" alt="KHS Consulting"
+            style={{ width: 200, height: 'auto', display: 'block', margin: '0 auto' }} />
+          </div>
+          <div className="about-name" style={{ display: 'none' }}>KHS Consulting</div>
+          <div className="about-role">PRODUCT · UX · STRATEGY</div>
+          <div className="about-divider" />
+          <div className="about-bio">
+            Product exec and builder with 12+ years building and scaling consumer products at high-growth companies — Jet.com, Buzzfeed, Trade, and The Infatuation. Deep expertise in e-commerce, marketplaces, media, and subscription businesses. After starting in entertainment at CAA and Fullscreen, I've spent the last decade working at the intersection of strategy, product, and design.
+          </div>
+          <div className="about-skills">
+            {['Product Strategy', 'UX Research', 'Team Building', 'Experimentation', '0→1 Products', 'Subscriptions', 'E-commerce', 'Design Thinking', 'Figma', 'Amplitude', 'SQL', 'Mixpanel'].map((s) =>
+            <span key={s} className="about-skill">{s}</span>
+            )}
+          </div>
+          <div className="about-divider" />
+          <div className="about-status">
+            <span className="status-dot" />
+            Available for new projects — 2026
+          </div>
+        </div>
+      ) : (
+        <div className="about-me-placeholder">COMING SOON</div>
+      )}
     </div>);
-
 }
 
 // ─── Resume content ───────────────────────────────────────
@@ -893,16 +1044,32 @@ function ContactContent() {
   );
 }
 
+// ─── About This Site content ──────────────────────────────
+function AboutSiteContent() {
+  return (
+    <div style={{ padding: '16px 4px' }}>
+      <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--color-ink-3)', marginBottom: 8 }}>Meta</div>
+      <div style={{ fontFamily: "'Playfair Display'", fontSize: 20, fontWeight: 700, color: 'var(--color-ink)', marginBottom: 12 }}>About This Site</div>
+      <div className="about-divider" style={{ marginBottom: 14, width: 40 }} />
+      <div style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--color-ink-2)', lineHeight: 1.7 }}>
+        This site is a hand-written static website — just <code>index.html</code> plus two CSS files (<code>colors_and_type.css</code> for the design tokens and typography, and <code>mobile.css</code> for the responsive layout), with no build step, bundler, or JavaScript framework in the way.
+      </div>
+      <div style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--color-ink-2)', lineHeight: 1.7, marginTop: 10 }}>
+        Source lives in a GitHub repo (<code>shirazik/khs-website</code>) and is deployed via GitHub Pages, which serves the files straight from the <code>main</code> branch; a <code>CNAME</code> file in the repo points the deployment at the custom domain <code>kareemshirazi.com</code>, so every push to <code>main</code> is effectively a production release.
+      </div>
+    </div>
+  );
+}
+
 // ─── Toolbar icons (subset, inline) ──────────────────────
 const TOOLBAR_ICONS = [
 { label: 'Home', action: 'home', svg: `<svg viewBox="0 0 64 64" shape-rendering="crispEdges"><rect x="41" y="10" width="6" height="22" fill="#6b4020"/><rect x="41" y="10" width="2" height="22" fill="#9a6040"/><rect x="40" y="9" width="8" height="3" fill="#1c1c14"/><polygon points="32,8 58,30 32,30" fill="#8c4820"/><polygon points="32,8 6,30 32,30" fill="#b46030"/><polygon points="32,8 10,30 32,14" fill="#cc8050"/><polygon points="32,8 6,30 58,30" fill="none" stroke="#1c1c14" stroke-width="1.5" stroke-linejoin="miter"/><rect x="8" y="29" width="48" height="28" fill="#f0e4c0"/><rect x="8" y="29" width="7" height="28" fill="#c8b880"/><rect x="15" y="29" width="41" height="3" fill="#f8f0d8"/><rect x="11" y="33" width="14" height="11" fill="#a8d0e0"/><rect x="11" y="33" width="5" height="11" fill="#c4dce8"/><rect x="18" y="33" width="1" height="11" fill="#1c1c14"/><rect x="11" y="38" width="14" height="1" fill="#1c1c14"/><rect x="11" y="33" width="14" height="11" fill="none" stroke="#1c1c14" stroke-width="1"/><rect x="39" y="33" width="14" height="11" fill="#a8d0e0"/><rect x="39" y="33" width="5" height="11" fill="#c4dce8"/><rect x="46" y="33" width="1" height="11" fill="#1c1c14"/><rect x="39" y="38" width="14" height="1" fill="#1c1c14"/><rect x="39" y="33" width="14" height="11" fill="none" stroke="#1c1c14" stroke-width="1"/><rect x="27" y="41" width="10" height="16" fill="#8c5820"/><rect x="27" y="41" width="3" height="16" fill="#a87040"/><rect x="35" y="50" width="2" height="2" fill="#e8c040"/><rect x="27" y="41" width="10" height="16" fill="none" stroke="#1c1c14" stroke-width="1"/><rect x="8" y="29" width="48" height="28" fill="none" stroke="#1c1c14" stroke-width="1.5"/><rect x="23" y="57" width="18" height="4" fill="#c8b880"/><rect x="23" y="57" width="18" height="1" fill="#e8d898"/><rect x="23" y="57" width="18" height="4" fill="none" stroke="#1c1c14" stroke-width="1"/></svg>` },
 { label: 'Portfolio', action: 'portfolio', svg: `<svg viewBox="0 0 64 64" shape-rendering="crispEdges"><rect x="22" y="10" width="3" height="10" fill="#6b4020"/><rect x="22" y="10" width="1" height="10" fill="#9a6040"/><rect x="39" y="10" width="3" height="10" fill="#6b4020"/><rect x="39" y="10" width="1" height="10" fill="#9a6040"/><rect x="22" y="10" width="20" height="3" fill="#6b4020"/><rect x="22" y="10" width="20" height="1" fill="#9a6040"/><rect x="22" y="9" width="20" height="4" fill="none" stroke="#1c1c14" stroke-width="1"/><rect x="6" y="19" width="52" height="36" fill="#c89438"/><rect x="6" y="19" width="8" height="36" fill="#9a7020"/><rect x="14" y="19" width="44" height="5" fill="#e8c060"/><rect x="6" y="36" width="52" height="2" fill="#8a6018"/><rect x="22" y="30" width="20" height="10" fill="#7a5418"/><rect x="22" y="30" width="20" height="3" fill="#b08828"/><rect x="22" y="30" width="20" height="10" fill="none" stroke="#1c1c14" stroke-width="1"/><rect x="29" y="35" width="6" height="4" fill="#604010"/><rect x="30" y="34" width="4" height="2" fill="#c0a030"/><rect x="6" y="51" width="52" height="4" fill="#8a6018"/><rect x="6" y="51" width="52" height="1" fill="#c09030"/><rect x="6" y="19" width="52" height="36" fill="none" stroke="#1c1c14" stroke-width="1.5"/><rect x="22" y="19" width="3" height="2" fill="#1c1c14"/><rect x="39" y="19" width="3" height="2" fill="#1c1c14"/></svg>` },
-{ label: 'Writing', action: 'writing', svg: `<svg viewBox="0 0 64 64" shape-rendering="crispEdges"><rect x="18" y="4" width="28" height="16" fill="#f8f4ec"/><rect x="18" y="4" width="4" height="16" fill="#e4e0d4"/><rect x="18" y="4" width="28" height="16" fill="none" stroke="#1c1c14" stroke-width="1"/><rect x="23" y="8" width="18" height="1.5" fill="#a0a898"/><rect x="23" y="12" width="14" height="1.5" fill="#a0a898"/><rect x="10" y="18" width="44" height="8" fill="#3c3830"/><rect x="10" y="18" width="44" height="3" fill="#605c54"/><rect x="10" y="18" width="44" height="8" fill="none" stroke="#1c1c14" stroke-width="1.5"/><rect x="6" y="25" width="52" height="30" fill="#3c3830"/><rect x="6" y="25" width="52" height="5" fill="#585450"/><rect x="6" y="25" width="7" height="30" fill="#504c48"/><rect x="11" y="32" width="42" height="18" fill="#282820"/><rect x="13" y="34" width="4" height="4" fill="#504c48"/><rect x="18" y="34" width="4" height="4" fill="#504c48"/><rect x="23" y="34" width="4" height="4" fill="#504c48"/><rect x="28" y="34" width="4" height="4" fill="#504c48"/><rect x="33" y="34" width="4" height="4" fill="#504c48"/><rect x="38" y="34" width="4" height="4" fill="#504c48"/><rect x="43" y="34" width="4" height="4" fill="#504c48"/><rect x="15" y="40" width="4" height="4" fill="#504c48"/><rect x="20" y="40" width="4" height="4" fill="#504c48"/><rect x="25" y="40" width="4" height="4" fill="#504c48"/><rect x="30" y="40" width="4" height="4" fill="#504c48"/><rect x="35" y="40" width="4" height="4" fill="#504c48"/><rect x="40" y="40" width="4" height="4" fill="#504c48"/><rect x="21" y="46" width="22" height="3" fill="#504c48"/><rect x="6" y="25" width="52" height="30" fill="none" stroke="#1c1c14" stroke-width="1.5"/></svg>` },
+{ label: 'Philosophies', action: 'philosophies', svg: `<svg viewBox="0 0 64 64" shape-rendering="crispEdges"><rect x="18" y="4" width="28" height="16" fill="#f8f4ec"/><rect x="18" y="4" width="4" height="16" fill="#e4e0d4"/><rect x="18" y="4" width="28" height="16" fill="none" stroke="#1c1c14" stroke-width="1"/><rect x="23" y="8" width="18" height="1.5" fill="#a0a898"/><rect x="23" y="12" width="14" height="1.5" fill="#a0a898"/><rect x="10" y="18" width="44" height="8" fill="#3c3830"/><rect x="10" y="18" width="44" height="3" fill="#605c54"/><rect x="10" y="18" width="44" height="8" fill="none" stroke="#1c1c14" stroke-width="1.5"/><rect x="6" y="25" width="52" height="30" fill="#3c3830"/><rect x="6" y="25" width="52" height="5" fill="#585450"/><rect x="6" y="25" width="7" height="30" fill="#504c48"/><rect x="11" y="32" width="42" height="18" fill="#282820"/><rect x="13" y="34" width="4" height="4" fill="#504c48"/><rect x="18" y="34" width="4" height="4" fill="#504c48"/><rect x="23" y="34" width="4" height="4" fill="#504c48"/><rect x="28" y="34" width="4" height="4" fill="#504c48"/><rect x="33" y="34" width="4" height="4" fill="#504c48"/><rect x="38" y="34" width="4" height="4" fill="#504c48"/><rect x="43" y="34" width="4" height="4" fill="#504c48"/><rect x="15" y="40" width="4" height="4" fill="#504c48"/><rect x="20" y="40" width="4" height="4" fill="#504c48"/><rect x="25" y="40" width="4" height="4" fill="#504c48"/><rect x="30" y="40" width="4" height="4" fill="#504c48"/><rect x="35" y="40" width="4" height="4" fill="#504c48"/><rect x="40" y="40" width="4" height="4" fill="#504c48"/><rect x="21" y="46" width="22" height="3" fill="#504c48"/><rect x="6" y="25" width="52" height="30" fill="none" stroke="#1c1c14" stroke-width="1.5"/></svg>` },
 { label: 'Contact', action: 'contact', svg: `<svg viewBox="0 0 64 64" shape-rendering="crispEdges"><rect x="20" y="6" width="24" height="14" fill="#3c3830"/><rect x="20" y="6" width="8" height="14" fill="#504c48"/><rect x="20" y="6" width="24" height="5" fill="#585450"/><rect x="20" y="6" width="24" height="14" fill="none" stroke="#1c1c14" stroke-width="1.5"/><rect x="25" y="9" width="3" height="1" fill="#282820"/><rect x="29" y="9" width="3" height="1" fill="#282820"/><rect x="33" y="9" width="3" height="1" fill="#282820"/><rect x="25" y="12" width="3" height="1" fill="#282820"/><rect x="29" y="12" width="3" height="1" fill="#282820"/><rect x="33" y="12" width="3" height="1" fill="#282820"/><rect x="24" y="19" width="16" height="26" fill="#3c3830"/><rect x="24" y="19" width="5" height="26" fill="#504c48"/><rect x="24" y="19" width="16" height="26" fill="none" stroke="#1c1c14" stroke-width="1"/><rect x="27" y="32" width="4" height="5" fill="#282820"/><rect x="27" y="32" width="4" height="5" fill="none" stroke="#1c1c14" stroke-width="1"/><rect x="20" y="44" width="24" height="14" fill="#3c3830"/><rect x="20" y="44" width="8" height="14" fill="#504c48"/><rect x="20" y="53" width="24" height="5" fill="#2a2820"/><rect x="20" y="44" width="24" height="14" fill="none" stroke="#1c1c14" stroke-width="1.5"/><rect x="25" y="48" width="3" height="1" fill="#282820"/><rect x="29" y="48" width="3" height="1" fill="#282820"/><rect x="33" y="48" width="3" height="1" fill="#282820"/><rect x="25" y="51" width="3" height="1" fill="#282820"/><rect x="29" y="51" width="3" height="1" fill="#282820"/><rect x="33" y="51" width="3" height="1" fill="#282820"/></svg>` },
 { label: 'Services', action: 'services', svg: `<svg viewBox="0 0 64 64" shape-rendering="crispEdges"><rect x="24" y="8" width="3" height="10" fill="#7a7870"/><rect x="37" y="8" width="3" height="10" fill="#7a7870"/><rect x="24" y="8" width="16" height="3" fill="#7a7870"/><rect x="24" y="7" width="16" height="4" fill="none" stroke="#1c1c14" stroke-width="1"/><rect x="24" y="10" width="3" height="8" fill="none" stroke="#1c1c14" stroke-width="1"/><rect x="37" y="10" width="3" height="8" fill="none" stroke="#1c1c14" stroke-width="1"/><rect x="4" y="17" width="56" height="38" fill="#9c9890"/><rect x="4" y="17" width="8" height="38" fill="#787470"/><rect x="12" y="17" width="48" height="5" fill="#c0bcb4"/><rect x="4" y="28" width="56" height="2" fill="#605c58"/><rect x="4" y="28" width="56" height="1" fill="#a0a0a0"/><rect x="8" y="24" width="10" height="6" fill="#c89438"/><rect x="8" y="24" width="10" height="2" fill="#e8c060"/><rect x="8" y="24" width="10" height="6" fill="none" stroke="#1c1c14" stroke-width="1"/><rect x="46" y="24" width="10" height="6" fill="#c89438"/><rect x="46" y="24" width="10" height="2" fill="#e8c060"/><rect x="46" y="24" width="10" height="6" fill="none" stroke="#1c1c14" stroke-width="1"/><rect x="4" y="17" width="56" height="38" fill="none" stroke="#1c1c14" stroke-width="1.5"/></svg>` },
 { label: 'Resume', action: 'resume', svg: `<svg viewBox="0 0 64 64" shape-rendering="crispEdges"><rect x="14" y="10" width="38" height="50" fill="#c0bcb0"/><rect x="10" y="8" width="38" height="50" fill="#f8f4ec"/><rect x="10" y="8" width="5" height="50" fill="#e4e0d4"/><rect x="15" y="8" width="33" height="3" fill="#ffffff"/><polygon points="38,8 48,8 48,18" fill="#d0ccc0"/><polygon points="38,8 48,18 38,18" fill="#e8e4d8"/><line x1="38" y1="8" x2="48" y2="18" stroke="#1c1c14" stroke-width="1"/><rect x="14" y="13" width="24" height="5" fill="#3c3830"/><rect x="14" y="13" width="24" height="2" fill="#585450"/><rect x="39" y="13" width="6" height="6" fill="#9c9890"/><rect x="14" y="22" width="30" height="1" fill="#c0bcb0"/><rect x="14" y="25" width="28" height="2" fill="#a0a898"/><rect x="14" y="29" width="22" height="2" fill="#c0bcb4"/><rect x="14" y="33" width="26" height="2" fill="#c0bcb4"/><rect x="14" y="38" width="30" height="1" fill="#c0bcb0"/><rect x="14" y="41" width="24" height="2" fill="#a0a898"/><rect x="14" y="45" width="20" height="2" fill="#c0bcb4"/><rect x="14" y="49" width="28" height="2" fill="#c0bcb4"/><rect x="14" y="53" width="4" height="4" fill="#4e7850"/><rect x="19" y="53" width="4" height="4" fill="#4e7850"/><rect x="24" y="53" width="4" height="4" fill="#4e7850"/><rect x="29" y="53" width="4" height="4" fill="#4e7850"/><rect x="34" y="53" width="4" height="4" fill="#c0bcb4"/><rect x="10" y="8" width="38" height="50" fill="none" stroke="#1c1c14" stroke-width="1.5"/></svg>` },
-{ label: 'About', action: 'about', svg: `<svg viewBox="0 0 64 64" shape-rendering="crispEdges"><rect x="10" y="10" width="48" height="48" fill="#283828"/><rect x="8" y="8" width="10" height="48" fill="#304830"/><rect x="8" y="8" width="4" height="48" fill="#4e7850"/><rect x="8" y="8" width="10" height="48" fill="none" stroke="#1c1c14" stroke-width="1"/><rect x="17" y="8" width="40" height="48" fill="#4e7850"/><rect x="17" y="8" width="40" height="6" fill="#6a9860"/><rect x="17" y="16" width="40" height="1" fill="#3e6040"/><rect x="17" y="20" width="40" height="1" fill="#3e6040"/><rect x="17" y="24" width="40" height="1" fill="#3e6040"/><rect x="20" y="28" width="34" height="12" fill="#c89438"/><rect x="20" y="28" width="34" height="3" fill="#e8c060"/><rect x="20" y="28" width="34" height="12" fill="none" stroke="#1c1c14" stroke-width="1"/><rect x="23" y="30" width="2" height="8" fill="#1c1c14"/><rect x="25" y="30" width="3" height="3" fill="#1c1c14"/><rect x="25" y="35" width="3" height="3" fill="#1c1c14"/><rect x="30" y="30" width="2" height="8" fill="#1c1c14"/><rect x="32" y="33" width="2" height="2" fill="#1c1c14"/><rect x="34" y="30" width="2" height="8" fill="#1c1c14"/><rect x="38" y="30" width="5" height="2" fill="#1c1c14"/><rect x="38" y="33" width="5" height="2" fill="#1c1c14"/><rect x="38" y="36" width="5" height="2" fill="#1c1c14"/><rect x="38" y="30" width="2" height="4" fill="#1c1c14"/><rect x="41" y="34" width="2" height="4" fill="#1c1c14"/><rect x="50" y="7" width="4" height="16" fill="#a82828"/><rect x="50" y="7" width="4" height="4" fill="#cc4444"/><polygon points="50,23 54,23 52,27" fill="#a82828"/><rect x="56" y="10" width="3" height="44" fill="#e8e4d8"/><rect x="56" y="10" width="1" height="44" fill="#f8f4ec"/><rect x="17" y="8" width="40" height="48" fill="none" stroke="#1c1c14" stroke-width="1.5"/></svg>` },
-{ label: 'Awards', action: 'awards', svg: `<svg viewBox="0 0 64 64" shape-rendering="crispEdges"><rect x="17" y="59" width="32" height="4" fill="#8a6018"/><rect x="14" y="56" width="36" height="6" fill="#c89438"/><rect x="14" y="56" width="36" height="2" fill="#e8c060"/><rect x="14" y="56" width="36" height="6" fill="none" stroke="#1c1c14" stroke-width="1.5"/><rect x="28" y="46" width="8" height="12" fill="#c89438"/><rect x="28" y="46" width="3" height="12" fill="#e8c060"/><rect x="22" y="52" width="20" height="4" fill="#c89438"/><rect x="22" y="52" width="20" height="2" fill="#e8c060"/><polygon points="38,10 50,16 46,46 32,46" fill="#8a6018"/><polygon points="26,10 14,16 18,46 32,46" fill="#e8c060"/><polygon points="26,10 38,10 46,46 18,46" fill="#c89438"/><polygon points="26,10 38,10 36,16 28,16" fill="#f0d060"/><rect x="22" y="8" width="20" height="5" fill="#c89438"/><rect x="22" y="8" width="20" height="2" fill="#f0d060"/><rect x="22" y="8" width="20" height="5" fill="none" stroke="#1c1c14" stroke-width="1.5"/><polygon points="32,22 33.5,27 38.5,27 34.5,30 36,35 32,32 28,35 29.5,30 25.5,27 30.5,27" fill="#f8f060"/><polygon points="26,10 38,10 46,46 18,46" fill="none" stroke="#1c1c14" stroke-width="1.5"/></svg>` }];
+{ label: 'About', action: 'about', svg: `<svg viewBox="0 0 64 64" shape-rendering="crispEdges"><rect x="10" y="10" width="48" height="48" fill="#283828"/><rect x="8" y="8" width="10" height="48" fill="#304830"/><rect x="8" y="8" width="4" height="48" fill="#4e7850"/><rect x="8" y="8" width="10" height="48" fill="none" stroke="#1c1c14" stroke-width="1"/><rect x="17" y="8" width="40" height="48" fill="#4e7850"/><rect x="17" y="8" width="40" height="6" fill="#6a9860"/><rect x="17" y="16" width="40" height="1" fill="#3e6040"/><rect x="17" y="20" width="40" height="1" fill="#3e6040"/><rect x="17" y="24" width="40" height="1" fill="#3e6040"/><rect x="20" y="28" width="34" height="12" fill="#c89438"/><rect x="20" y="28" width="34" height="3" fill="#e8c060"/><rect x="20" y="28" width="34" height="12" fill="none" stroke="#1c1c14" stroke-width="1"/><rect x="23" y="30" width="2" height="8" fill="#1c1c14"/><rect x="25" y="30" width="3" height="3" fill="#1c1c14"/><rect x="25" y="35" width="3" height="3" fill="#1c1c14"/><rect x="30" y="30" width="2" height="8" fill="#1c1c14"/><rect x="32" y="33" width="2" height="2" fill="#1c1c14"/><rect x="34" y="30" width="2" height="8" fill="#1c1c14"/><rect x="38" y="30" width="5" height="2" fill="#1c1c14"/><rect x="38" y="33" width="5" height="2" fill="#1c1c14"/><rect x="38" y="36" width="5" height="2" fill="#1c1c14"/><rect x="38" y="30" width="2" height="4" fill="#1c1c14"/><rect x="41" y="34" width="2" height="4" fill="#1c1c14"/><rect x="50" y="7" width="4" height="16" fill="#a82828"/><rect x="50" y="7" width="4" height="4" fill="#cc4444"/><polygon points="50,23 54,23 52,27" fill="#a82828"/><rect x="56" y="10" width="3" height="44" fill="#e8e4d8"/><rect x="56" y="10" width="1" height="44" fill="#f8f4ec"/><rect x="17" y="8" width="40" height="48" fill="none" stroke="#1c1c14" stroke-width="1.5"/></svg>` }];
 
 
 // ─── Toolbar ──────────────────────────────────────────────
@@ -1103,6 +1270,8 @@ function TweaksPanel({ setFolderPos }) {
 // ─── App ──────────────────────────────────────────────────
 let winCounter = 300;
 
+const THEMES = ['terminal', 'amber', 'blueprint'];
+
 function App() {
   const [time, setTime] = useState(new Date());
   const [selectedFolder, setSelectedFolder] = useState(null);
@@ -1125,6 +1294,13 @@ function App() {
   useEffect(() => {
     const t = setInterval(() => setTime(new Date()), 10000);
     return () => clearInterval(t);
+  }, []);
+
+  const cycleTheme = useCallback(() => {
+    const current = document.documentElement.getAttribute('data-theme') || 'terminal';
+    const next = THEMES[(THEMES.indexOf(current) + 1) % THEMES.length];
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('khs-theme', next);
   }, []);
 
   // Global drag handlers
@@ -1209,6 +1385,15 @@ function App() {
       PROJECTS.forEach((p, i) => setTimeout(() => openProject(p), i * 80));
       return;
     }
+    if (action === 'aboutsite') {
+      const existing = windows.find((w) => w.type === 'aboutsite');
+      if (existing) { focusWindow(existing.id); return; }
+      winCounter++;
+      const win = { id: `aboutsite-${Date.now()}`, type: 'aboutsite', title: 'About This Site', x: 150, y: 100, width: 320, z: winCounter };
+      setWindows((ws) => [...ws, win]);
+      setFocusedWin(win.id);
+      return;
+    }
     // Open a placeholder window for other actions
     winCounter++;
     const win = {
@@ -1222,7 +1407,7 @@ function App() {
 
   return (
     <div className="app">
-      <MenuBar time={time} onAbout={openAbout} />
+      <MenuBar time={time} onAbout={openAbout} onThemeCycle={cycleTheme} />
       <TickerBar />
       <div
         className="desktop"
@@ -1261,6 +1446,28 @@ function App() {
 
         })}
 
+        {/* About This Site gear icon */}
+        {(() => {
+          const pos = folderPos['aboutsite'] || DEFAULT_POS['aboutsite'];
+          const isSelected = selectedFolder === 'aboutsite';
+          return (
+            <div
+              className={`folder${isSelected ? ' selected' : ''}`}
+              style={{ left: pos.x, top: pos.y }}
+              onMouseDown={(e) => {
+                e.preventDefault();
+                setSelectedFolder('aboutsite');
+                dragging.current = { type: 'folder', id: 'aboutsite', ox: e.clientX - pos.x, oy: e.clientY - pos.y };
+              }}
+              onDoubleClick={() => handleToolbarAction('aboutsite')}>
+              <GearIconSVG />
+              <div className="folder-label">
+                <span className="folder-label-inner">About This Site</span>
+              </div>
+            </div>
+          );
+        })()}
+
         {/* Windows */}
         {windows.map((win) =>
         <OSWindow
@@ -1278,6 +1485,7 @@ function App() {
             {win.type === 'about' && <AboutContent />}
             {win.type === 'resume' && <ResumeContent />}
             {win.type === 'contact' && <ContactContent />}
+            {win.type === 'aboutsite' && <AboutSiteContent />}
             {win.type === 'project' &&
           <ProjectContent project={PROJECTS.find((p) => p.id === win.projectId)} />
           }
@@ -1346,11 +1554,11 @@ function mobNavigate(action) {
     home:      function () { window.scrollTo({ top: 0, behavior: 'smooth' }); },
     portfolio: function () { scrollTo('mob-projects-section'); },
     about:     function () { scrollTo('mob-hero'); },
-    writing:   function () { scrollTo('mob-writing'); },
+    philosophies:   function () { scrollTo('mob-philosophies'); },
     contact:   function () { scrollTo('mob-contact'); },
     services:  function () { scrollTo('mob-services'); },
     resume:    function () { scrollTo('mob-resume'); },
-    awards:    function () { scrollTo('mob-awards'); },
+    aboutsite: function () { scrollTo('mob-aboutsite'); },
   };
   if (actions[action]) actions[action]();
 }

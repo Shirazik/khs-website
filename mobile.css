@@ -243,6 +243,13 @@
     color: var(--color-ink-2);
     margin-bottom: 14px;
   }
+  .mob-card-desc code {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    background: var(--color-surface-2, rgba(0,0,0,0.06));
+    padding: 1px 4px;
+    border-radius: 2px;
+  }
   .mob-card-divider {
     height: 1px;
     background: var(--color-ink);

@@ -36,20 +36,23 @@ All React code is inline in a single `<script type="text/babel">` block.
 | `OSWindow` | Draggable modal window with traffic-light controls |
 | `ProjectContent` | Content rendered inside a project window |
 | `AboutContent` | Content rendered inside the About window |
-| `DockToolbar` | Bottom dock with 8 pixel-art icon buttons |
+| `DockToolbar` | Bottom dock with 7 pixel-art icon buttons |
 | `TweaksPanel` | Hidden settings panel (toggled via postMessage from parent frame) |
 | `App` | Root: manages window state, folder positions, dragging |
 
 ### Data
 
-- `PROJECTS` array — 6 projects (infatuation, trade, jetcom, pawp, buzzfeed, button)
-- `DEFAULT_POS` — default x/y desktop coordinates for each folder; keys must match `PROJECTS` IDs
-- `TOOLBAR_ICONS` — 8 icons with inline SVG strings and action names
+- `PROJECTS` array — 8 projects: 6 work history (infatuation, trade, jetcom, pawp, buzzfeed, button) + 2 AI side projects (chrome-extension, fpl-analyzer)
+  - **AI projects** (`chrome-extension`, `fpl-analyzer`) are a distinct classification from work history. When the user says "my AI projects" or "add another AI project", treat these as the reference group. More AI projects may be added over time.
+- `DEFAULT_POS` — default x/y desktop coordinates for each folder; keys must match `PROJECTS` IDs. AI project folders are fixed at `y:560` to the right of the `aboutsite` gear icon (`x:30`). New AI projects should continue extending rightward along that row.
+- `TOOLBAR_ICONS` — 7 icons with inline SVG strings and action names (Home, Portfolio, Philosophies, Contact, Services, Resume, About)
 - `TWEAK_DEFAULTS` — default values for the tweaks panel controls
 
 > **Sync rule:** The `PROJECTS` array (React) and the `.mob-cards` block (static HTML, ~line 344) are **not linked** — they must be updated together manually. Any time a project is added, removed, or renamed in `PROJECTS`, make the equivalent change to the corresponding `.mob-card` in the mobile section. The two sources of truth are:
 > 1. `PROJECTS` array → drives desktop folder labels and `OSWindow` content
 > 2. `.mob-cards` HTML block → drives mobile project cards
+>
+> Work history projects go in `#mob-projects-section`; AI side projects go in `#mob-ai-projects`.
 
 ### Desktop Interaction Model
 
@@ -85,14 +88,15 @@ The mobile layout is **static HTML** outside React's `#root`, so it's always in 
 .mob-ticker          — CSS-animated marquee strip
 .mob-hero#mob-hero   — hero: logo image, tagline, bio, availability
 .mob-skills          — skill pill tags
-.mob-section#mob-projects-section — 6 project cards (.mob-card)
+.mob-section#mob-projects-section — 6 work history project cards (.mob-card)
+.mob-section#mob-ai-projects      — AI side project cards (label: "Side Projects", title: "AI Projects")
   .mob-card          — retro OS-window-style card: titlebar + body
-placeholder anchors  — #mob-writing, #mob-contact, #mob-services, #mob-resume, #mob-awards
+placeholder anchors  — #mob-writing, #mob-contact, #mob-services, #mob-resume
 .mob-footer          — copyright line
 .mob-fab#mob-fab     — floating action button (fixed bottom-right)
 .mob-menu-overlay    — full-screen overlay with bottom-sheet grid menu
   .mob-menu-panel    — slides up from bottom
-  .mob-menu-grid     — 4-column grid of all 8 toolbar icons
+  .mob-menu-grid     — 4-column grid of all 7 toolbar icons
 ```
 
 ### FAB + Grid Menu
@@ -118,7 +122,7 @@ Two functions outside React:
 
 ## Known Limitations / Future Work
 
-- Placeholder sections needed for: Writing, Contact, Services, Resume, Awards (anchors exist, content does not)
+- Placeholder sections needed for: Writing, Contact, Services, Resume (anchors exist, content does not)
 - Touch drag events not implemented on desktop (mouse-only)
 - All placeholder toolbar windows on desktop show "Coming Soon"
 - The tweaks panel is only accessible via postMessage (parent frame integration)
