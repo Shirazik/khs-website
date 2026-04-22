@@ -49,6 +49,7 @@
     height: 7px;
     background: var(--color-accent);
     flex-shrink: 0;
+    animation: blink 1.2s step-start infinite;
   }
 
   /* ── Ticker ──────────────────────────────────────────────── */

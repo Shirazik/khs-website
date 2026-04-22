@@ -256,7 +256,8 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
   color: var(--color-ink-3); text-align: center;
   display: flex; align-items: center; justify-content: center; gap: 6px;
 }
-.status-dot { width: 6px; height: 6px; background: var(--color-accent); flex-shrink: 0; }
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+.status-dot { width: 6px; height: 6px; background: var(--color-accent); flex-shrink: 0; animation: blink 1.2s step-start infinite; }
 
 /* ── Toolbar ─────────────────────────────────────────────── */
 .toolbar-wrap {
@@ -356,7 +357,7 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
     <p class="mob-hero-bio">Product exec and builder with 12+ years building consumer products at Jet.com, Buzzfeed, Trade, and The Infatuation. Deep expertise in e-commerce, marketplaces, media, and subscription businesses.</p>
     <div class="mob-hero-availability">
       <div class="mob-status-dot"></div>
-      Available for new projects — 2026
+      Available for new projects
     </div>
   </section>
 
@@ -398,7 +399,6 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
             <div class="mob-card-deliv">100+ roadmap items across 6 PM squads</div>
             <div class="mob-card-deliv">Chase Link &amp; Dine integration</div>
           </div>
-          <a class="mob-card-cta" href="#">View Case Study →</a>
         </div>
       </div>
 
@@ -423,7 +423,6 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
             <div class="mob-card-deliv">15+ roadmap initiatives shipped</div>
             <div class="mob-card-deliv">2 new business lines in 6 months</div>
           </div>
-          <a class="mob-card-cta" href="#">View Case Study →</a>
         </div>
       </div>
 
@@ -448,7 +447,6 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
             <div class="mob-card-deliv">KPI dashboards and metrics framework</div>
             <div class="mob-card-deliv">Lean team: 3 engineers, 1 designer, 1 analyst</div>
           </div>
-          <a class="mob-card-cta" href="#">View Case Study →</a>
         </div>
       </div>
 
@@ -473,7 +471,6 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
             <div class="mob-card-deliv">Improved payback period &amp; CAC economics</div>
             <div class="mob-card-deliv">Retention, AOV, CVR, gifting &amp; referral features</div>
           </div>
-          <a class="mob-card-cta" href="#">View Case Study →</a>
         </div>
       </div>
 
@@ -498,7 +495,6 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
             <div class="mob-card-deliv">Team process refresh — less thrash, higher output</div>
             <div class="mob-card-deliv">Tooling and operating culture improvements</div>
           </div>
-          <a class="mob-card-cta" href="#">View Case Study →</a>
         </div>
       </div>
 
@@ -523,7 +519,6 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
             <div class="mob-card-deliv">Apple &amp; Google partnerships (ARKit, iMessage)</div>
             <div class="mob-card-deliv">App Store &amp; Play Store Editors' Choice 2015</div>
           </div>
-          <a class="mob-card-cta" href="#">View Case Study →</a>
         </div>
       </div>
 
@@ -545,7 +540,7 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
         <div class="mob-card-body">
           <div class="mob-card-meta">
             <span class="mob-card-tag">Side Project</span>
-            <span class="mob-card-year">2025</span>
+            <span class="mob-card-year">2026</span>
           </div>
           <div class="mob-card-title">Marketing Claims Analyzer</div>
           <div class="mob-card-desc">A browser extension that brings AI-powered transparency to online shopping — evaluating every marketing claim on any product page with verdicts of Supported, Misleading, or Unverified. BYOK via OpenAI, no data collection, under a penny per analysis.</div>
@@ -761,7 +756,7 @@ const PROJECTS = [
 { id: 'button', name: 'Button', year: 'Jul\'18–Aug\'19', tag: 'Sr. Product Manager',
   desc: 'Led mobile experience at a commerce enablement platform. Built partner conversion features, ran a team process refresh, and instituted a culture of prototyping and data-informed iteration.',
   deliverables: ['Mobile partner conversion optimization', 'OKR framework for team focus', 'Team process refresh — less thrash, higher output', 'Tooling and operating culture improvements'] },
-{ id: 'chrome-extension', name: 'Marketing Claims Analyzer', year: '2025', tag: 'Side Project',
+{ id: 'chrome-extension', name: 'Marketing Claims Analyzer', year: '2026', tag: 'Side Project',
   url: 'https://chromewebstore.google.com/detail/ncnnfdcljpfbchhmhhplahafnamlfhih?utm_source=item-share-cb',
   desc: 'A browser extension that brings AI-powered transparency to online shopping. It analyzes any product page — Amazon listings, Shopify stores, or any website — and evaluates every marketing claim it finds, returning a verdict of Supported, Misleading, or Unverified alongside plain-English explanations and ingredient-aware scientific reasoning. Built with a privacy-first architecture (BYOK via OpenAI, no data collection, no tracking) at under a penny per analysis.',
   deliverables: ['Works on Amazon, Shopify, and any product page', 'Verdicts: Supported · Misleading · Unverified', 'Product-aware: builds ingredient context before drawing conclusions', 'BYOK via OpenAI — no data collection, no tracking', 'Under a penny per analysis'] },
@@ -955,9 +950,8 @@ function ProjectContent({ project }) {
         <div key={i} className="win-deliv-item">{d}</div>
         )}
       </div>
-      {project.url
-        ? <a href={project.url} target="_blank" rel="noopener noreferrer" className="win-cta" style={{display:'block',textAlign:'center',textDecoration:'none'}}>View Project →</a>
-        : <button className="win-cta">View Case Study →</button>}
+      {project.url &&
+        <a href={project.url} target="_blank" rel="noopener noreferrer" className="win-cta" style={{display:'block',textAlign:'center',textDecoration:'none'}}>View Project →</a>}
     </div>);
 
 }
@@ -995,7 +989,7 @@ function AboutContent() {
           <div className="about-divider" />
           <div className="about-status">
             <span className="status-dot" />
-            Available for new projects — 2026
+            Available for new projects
           </div>
         </div>
       ) : (
