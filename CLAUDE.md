@@ -45,6 +45,7 @@ All React code is inline in a single `<script type="text/babel">` block.
 - `PROJECTS` array — 8 projects: 6 work history (infatuation, trade, jetcom, pawp, buzzfeed, button) + 2 AI side projects (chrome-extension, fpl-analyzer)
   - **AI projects** (`chrome-extension`, `fpl-analyzer`) are a distinct classification from work history. When the user says "my AI projects" or "add another AI project", treat these as the reference group. More AI projects may be added over time.
 - `DEFAULT_POS` — default x/y desktop coordinates for each folder; keys must match `PROJECTS` IDs. AI project folders are fixed at `y:560` to the right of the `aboutsite` gear icon (`x:30`). New AI projects should continue extending rightward along that row.
+- `SKILLS` array — single source of truth for skill pills. Defined in a plain `<script>` block before the React/Babel block so it's available synchronously to both the desktop `AboutContent` component and the mobile JS that populates `.mob-skills`. **Only edit this one array** — both layouts update automatically.
 - `TOOLBAR_ICONS` — 7 icons with inline SVG strings and action names (Home, Portfolio, Philosophies, Contact, Services, Resume, About)
 - `TWEAK_DEFAULTS` — default values for the tweaks panel controls
 
@@ -116,7 +117,8 @@ placeholder anchors  — #mob-writing, #mob-contact, #mob-services, #mob-resume
 
 ### Mobile JS (`<script>` before `</body>`)
 
-Two functions outside React:
+Three functions outside React:
+- IIFE populates `.mob-skills` from the global `SKILLS` array
 - IIFE sets up FAB toggle + backdrop/close-button listeners
 - `mobNavigate(action)` — global function called by `onclick` on grid cells
 
