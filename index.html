@@ -1378,6 +1378,21 @@ let winCounter = 300;
 const THEMES = ['terminal', 'amber', 'blueprint'];
 const withOpeningAnimation = (win) => ({ ...win, animState: 'opening' });
 
+// Returns {x, y} for a window that opens near a folder without overflowing the desktop.
+// Opens below the folder when there's room; flips above when not.
+function getFolderWinPos(fPos, winWidth = 340) {
+  const TOP_CHROME = 59;  // menu bar (31) + ticker (28)
+  const DOCK_H = 70;
+  const WIN_H_EST = 480;
+  const viewW = window.innerWidth || 1200;
+  const viewH = window.innerHeight || 900;
+  const idealY = fPos.y + 72;
+  const fitsBelow = (TOP_CHROME + idealY + WIN_H_EST) <= (viewH - DOCK_H);
+  const y = fitsBelow ? idealY : Math.max(8, fPos.y - WIN_H_EST - 8);
+  const x = Math.max(8, Math.min(fPos.x + 38 - Math.round(winWidth / 2), viewW - winWidth - 8));
+  return { x, y };
+}
+
 function App() {
   const [time, setTime] = useState(new Date());
   const [selectedFolder, setSelectedFolder] = useState(null);
@@ -1453,17 +1468,17 @@ function App() {
     const existing = windows.find((w) => w.projectId === project.id && w.animState !== 'closing');
     if (existing) {focusWindow(existing.id);return;}
     winCounter++;
+    const fPos = folderPos[project.id] || DEFAULT_POS[project.id] || { x: 80, y: 60 };
+    const { x, y } = getFolderWinPos(fPos, 340);
     const newWin = withOpeningAnimation({
       id: `proj-${project.id}-${Date.now()}`,
       type: 'project', projectId: project.id,
       title: project.name,
-      x: 80 + windows.length % 5 * 30,
-      y: 60 + windows.length % 4 * 24,
-      width: 340, z: winCounter
+      x, y, width: 340, z: winCounter
     });
     setWindows((ws) => [...ws, newWin]);
     setFocusedWin(newWin.id);
-  }, [windows, focusWindow]);
+  }, [windows, focusWindow, folderPos]);
 
   const openAbout = useCallback(() => {
     const existing = windows.find((w) => w.type === 'about' && w.animState !== 'closing');
@@ -1510,7 +1525,9 @@ function App() {
       const existing = windows.find((w) => w.type === 'aboutsite' && w.animState !== 'closing');
       if (existing) { focusWindow(existing.id); return; }
       winCounter++;
-      const win = withOpeningAnimation({ id: `aboutsite-${Date.now()}`, type: 'aboutsite', title: 'About This Site', x: 150, y: 100, width: 320, z: winCounter });
+      const aPos = folderPos['aboutsite'] || DEFAULT_POS['aboutsite'] || { x: 30, y: 560 };
+      const { x: ax, y: ay } = getFolderWinPos(aPos, 320);
+      const win = withOpeningAnimation({ id: `aboutsite-${Date.now()}`, type: 'aboutsite', title: 'About This Site', x: ax, y: ay, width: 320, z: winCounter });
       setWindows((ws) => [...ws, win]);
       setFocusedWin(win.id);
       return;
@@ -1524,7 +1541,7 @@ function App() {
     };
     setWindows((ws) => [...ws, withOpeningAnimation(win)]);
     setFocusedWin(win.id);
-  }, [windows, focusWindow, openAbout, openProject]);
+  }, [windows, focusWindow, openAbout, openProject, folderPos]);
 
   return (
     <div className="app">
