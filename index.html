@@ -171,8 +171,64 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
   border: 2px solid var(--color-ink);
   box-shadow: 6px 6px 0 var(--color-ink);
   z-index: 200; min-width: 300px;
+  transform-origin: top left;
+  will-change: transform, opacity;
 }
 .os-window.focused { box-shadow: 6px 6px 0 var(--color-accent); z-index: 300; }
+.os-window.is-opening {
+  animation: window-open 340ms steps(6, end) both, window-crt-flicker 340ms steps(5, end) both;
+}
+.os-window.is-closing {
+  pointer-events: none;
+  animation: window-close 280ms steps(6, end) both, window-crt-flicker 280ms steps(5, end) reverse both;
+}
+.os-window.is-opening::before,
+.os-window.is-closing::before {
+  content: '';
+  position: absolute; inset: -2px;
+  border: 2px solid var(--color-accent);
+  pointer-events: none;
+  opacity: 0.42;
+  mix-blend-mode: multiply;
+}
+.os-window.is-opening::after,
+.os-window.is-closing::after {
+  content: '';
+  position: absolute; inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(0deg, transparent 0 3px, var(--color-ink) 3px 4px);
+  opacity: 0.055;
+}
+@keyframes window-open {
+  0% { opacity: 0; transform: translate(14px, 10px) scale(0.08, 0.03); filter: contrast(1.35); }
+  24% { opacity: 1; transform: translate(10px, 8px) scale(0.34, 0.08); }
+  46% { transform: translate(6px, 5px) scale(0.62, 0.22); }
+  68% { transform: translate(2px, 2px) scale(0.88, 0.72); }
+  82% { transform: translate(-1px, -1px) scale(1.02, 1.02); }
+  100% { opacity: 1; transform: translate(0, 0) scale(1); filter: contrast(1); }
+}
+@keyframes window-close {
+  0% { opacity: 1; transform: translate(0, 0) scale(1); filter: contrast(1); }
+  22% { transform: translate(-1px, -1px) scale(1.02, 1.02); }
+  44% { transform: translate(3px, 3px) scale(0.76, 0.52); }
+  66% { transform: translate(7px, 6px) scale(0.42, 0.16); }
+  84% { opacity: 0.75; transform: translate(11px, 8px) scale(0.18, 0.05); }
+  100% { opacity: 0; transform: translate(14px, 10px) scale(0.04, 0.02); filter: contrast(1.35); }
+}
+@keyframes window-crt-flicker {
+  0% { clip-path: inset(48% 0 48% 0); }
+  18% { clip-path: inset(38% 0 40% 0); }
+  36% { clip-path: inset(24% 0 28% 0); }
+  54% { clip-path: inset(12% 0 16% 0); }
+  72% { clip-path: inset(3% 0 4% 0); }
+  100% { clip-path: inset(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .os-window.is-opening,
+  .os-window.is-closing {
+    animation-duration: 1ms;
+  }
+}
 .os-titlebar {
   background: var(--bg-inverse); height: 28px;
   display: flex; align-items: center; gap: 8px; padding: 0 10px;
@@ -383,6 +439,31 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
     <div class="mob-section-label">Work History</div>
     <div class="mob-section-title">Career</div>
     <div class="mob-cards">
+
+      <div class="mob-card">
+        <div class="mob-card-titlebar">
+          <div class="mob-card-tl mob-card-tl-red"></div>
+          <div class="mob-card-tl mob-card-tl-yel"></div>
+          <div class="mob-card-tl mob-card-tl-grn"></div>
+          <div class="mob-card-wintitle">Bond Holdings</div>
+        </div>
+        <div class="mob-card-body">
+          <div class="mob-card-meta">
+            <span class="mob-card-tag">Head of P &amp; G · Contract</span>
+            <span class="mob-card-year">Dec'25–Present</span>
+          </div>
+          <div class="mob-card-title">Bond Holdings</div>
+          <div class="mob-card-desc">Head of product and growth embedded across a 5-brand consumer portfolio (candy, supplements, wellness, jewelry, ODS). Launched a new DTC brand from scratch and deployed AI tooling across creative production, conversion testing, and growth operations.</div>
+          <div class="mob-card-divider"></div>
+          <div class="mob-card-deliverables">
+            <div class="mob-card-deliv">First cross-portfolio product &amp; growth hire across 5 brands</div>
+            <div class="mob-card-deliv">Launched Don.co DTC brand from zero — e-comm, vendors, CS, 3PL</div>
+            <div class="mob-card-deliv">Built AI ad production workflow; personally produced ~100 creatives</div>
+            <div class="mob-card-deliv">Amazon &amp; Meta agency management; UGC &amp; performance marketing</div>
+            <div class="mob-card-deliv">CAC/CPA stabilization, AOV uplift, and revenue recovery</div>
+          </div>
+        </div>
+      </div>
 
       <div class="mob-card">
         <div class="mob-card-titlebar">
@@ -756,6 +837,9 @@ const { useState, useEffect, useRef, useCallback } = React;
 
 // ─── Data ──────────────────────────────────────────────────
 const PROJECTS = [
+{ id: 'bond', name: 'Bond Holdings', year: 'Dec\'25–Present', tag: 'Head of P & G · Contract',
+  desc: 'Head of product and growth embedded across a 5-brand consumer portfolio (candy, supplements, wellness, jewelry, ODS). Launched a new DTC brand from scratch and deployed AI tooling across creative production, conversion testing, and growth operations.',
+  deliverables: ['First cross-portfolio product & growth hire across 5 brands', 'Launched Don.co DTC brand from zero — e-comm, vendors, CS, 3PL', 'Built AI ad production workflow; personally produced ~100 creatives', 'Amazon & Meta agency management; UGC & performance marketing', 'CAC/CPA stabilization, AOV uplift, and revenue recovery'] },
 { id: 'infatuation', name: 'The Infatuation', year: 'Aug\'22–Now', tag: 'VP of Product',
   desc: 'Led product strategy for a restaurant discovery platform acquired by JPMorgan Chase. Drove a full iOS/Android redesign and triple-digit growth in user accounts and newsletter subscribers.',
   deliverables: ['30% sign-up rate increase post-redesign', '150% increase in monthly downloads', '15–20% MAU growth per month', '100+ roadmap items shipped across 6 PM squads', 'Chase Link & Dine dining rewards integration'] },
@@ -764,7 +848,7 @@ const PROJECTS = [
   deliverables: ['+100k paying subscribers (+330%)', '20+ A/B feature tests in 12 months', 'Improved payback period & CAC economics', 'Retention, AOV, CVR, gifting & referral features', 'Led 1 PM, 5 engineers, 2 designers'] },
 { id: 'jetcom', name: 'Jet.com', year: 'Nov\'14–Jul\'18', tag: 'Sr. Product Manager',
   desc: 'Early member of Jet\'s product team. Grew the app\'s share of GMS from 13% to 22%, launched a full iOS redesign, and forged Apple and Google partnerships — including a 2018 Apple Pay commercial.',
-  deliverables: ['App GMS share: 13% → 22%', 'Full iOS UI/UX redesign led end-to-end', 'Apple & Google partnerships (ARKit, iMessage Apps)', 'App Store & Play Store Editors\' Choice 2015', 'Scaled product team from 60 to 1,500 employees'] },
+  deliverables: ['App GMS share: 13% → 22%', 'Full iOS UI/UX redesign led end-to-end', 'Apple & Google partnerships (ARKit, iMessage Apps)', 'App Store & Play Store Editors\' Choice 2015', 'Thrived during rapid scaling (60 to 1,500 employees)'] },
 { id: 'pawp', name: 'Pawp', year: 'Sept\'21–May\'22', tag: 'Head of Product',
   desc: 'Led product at a pet health startup. Built an in-house Pet Pharmacy and a digital prescription feature that opened new acquisition channels and increased monthly retention in under 6 months.',
   deliverables: ['In-house Pet Pharmacy launched', 'Digital prescription feature (novel acquisition channel)', '15+ roadmap initiatives shipped', '2 new business lines within 6 months', 'Improved CSAT and NPS'] },
@@ -785,6 +869,7 @@ const PROJECTS = [
 
 
 const DEFAULT_POS = {
+  bond: { x: 780, y: 64 },
   infatuation: { x: 72, y: 64 },
   trade: { x: 280, y: 44 },
   jetcom: { x: 520, y: 80 },
@@ -932,12 +1017,16 @@ function TickerBar() {
 }
 
 // ─── OS Window ────────────────────────────────────────────
-function OSWindow({ win, focused, onClose, onFocus, onTitleBarDown, children }) {
+function OSWindow({ win, focused, onClose, onFocus, onTitleBarDown, onAnimationEnd, children }) {
+  const animClass = win.animState ? ` is-${win.animState}` : '';
   return (
     <div
-      className={`os-window${focused ? ' focused' : ''}`}
+      className={`os-window${focused ? ' focused' : ''}${animClass}`}
       style={{ left: win.x, top: win.y, width: win.width || 340, zIndex: win.z }}
-      onMouseDown={onFocus}>
+      onMouseDown={win.animState === 'closing' ? undefined : onFocus}
+      onAnimationEnd={(e) => {
+        if (e.target === e.currentTarget) onAnimationEnd(win.id);
+      }}>
       
       <div className="os-titlebar" onMouseDown={onTitleBarDown}>
         <div className="traffic-lights">
@@ -1287,6 +1376,7 @@ function TweaksPanel({ setFolderPos }) {
 let winCounter = 300;
 
 const THEMES = ['terminal', 'amber', 'blueprint'];
+const withOpeningAnimation = (win) => ({ ...win, animState: 'opening' });
 
 function App() {
   const [time, setTime] = useState(new Date());
@@ -1300,7 +1390,7 @@ function App() {
     id: 'about-initial', type: 'about', title: 'About KHS',
     x: Math.min((window.innerWidth || 1200) - 340, Math.max(50, (window.innerWidth || 1200) * 2 / 3)),
     y: 80, width: 320, z: 200
-  }]);
+  }].map(withOpeningAnimation));
   const [focusedWin, setFocusedWin] = useState('about-initial');
 
   // dragging state
@@ -1346,53 +1436,68 @@ function App() {
   const focusWindow = useCallback((id) => {
     winCounter++;
     setFocusedWin(id);
-    setWindows((ws) => ws.map((w) => w.id === id ? { ...w, z: winCounter } : w));
+    setWindows((ws) => ws.map((w) => w.id === id && w.animState !== 'closing' ? { ...w, z: winCounter } : w));
+  }, []);
+
+  const finishWindowAnimation = useCallback((id) => {
+    setWindows((ws) => {
+      const win = ws.find((w) => w.id === id);
+      if (!win) return ws;
+      if (win.animState === 'closing') return ws.filter((w) => w.id !== id);
+      if (win.animState === 'opening') return ws.map((w) => w.id === id ? { ...w, animState: null } : w);
+      return ws;
+    });
   }, []);
 
   const openProject = useCallback((project) => {
-    const existing = windows.find((w) => w.projectId === project.id);
+    const existing = windows.find((w) => w.projectId === project.id && w.animState !== 'closing');
     if (existing) {focusWindow(existing.id);return;}
     winCounter++;
-    const newWin = {
+    const newWin = withOpeningAnimation({
       id: `proj-${project.id}-${Date.now()}`,
       type: 'project', projectId: project.id,
       title: project.name,
       x: 80 + windows.length % 5 * 30,
       y: 60 + windows.length % 4 * 24,
       width: 340, z: winCounter
-    };
+    });
     setWindows((ws) => [...ws, newWin]);
     setFocusedWin(newWin.id);
   }, [windows, focusWindow]);
 
   const openAbout = useCallback(() => {
-    const existing = windows.find((w) => w.type === 'about');
+    const existing = windows.find((w) => w.type === 'about' && w.animState !== 'closing');
     if (existing) {focusWindow(existing.id);return;}
     winCounter++;
-    const newWin = { id: 'about-' + Date.now(), type: 'about', title: 'About KHS', x: 200, y: 80, width: 320, z: winCounter };
+    const newWin = withOpeningAnimation({ id: 'about-' + Date.now(), type: 'about', title: 'About KHS', x: 200, y: 80, width: 320, z: winCounter });
     setWindows((ws) => [...ws, newWin]);
     setFocusedWin(newWin.id);
   }, [windows, focusWindow]);
 
   const closeWindow = useCallback((id) => {
-    setWindows((ws) => ws.filter((w) => w.id !== id));
+    if (dragging.current?.type === 'window' && dragging.current.id === id) dragging.current = null;
+    setWindows((ws) => ws.map((w) => w.id === id ? { ...w, animState: 'closing' } : w));
   }, []);
 
   const handleToolbarAction = useCallback((action) => {
     if (action === 'about') {openAbout();return;}
-    if (action === 'home') {setWindows([]);return;}
+    if (action === 'home') {
+      dragging.current = null;
+      setWindows((ws) => ws.map((w) => ({ ...w, animState: 'closing' })));
+      return;
+    }
     if (action === 'resume') {
       winCounter++;
-      const win = { id: `resume-${Date.now()}`, type: 'resume', title: 'Resume', x: 180, y: 110, width: 320, z: winCounter };
+      const win = withOpeningAnimation({ id: `resume-${Date.now()}`, type: 'resume', title: 'Resume', x: 180, y: 110, width: 320, z: winCounter });
       setWindows((ws) => [...ws, win]);
       setFocusedWin(win.id);
       return;
     }
     if (action === 'contact') {
-      const existing = windows.find((w) => w.type === 'contact');
+      const existing = windows.find((w) => w.type === 'contact' && w.animState !== 'closing');
       if (existing) { focusWindow(existing.id); return; }
       winCounter++;
-      const win = { id: `contact-${Date.now()}`, type: 'contact', title: 'Contact', x: 220, y: 130, width: 340, z: winCounter };
+      const win = withOpeningAnimation({ id: `contact-${Date.now()}`, type: 'contact', title: 'Contact', x: 220, y: 130, width: 340, z: winCounter });
       setWindows((ws) => [...ws, win]);
       setFocusedWin(win.id);
       return;
@@ -1402,10 +1507,10 @@ function App() {
       return;
     }
     if (action === 'aboutsite') {
-      const existing = windows.find((w) => w.type === 'aboutsite');
+      const existing = windows.find((w) => w.type === 'aboutsite' && w.animState !== 'closing');
       if (existing) { focusWindow(existing.id); return; }
       winCounter++;
-      const win = { id: `aboutsite-${Date.now()}`, type: 'aboutsite', title: 'About This Site', x: 150, y: 100, width: 320, z: winCounter };
+      const win = withOpeningAnimation({ id: `aboutsite-${Date.now()}`, type: 'aboutsite', title: 'About This Site', x: 150, y: 100, width: 320, z: winCounter });
       setWindows((ws) => [...ws, win]);
       setFocusedWin(win.id);
       return;
@@ -1417,9 +1522,9 @@ function App() {
       title: action.charAt(0).toUpperCase() + action.slice(1),
       x: 150, y: 100, width: 300, z: winCounter
     };
-    setWindows((ws) => [...ws, win]);
+    setWindows((ws) => [...ws, withOpeningAnimation(win)]);
     setFocusedWin(win.id);
-  }, [openAbout, openProject]);
+  }, [windows, focusWindow, openAbout, openProject]);
 
   return (
     <div className="app">
@@ -1492,6 +1597,7 @@ function App() {
           focused={focusedWin === win.id}
           onClose={() => closeWindow(win.id)}
           onFocus={() => focusWindow(win.id)}
+          onAnimationEnd={finishWindowAnimation}
           onTitleBarDown={(e) => {
             e.preventDefault();
             focusWindow(win.id);
