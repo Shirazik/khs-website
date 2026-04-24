@@ -522,7 +522,7 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
         <div class="mob-card-body">
           <div class="mob-card-meta">
             <span class="mob-card-tag">VP of Product</span>
-            <span class="mob-card-year">Aug'22–Now</span>
+            <span class="mob-card-year">Aug'22–Oct'25</span>
           </div>
           <div class="mob-card-title">The Infatuation</div>
           <div class="mob-card-desc">Led product strategy for a restaurant discovery platform acquired by JPMorgan Chase. Drove a full iOS/Android redesign and triple-digit growth in user accounts and newsletter subscribers.</div>
@@ -1097,7 +1097,7 @@ const PROJECTS = [
 { id: 'bond', name: 'Bond Holdings', year: 'Dec\'25–Present', tag: 'Head of P & G · Contract',
   desc: 'Head of product and growth embedded across a 5-brand consumer portfolio (candy, supplements, wellness, jewelry, ODS). Launched a new DTC brand from scratch and deployed AI tooling across creative production, conversion testing, and growth operations.',
   deliverables: ['First cross-portfolio product & growth hire across 5 brands', 'Launched Don.co DTC brand from zero — e-comm, vendors, CS, 3PL', 'Built AI ad production workflow; personally produced ~100 creatives', 'Amazon & Meta agency management; UGC & performance marketing', 'CAC/CPA stabilization, AOV uplift, and revenue recovery'] },
-{ id: 'infatuation', name: 'The Infatuation', year: 'Aug\'22–Now', tag: 'VP of Product',
+{ id: 'infatuation', name: 'The Infatuation', year: 'Aug\'22–Oct\'25', tag: 'VP of Product',
   desc: 'Led product strategy for a restaurant discovery platform acquired by JPMorgan Chase. Drove a full iOS/Android redesign and triple-digit growth in user accounts and newsletter subscribers.',
   deliverables: ['30% sign-up rate increase post-redesign', '150% increase in monthly downloads', '15–20% MAU growth per month', '100+ roadmap items shipped across 6 PM squads', 'Chase Link & Dine dining rewards integration'] },
 { id: 'trade', name: 'Trade Coffee', year: 'Oct\'19–Jun\'21', tag: 'Director of Product',
@@ -1115,12 +1115,12 @@ const PROJECTS = [
 { id: 'button', name: 'Button', year: 'Jul\'18–Aug\'19', tag: 'Sr. Product Manager',
   desc: 'Led mobile experience at a commerce enablement platform. Built partner conversion features, ran a team process refresh, and instituted a culture of prototyping and data-informed iteration.',
   deliverables: ['Mobile partner conversion optimization', 'OKR framework for team focus', 'Team process refresh — less thrash, higher output', 'Tooling and operating culture improvements'] },
-{ id: 'chrome-extension', name: 'Marketing Claims Analyzer', year: '2026', tag: 'Side Project',
+{ id: 'chrome-extension', isAI: true, name: 'Marketing Claims Analyzer', year: '2026', tag: 'Side Project',
   url: 'https://chromewebstore.google.com/detail/ncnnfdcljpfbchhmhhplahafnamlfhih?utm_source=item-share-cb',
   githubUrl: 'https://github.com/Shirazik/marketing-claims-analyzer',
   desc: 'A browser extension that brings AI-powered transparency to online shopping. It analyzes any product page — Amazon listings, Shopify stores, or any website — and evaluates every marketing claim it finds, returning a verdict of Supported, Misleading, or Unverified alongside plain-English explanations and ingredient-aware scientific reasoning. Built with a privacy-first architecture (BYOK via OpenAI, no data collection, no tracking) at under a penny per analysis.',
   deliverables: ['Works on Amazon, Shopify, and any product page', 'Verdicts: Supported · Misleading · Unverified', 'Product-aware: builds ingredient context before drawing conclusions', 'BYOK via OpenAI — no data collection, no tracking', 'Under a penny per analysis'] },
-{ id: 'fpl-analyzer', name: 'FPL Transfer Analyzer', year: '2025', tag: 'Side Project',
+{ id: 'fpl-analyzer', isAI: true, name: 'FPL Transfer Analyzer', year: '2025', tag: 'Side Project',
   url: 'https://fpl-optimizer-three.vercel.app/',
   githubUrl: 'https://github.com/Shirazik/fpl-optimizer',
   desc: 'A web app that gives Fantasy Premier League managers mathematically optimal transfer recommendations. Enter your team ID and it pulls your squad from the official FPL API, then solves a Mixed Integer Linear Program to maximize expected points over the next three gameweeks — accounting for budget, squad composition, club limits, selling prices, and the -4 hit for extra transfers.',
@@ -1890,7 +1890,7 @@ function App() {
       return;
     }
     if (action === 'portfolio') {
-      PROJECTS.forEach((p, i) => setTimeout(() => openProject(p), i * 80));
+      PROJECTS.filter(p => p.isAI).forEach((p, i) => setTimeout(() => openProject(p), i * 80));
       return;
     }
     if (action === 'aboutsite') {
