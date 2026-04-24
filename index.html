@@ -305,6 +305,48 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
 }
 .win-cta:hover { background: var(--color-ink); color: var(--color-ink-inv); }
 
+/* Services window */
+.svc-cat-label {
+  font-family: var(--font-mono); font-size: 7px; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--color-ink-3);
+  margin: 16px 0 8px; padding-bottom: 4px;
+  border-bottom: 1px solid var(--color-ink); opacity: 0.6;
+}
+.svc-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+}
+.svc-card {
+  border: 1px solid var(--color-ink); padding: 10px 12px;
+  background: var(--bg-base); position: relative; overflow: hidden;
+  transition: background 80ms;
+  cursor: default;
+}
+.svc-card::before {
+  content: ''; position: absolute; top: 0; left: 0;
+  width: 2px; height: 100%; background: var(--color-accent); opacity: 0;
+  transition: opacity 80ms;
+}
+.svc-card:hover { background: var(--bg-sunken); }
+.svc-card:hover::before { opacity: 1; }
+.svc-card-title {
+  font-family: var(--font-mono); font-size: 9px; font-weight: 600;
+  letter-spacing: 0.04em; color: var(--color-ink);
+  margin-bottom: 5px; line-height: 1.4;
+}
+.svc-card-desc {
+  font-family: 'Source Sans 3', sans-serif; font-size: 11px;
+  line-height: 1.55; color: var(--color-ink-2);
+}
+.svc-cta-row {
+  margin-top: 18px; padding-top: 14px;
+  border-top: 1px solid var(--color-ink);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.svc-avail {
+  font-family: var(--font-mono); font-size: 8px; letter-spacing: 0.1em;
+  color: var(--color-ink-3); display: flex; align-items: center; gap: 6px;
+}
+
 /* About window */
 .about-hex { display: flex; justify-content: center; margin-bottom: 14px; }
 .about-name {
@@ -783,7 +825,143 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
       </div>
     </div>
   </section>
-  <div id="mob-services"></div>
+  <section class="mob-section" id="mob-services">
+    <div class="mob-section-label">Consulting</div>
+    <div class="mob-section-title">Services</div>
+    <div class="mob-cards">
+
+      <div class="mob-card">
+        <div class="mob-card-titlebar">
+          <div class="mob-card-tl mob-card-tl-red"></div>
+          <div class="mob-card-tl mob-card-tl-yel"></div>
+          <div class="mob-card-tl mob-card-tl-grn"></div>
+          <div class="mob-card-wintitle">AI</div>
+        </div>
+        <div class="mob-card-body">
+          <div class="mob-card-title">AI</div>
+          <div class="mob-card-divider"></div>
+          <div class="mob-card-deliverables" style="gap: 12px;">
+            <div>
+              <div class="mob-card-deliv">AI Workflow Integration</div>
+              <div style="margin: 4px 0 0 18px; font-family: 'Source Sans 3', sans-serif; font-size: 12px; line-height: 1.5; color: var(--color-ink-2);">Identifying and deploying AI tooling inside existing operations — product dev, creative, growth, ops.</div>
+            </div>
+            <div>
+              <div class="mob-card-deliv">AI Product Consulting</div>
+              <div style="margin: 4px 0 0 18px; font-family: 'Source Sans 3', sans-serif; font-size: 12px; line-height: 1.5; color: var(--color-ink-2);">Building AI-native features or tools into existing products. Privacy-first, BYOK patterns.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mob-card">
+        <div class="mob-card-titlebar">
+          <div class="mob-card-tl mob-card-tl-red"></div>
+          <div class="mob-card-tl mob-card-tl-yel"></div>
+          <div class="mob-card-tl mob-card-tl-grn"></div>
+          <div class="mob-card-wintitle">Leadership</div>
+        </div>
+        <div class="mob-card-body">
+          <div class="mob-card-title">Leadership</div>
+          <div class="mob-card-divider"></div>
+          <div class="mob-card-deliverables" style="gap: 12px;">
+            <div>
+              <div class="mob-card-deliv">Fractional Head of Product</div>
+              <div style="margin: 4px 0 0 18px; font-family: 'Source Sans 3', sans-serif; font-size: 12px; line-height: 1.5; color: var(--color-ink-2);">Embedded, ongoing leadership across roadmap, team, and execution.</div>
+            </div>
+            <div>
+              <div class="mob-card-deliv">0→1 Launch &amp; 1→10 Scaling</div>
+              <div style="margin: 4px 0 0 18px; font-family: 'Source Sans 3', sans-serif; font-size: 12px; line-height: 1.5; color: var(--color-ink-2);">Taking a new product from concept to market. Scaling team and business. DTC, B2C, or B2B.</div>
+            </div>
+            <div>
+              <div class="mob-card-deliv">Product Org Process Design</div>
+              <div style="margin: 4px 0 0 18px; font-family: 'Source Sans 3', sans-serif; font-size: 12px; line-height: 1.5; color: var(--color-ink-2);">Roadmapping, OKRs, culture of experimentation, reducing thrash, velocity optimization.</div>
+            </div>
+            <div>
+              <div class="mob-card-deliv">Team Building &amp; PM Hiring</div>
+              <div style="margin: 4px 0 0 18px; font-family: 'Source Sans 3', sans-serif; font-size: 12px; line-height: 1.5; color: var(--color-ink-2);">Structure, leveling, and interview process design for product orgs.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mob-card">
+        <div class="mob-card-titlebar">
+          <div class="mob-card-tl mob-card-tl-red"></div>
+          <div class="mob-card-tl mob-card-tl-yel"></div>
+          <div class="mob-card-tl mob-card-tl-grn"></div>
+          <div class="mob-card-wintitle">Growth &amp; Analytics</div>
+        </div>
+        <div class="mob-card-body">
+          <div class="mob-card-title">Growth &amp; Analytics</div>
+          <div class="mob-card-divider"></div>
+          <div class="mob-card-deliverables" style="gap: 12px;">
+            <div>
+              <div class="mob-card-deliv">KPI Framework &amp; Dashboards</div>
+              <div style="margin: 4px 0 0 18px; font-family: 'Source Sans 3', sans-serif; font-size: 12px; line-height: 1.5; color: var(--color-ink-2);">Metrics definition, measurement infrastructure, and exec reporting.</div>
+            </div>
+            <div>
+              <div class="mob-card-deliv">Unit Economics &amp; Optimization</div>
+              <div style="margin: 4px 0 0 18px; font-family: 'Source Sans 3', sans-serif; font-size: 12px; line-height: 1.5; color: var(--color-ink-2);">Funnel analysis, testing, and CAC / LTV / payback period / AOV modeling for consumer businesses.</div>
+            </div>
+            <div>
+              <div class="mob-card-deliv">Subscription Growth &amp; Retention</div>
+              <div style="margin: 4px 0 0 18px; font-family: 'Source Sans 3', sans-serif; font-size: 12px; line-height: 1.5; color: var(--color-ink-2);">CVR, AOV, gifting, referral, and payback period optimization.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mob-card">
+        <div class="mob-card-titlebar">
+          <div class="mob-card-tl mob-card-tl-red"></div>
+          <div class="mob-card-tl mob-card-tl-yel"></div>
+          <div class="mob-card-tl mob-card-tl-grn"></div>
+          <div class="mob-card-wintitle">Specialty</div>
+        </div>
+        <div class="mob-card-body">
+          <div class="mob-card-title">Specialty</div>
+          <div class="mob-card-divider"></div>
+          <div class="mob-card-deliverables" style="gap: 12px;">
+            <div>
+              <div class="mob-card-deliv">Mobile App Strategy &amp; Redesign</div>
+              <div style="margin: 4px 0 0 18px; font-family: 'Source Sans 3', sans-serif; font-size: 12px; line-height: 1.5; color: var(--color-ink-2);">iOS/Android product direction, UX, and App Store optimization.</div>
+            </div>
+            <div>
+              <div class="mob-card-deliv">Media &amp; Content Platform Strategy</div>
+              <div style="margin: 4px 0 0 18px; font-family: 'Source Sans 3', sans-serif; font-size: 12px; line-height: 1.5; color: var(--color-ink-2);">Editorial product, SEO, newsletter growth, consumer media.</div>
+            </div>
+            <div>
+              <div class="mob-card-deliv">UX Research &amp; Discovery</div>
+              <div style="margin: 4px 0 0 18px; font-family: 'Source Sans 3', sans-serif; font-size: 12px; line-height: 1.5; color: var(--color-ink-2);">User interviews, synthesis, and design-thinking facilitation.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mob-card">
+        <div class="mob-card-titlebar">
+          <div class="mob-card-tl mob-card-tl-red"></div>
+          <div class="mob-card-tl mob-card-tl-yel"></div>
+          <div class="mob-card-tl mob-card-tl-grn"></div>
+          <div class="mob-card-wintitle">Advisory</div>
+        </div>
+        <div class="mob-card-body">
+          <div class="mob-card-title">Advisory</div>
+          <div class="mob-card-divider"></div>
+          <div class="mob-card-deliverables" style="gap: 12px;">
+            <div>
+              <div class="mob-card-deliv">Startup Product Advisory</div>
+              <div style="margin: 4px 0 0 18px; font-family: 'Source Sans 3', sans-serif; font-size: 12px; line-height: 1.5; color: var(--color-ink-2);">Ongoing advisory for seed/Series A founders building consumer products.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div style="text-align: center; margin-top: 24px;">
+      <button class="mob-card-cta" onclick="mobNavigate('contact')">Get in Touch →</button>
+    </div>
+  </section>
   <section class="mob-section" id="mob-resume">
     <div class="mob-section-label">CV</div>
     <div class="mob-section-title">Resume</div>
@@ -1093,7 +1271,7 @@ function TickerBar() {
 }
 
 // ─── OS Window ────────────────────────────────────────────
-function OSWindow({ win, focused, onClose, onFocus, onTitleBarDown, onAnimationEnd, children }) {
+function OSWindow({ win, focused, onClose, onFocus, onTitleBarDown, onAnimationEnd, children, bodyStyle }) {
   const animClass = win.animState ? ` is-${win.animState}` : '';
   return (
     <div
@@ -1112,7 +1290,7 @@ function OSWindow({ win, focused, onClose, onFocus, onTitleBarDown, onAnimationE
         </div>
         <div className="os-wintitle">{win.title}</div>
       </div>
-      <div className="os-body">{children}</div>
+      <div className="os-body" style={bodyStyle}>{children}</div>
     </div>);
 
 }
@@ -1143,6 +1321,56 @@ function ProjectContent({ project }) {
       )}
     </div>);
 
+}
+
+// ─── Services content ──────────────────────────────────────
+const SERVICES = [
+  { cat: 'AI', title: 'AI Workflow Integration', desc: 'Identifying and deploying AI tooling inside existing operations — product dev, creative, growth, ops.' },
+  { cat: 'AI', title: 'AI Product Consulting', desc: 'Building AI-native features or tools into existing products. Privacy-first, BYOK patterns.' },
+  { cat: 'Leadership', title: 'Fractional Head of Product', desc: 'Embedded, ongoing leadership across roadmap, team, and execution.' },
+  { cat: 'Leadership', title: '0→1 Launch & 1→10 Scaling', desc: 'Taking a new product from concept to market. Scaling team and business. DTC, B2C, or B2B.' },
+  { cat: 'Leadership', title: 'Product Org Process Design', desc: 'Roadmapping, OKRs, culture of experimentation, reducing thrash, velocity optimization.' },
+  { cat: 'Leadership', title: 'Team Building & PM Hiring', desc: 'Structure, leveling, and interview process design for product orgs.' },
+  { cat: 'Growth & Analytics', title: 'KPI Framework & Dashboards', desc: 'Metrics definition, measurement infrastructure, and exec reporting.' },
+  { cat: 'Growth & Analytics', title: 'Unit Economics & Optimization', desc: 'Funnel analysis, testing, and CAC / LTV / payback period / AOV modeling for consumer businesses.' },
+  { cat: 'Growth & Analytics', title: 'Subscription Growth & Retention', desc: 'CVR, AOV, gifting, referral, and payback period optimization.' },
+  { cat: 'Specialty', title: 'Mobile App Strategy & Redesign', desc: 'iOS/Android product direction, UX, and App Store optimization.' },
+  { cat: 'Specialty', title: 'Media & Content Platform Strategy', desc: 'Editorial product, SEO, newsletter growth, consumer media.' },
+  { cat: 'Specialty', title: 'UX Research & Discovery', desc: 'User interviews, synthesis, and design-thinking facilitation.' },
+  { cat: 'Advisory', title: 'Startup Product Advisory', desc: 'Ongoing advisory for seed/Series A founders building consumer products.' },
+];
+
+function ServicesContent() {
+  const cats = [...new Set(SERVICES.map(s => s.cat))];
+  return (
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 12 }}>
+        <div className="win-title" style={{ fontSize: 20, marginBottom: 0 }}>Services</div>
+        <span className="win-tag">KHS Consulting</span>
+      </div>
+      <div className="win-divider" />
+      {cats.map(cat => (
+        <div key={cat}>
+          <div className="svc-cat-label">{cat}</div>
+          <div className="svc-grid">
+            {SERVICES.filter(s => s.cat === cat).map(s => (
+              <div key={s.title} className="svc-card">
+                <div className="svc-card-title">{s.title}</div>
+                <div className="svc-card-desc">{s.desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+      <div className="svc-cta-row">
+        <div className="svc-avail">
+          <span className="status-dot" />
+          Available for new engagements — 2026
+        </div>
+        <button className="win-cta">Get in Touch →</button>
+      </div>
+    </div>
+  );
 }
 
 // ─── About content ────────────────────────────────────────
@@ -1644,6 +1872,18 @@ function App() {
       setFocusedWin(win.id);
       return;
     }
+    if (action === 'services') {
+      const existing = windows.find((w) => w.type === 'services');
+      if (existing) { focusWindow(existing.id); return; }
+      winCounter++;
+      const win = withOpeningAnimation({
+        id: `services-${Date.now()}`, type: 'services',
+        title: 'Services', x: 160, y: 80, width: 560, z: winCounter
+      });
+      setWindows((ws) => [...ws, win]);
+      setFocusedWin(win.id);
+      return;
+    }
     if (action === 'portfolio') {
       PROJECTS.forEach((p, i) => setTimeout(() => openProject(p), i * 80));
       return;
@@ -1751,12 +1991,16 @@ function App() {
           onClose={() => closeWindow(win.id)}
           onFocus={() => focusWindow(win.id)}
           onAnimationEnd={finishWindowAnimation}
+          bodyStyle={win.type === 'services'
+            ? { maxHeight: 'calc(100vh - 180px)', overflowY: 'auto' }
+            : undefined}
           onTitleBarDown={(e) => {
             e.preventDefault();
             focusWindow(win.id);
             dragging.current = { type: 'window', id: win.id, ox: e.clientX - win.x, oy: e.clientY - win.y };
           }}>
-          
+
+            {win.type === 'services' && <ServicesContent />}
             {win.type === 'about' && <AboutContent />}
             {win.type === 'resume' && <ResumeContent />}
             {win.type === 'contact' && <ContactContent />}
