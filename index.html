@@ -408,7 +408,7 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
   background: var(--bg-surface);
 }
 .tb-cell {
-  width: 64px; padding: 5px 0 4px; display: flex; flex-direction: column;
+  width: 80px; padding: 5px 0 4px; display: flex; flex-direction: column;
   align-items: center; gap: 3px; border-right: 1px solid rgba(0,0,0,0.12);
   cursor: pointer;
   border-top: 2px solid rgba(255,255,255,0.65);
@@ -425,7 +425,7 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
 }
 .tb-cell svg { width: 36px; height: 36px; }
 .tb-label {
-  font-family: var(--font-mono); font-size: 7.5px; letter-spacing: 0.03em;
+  font-family: var(--font-mono); font-size: 8.5px; letter-spacing: 0.03em;
   color: var(--color-ink); text-align: center; line-height: 1.2;
   pointer-events: none;
 }
@@ -1252,7 +1252,7 @@ function HexMark({ size = 18, color = 'rgba(255,255,255,0.9)' }) {
 // ─── Menu Bar Popup ───────────────────────────────────────
 const MENU_MESSAGES = {
   File: "Don't file me away.",
-  Go:   "Where do you want to go?",
+  Go:   "Where do you want to go? I can help you get there.",
   Help: "Help? Yea, I can help you.",
 };
 
