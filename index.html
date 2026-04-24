@@ -1346,7 +1346,7 @@ const SERVICES = [
   { cat: 'Advisory', title: 'Startup Product Advisory', desc: 'Ongoing advisory for seed/Series A founders building consumer products.' },
 ];
 
-function ServicesContent() {
+function ServicesContent({ onGetInTouch }) {
   const cats = [...new Set(SERVICES.map(s => s.cat))];
   return (
     <div>
@@ -1373,7 +1373,7 @@ function ServicesContent() {
           <span className="status-dot" />
           Available for new engagements — 2026
         </div>
-        <button className="win-cta">Get in Touch →</button>
+        <button className="win-cta" onClick={onGetInTouch}>Get in Touch →</button>
       </div>
     </div>
   );
@@ -1998,7 +1998,7 @@ function App() {
           onFocus={() => focusWindow(win.id)}
           onAnimationEnd={finishWindowAnimation}
           bodyStyle={win.type === 'services'
-            ? { maxHeight: 'calc(100vh - 180px)', overflowY: 'auto' }
+            ? { maxHeight: 'calc(100vh - 280px)', overflowY: 'auto' }
             : undefined}
           onTitleBarDown={(e) => {
             e.preventDefault();
@@ -2006,7 +2006,7 @@ function App() {
             dragging.current = { type: 'window', id: win.id, ox: e.clientX - win.x, oy: e.clientY - win.y };
           }}>
 
-            {win.type === 'services' && <ServicesContent />}
+            {win.type === 'services' && <ServicesContent onGetInTouch={() => handleToolbarAction('contact')} />}
             {win.type === 'about' && <AboutContent />}
             {win.type === 'resume' && <ResumeContent />}
             {win.type === 'contact' && <ContactContent />}
