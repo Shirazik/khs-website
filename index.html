@@ -57,6 +57,25 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
 }
 .menu-item:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.9); }
 .menu-item.active { color: var(--color-accent); opacity: 1; }
+.menu-popup {
+  position: fixed; top: 28px;
+  background: var(--bg-surface, #1a1a1a);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-top: none;
+  padding: 10px 14px;
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em;
+  color: #000;
+  white-space: nowrap;
+  z-index: 10000;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  animation: menuPopupIn 120ms ease-out;
+  cursor: pointer;
+  max-width: 280px; white-space: normal; line-height: 1.5;
+}
+@keyframes menuPopupIn {
+  from { opacity: 0; transform: translateY(-3px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 .about-inner-menu { margin: -20px -20px 20px; border-top: none; border-bottom: 2px solid var(--color-ink); z-index: 1; background: #202020; }
 .about-inner-menu .menu-item { cursor: pointer; }
 .about-me-placeholder { padding: 60px 20px; text-align: center; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; color: var(--color-ink); opacity: 0.45; }
@@ -1230,6 +1249,34 @@ function HexMark({ size = 18, color = 'rgba(255,255,255,0.9)' }) {
 
 }
 
+// ─── Menu Bar Popup ───────────────────────────────────────
+const MENU_MESSAGES = {
+  File: "Don't file me away.",
+  Go:   "Where do you want to go?",
+  Help: "Help? Yea, I can help you.",
+};
+
+function MenuPopup({ popup, onClose }) {
+  React.useEffect(() => {
+    if (!popup) return;
+    const id = setTimeout(onClose, 3000);
+    return () => clearTimeout(id);
+  }, [popup]);
+
+  if (!popup) return null;
+
+  const clampedLeft = Math.min(popup.x, window.innerWidth - 296);
+  return (
+    <div
+      className="menu-popup"
+      style={{ left: clampedLeft }}
+      onClick={onClose}
+    >
+      {MENU_MESSAGES[popup.menu]}
+    </div>
+  );
+}
+
 // ─── Menu Bar ─────────────────────────────────────────────
 function MenuBar({ time, onAbout, onThemeCycle }) {
   const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
@@ -1238,20 +1285,35 @@ function MenuBar({ time, onAbout, onThemeCycle }) {
   const dateStr = `${days[d.getDay()]} ${String(d.getDate()).padStart(2, '0')} ${months[d.getMonth()]} ${d.getFullYear()}`;
   const timeStr = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
 
+  const [popup, setPopup] = React.useState(null);
+  const closePopup = React.useCallback(() => setPopup(null), []);
+
+  function handleMenuClick(m, e) {
+    if (m === 'View') { onThemeCycle(); return; }
+    if (m in MENU_MESSAGES) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      setPopup(prev => prev?.menu === m ? null : { menu: m, x: rect.left });
+    }
+  }
+
   return (
-    <div className="menu-bar">
-      <div className="menu-logo" onClick={onAbout}>
-        <img src="assets/khs-logo-transparent.png" alt="KHS" style={{ filter: 'invert(1)', display: 'block', width: "35px", height: "33px", objectFit: "contain" }} />
+    <React.Fragment>
+      <div className="menu-bar">
+        <div className="menu-logo" onClick={onAbout}>
+          <img src="assets/khs-logo-transparent.png" alt="KHS" style={{ filter: 'invert(1)', display: 'block', width: "35px", height: "33px", objectFit: "contain" }} />
+        </div>
+        {['File', 'View', 'Go', 'Help'].map((m) =>
+          <div key={m} className="menu-item" onClick={(e) => handleMenuClick(m, e)}>{m}</div>
+        )}
+        <div className="menu-spacer" />
+        <div className="menu-right">
+          <div className="menu-date">{dateStr}</div>
+          <div className="menu-clock">{timeStr}</div>
+        </div>
       </div>
-      {['File', 'View', 'Go', 'Help'].map((m) =>
-      <div key={m} className="menu-item" onClick={m === 'View' ? onThemeCycle : undefined}>{m}</div>
-      )}
-      <div className="menu-spacer" />
-      <div className="menu-right">
-        <div className="menu-date">{dateStr}</div>
-        <div className="menu-clock">{timeStr}</div>
-      </div>
-    </div>);
+      <MenuPopup popup={popup} onClose={closePopup} />
+    </React.Fragment>
+  );
 
 }
 
