@@ -1122,21 +1122,21 @@ const PROJECTS = [
 { id: 'infatuation', name: 'The Infatuation', year: 'Aug\'22–Oct\'25', tag: 'VP of Product',
   desc: 'Led product strategy for a restaurant discovery platform acquired by JPMorgan Chase. Drove a full iOS/Android redesign and triple-digit growth in user accounts and newsletter subscribers.',
   deliverables: ['30% sign-up rate increase post-redesign', '150% increase in monthly downloads', '15–20% MAU growth per month', '100+ roadmap items shipped across 6 PM squads', 'Chase Link & Dine dining rewards integration'] },
-{ id: 'trade', name: 'Trade Coffee', year: 'Oct\'19–Jun\'21', tag: 'Director of Product',
-  desc: 'Partnered with the CEO to scale a specialty coffee subscription from concept to 100k+ paying subscribers — a 330%+ increase — by building a deep culture of experimentation and user research.',
-  deliverables: ['+100k paying subscribers (+330%)', '20+ A/B feature tests in 12 months', 'Improved payback period & CAC economics', 'Retention, AOV, CVR, gifting & referral features', 'Led 1 PM, 5 engineers, 2 designers'] },
-{ id: 'jetcom', name: 'Jet.com', year: 'Nov\'14–Jul\'18', tag: 'Sr. Product Manager',
-  desc: 'Early member of Jet\'s product team. Grew the app\'s share of GMS from 13% to 22%, launched a full iOS redesign, and forged Apple and Google partnerships — including a 2018 Apple Pay commercial.',
-  deliverables: ['App GMS share: 13% → 22%', 'Full iOS UI/UX redesign led end-to-end', 'Apple & Google partnerships (ARKit, iMessage Apps)', 'App Store & Play Store Editors\' Choice 2015', 'Thrived during rapid scaling (60 to 1,500 employees)'] },
 { id: 'pawp', name: 'Pawp', year: 'Sept\'21–May\'22', tag: 'Head of Product',
   desc: 'Led product at a pet health startup. Built an in-house Pet Pharmacy and a digital prescription feature that opened new acquisition channels and increased monthly retention in under 6 months.',
   deliverables: ['In-house Pet Pharmacy launched', 'Digital prescription feature (novel acquisition channel)', '15+ roadmap initiatives shipped', '2 new business lines within 6 months', 'Improved CSAT and NPS'] },
 { id: 'buzzfeed', name: 'BuzzFeed', year: 'Jun–Nov\'21', tag: 'Staff PM · Contract',
   desc: 'Led the first redesign of BuzzFeed.com since 2016 — a homepage serving 60–80 million monthly visits — coordinating across SVPs, VPs, and a cross-functional team to ship on a tight timeline.',
   deliverables: ['Homepage redesign at 60–80M monthly visits', 'First redesign since 2016', 'KPI dashboards and measurement framework', 'Lean team: 3 engineers, 1 designer, 1 data analyst'] },
+{ id: 'trade', name: 'Trade Coffee', year: 'Oct\'19–Jun\'21', tag: 'Director of Product',
+  desc: 'Partnered with the CEO to scale a specialty coffee subscription from concept to 100k+ paying subscribers — a 330%+ increase — by building a deep culture of experimentation and user research.',
+  deliverables: ['+100k paying subscribers (+330%)', '20+ A/B feature tests in 12 months', 'Improved payback period & CAC economics', 'Retention, AOV, CVR, gifting & referral features', 'Led 1 PM, 5 engineers, 2 designers'] },
 { id: 'button', name: 'Button', year: 'Jul\'18–Aug\'19', tag: 'Sr. Product Manager',
   desc: 'Led mobile experience at a commerce enablement platform. Built partner conversion features, ran a team process refresh, and instituted a culture of prototyping and data-informed iteration.',
   deliverables: ['Mobile partner conversion optimization', 'OKR framework for team focus', 'Team process refresh — less thrash, higher output', 'Tooling and operating culture improvements'] },
+{ id: 'jetcom', name: 'Jet.com', year: 'Nov\'14–Jul\'18', tag: 'Sr. Product Manager',
+  desc: 'Early member of Jet\'s product team. Grew the app\'s share of GMS from 13% to 22%, launched a full iOS redesign, and forged Apple and Google partnerships — including a 2018 Apple Pay commercial.',
+  deliverables: ['App GMS share: 13% → 22%', 'Full iOS UI/UX redesign led end-to-end', 'Apple & Google partnerships (ARKit, iMessage Apps)', 'App Store & Play Store Editors\' Choice 2015', 'Thrived during rapid scaling (60 to 1,500 employees)'] },
 { id: 'chrome-extension', isAI: true, name: 'Marketing Claims Analyzer', year: '2026', tag: 'Side Project',
   url: 'https://chromewebstore.google.com/detail/ncnnfdcljpfbchhmhhplahafnamlfhih?utm_source=item-share-cb',
   githubUrl: 'https://github.com/Shirazik/marketing-claims-analyzer',
@@ -1150,16 +1150,16 @@ const PROJECTS = [
 
 
 const DEFAULT_POS = {
-  bond: { x: 780, y: 64 },
-  infatuation: { x: 72, y: 64 },
-  trade: { x: 280, y: 44 },
-  jetcom: { x: 520, y: 80 },
-  pawp: { x: 130, y: 260 },
-  buzzfeed: { x: 400, y: 240 },
-  button: { x: 680, y: 155 },
-  aboutsite: { x: 30, y: 560 },
+  bond:        { x: 30,  y: 64  },
+  infatuation: { x: 160, y: 64  },
+  pawp:        { x: 290, y: 64  },
+  buzzfeed:    { x: 420, y: 64  },
+  trade:       { x: 30,  y: 190 },
+  button:      { x: 160, y: 190 },
+  jetcom:      { x: 290, y: 190 },
+  aboutsite:         { x: 30,  y: 560 },
   'chrome-extension': { x: 160, y: 560 },
-  'fpl-analyzer': { x: 300, y: 560 }
+  'fpl-analyzer':     { x: 300, y: 560 }
 };
 
 const TICKER = 'STRATEGY · PRODUCT · SYSTEMS · KHS CONSULTING · EST. 2025 · AVAILABLE FOR NEW PROJECTS · ';
