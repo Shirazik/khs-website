@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="amber">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Kareem Shirazi — Resume (Editorial)</title>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   KHS DESIGN SYSTEM — Amber + Print themes only
+   ============================================================ */
+
+[data-theme="amber"] {
+  --bg-base:        oklch(97% 0.018 88);
+  --bg-surface:     oklch(93% 0.022 88);
+  --bg-sunken:      oklch(88% 0.025 88);
+  --bg-inverse:     oklch(16% 0.025 60);
+  --color-ink:      oklch(14% 0.015 60);
+  --color-ink-2:    oklch(36% 0.018 60);
+  --color-ink-3:    oklch(58% 0.012 60);
+  --color-ink-inv:  oklch(97% 0.018 88);
+  --color-accent:       oklch(62% 0.19 68);
+  --color-accent-light: oklch(91% 0.08 68);
+  --color-accent-dark:  oklch(44% 0.17 68);
+  --border-color:   var(--color-ink);
+  --border:         1px solid var(--border-color);
+  --border-2:       2px solid var(--border-color);
+}
+
+/* Print theme: identical amber accents + ink, white backgrounds */
+[data-theme="print"] {
+  --bg-base:        #ffffff;
+  --bg-surface:     #f9f9f8;
+  --bg-sunken:      #f2f1ef;
+  --bg-inverse:     oklch(16% 0.025 60);
+  --color-ink:      oklch(14% 0.015 60);
+  --color-ink-2:    oklch(36% 0.018 60);
+  --color-ink-3:    oklch(58% 0.012 60);
+  --color-ink-inv:  oklch(97% 0.018 88);
+  --color-accent:       oklch(62% 0.19 68);
+  --color-accent-light: oklch(91% 0.08 68);
+  --color-accent-dark:  oklch(44% 0.17 68);
+  --border-color:   var(--color-ink);
+  --border:         1px solid var(--border-color);
+  --border-2:       2px solid var(--border-color);
+}
+
+:root {
+  --space-1:   4px;
+  --space-2:   8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  24px;
+  --space-6:  32px;
+  --space-7:  48px;
+  --space-8:  64px;
+  --space-9:  96px;
+  --space-10: 128px;
+
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-mono:    'IBM Plex Mono', 'Courier New', monospace;
+  --font-body:    'Source Sans 3', Helvetica, Arial, sans-serif;
+
+  --text-xs:   0.64rem;
+  --text-sm:   0.8rem;
+  --text-base: 1rem;
+  --text-md:   1.25rem;
+  --text-lg:   1.563rem;
+  --text-xl:   1.953rem;
+  --text-2xl:  2.441rem;
+  --text-3xl:  3.052rem;
+  --text-4xl:  3.815rem;
+  --text-5xl:  5rem;
+
+  --leading-tight:  1.15;
+  --leading-snug:   1.35;
+  --leading-normal: 1.6;
+  --leading-loose:  1.9;
+
+  --tracking-tight:  -0.03em;
+  --tracking-normal:  0em;
+  --tracking-wide:    0.06em;
+  --tracking-wider:   0.12em;
+  --tracking-widest:  0.2em;
+
+  --radius-none: 0px;
+  --radius-sm:   2px;
+
+  --shadow-sm:     3px 3px 0px var(--color-ink);
+  --shadow-md:     5px 5px 0px var(--color-ink);
+  --shadow-lg:     8px 8px 0px var(--color-ink);
+  --shadow-accent: 5px 5px 0px var(--color-accent);
+}
+
+/* ============================================================
+   Resume page base
+   ============================================================ */
+
+@page { size: letter; margin: 0; }
+
+:root {
+  --page-w:   816px;
+  --page-h:   1056px;
+  --page-pad: 44px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+.resume-page {
+  width: var(--page-w);
+  min-height: var(--page-h);
+  max-height: var(--page-h);
+  overflow: hidden;
+  background: var(--bg-base);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: 9.5pt;
+  line-height: 1.45;
+  position: relative;
+  padding: var(--page-pad);
+  box-sizing: border-box;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.resume-page * { box-sizing: border-box; }
+
+.resume-page a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid var(--color-ink-3);
+}
+
+.ital-accent {
+  font-style: italic;
+  color: var(--color-accent-dark);
+}
+
+/* ======================================================================
+   Editorial layout
+   ====================================================================== */
+.resume-page.editorial { padding: 44px 52px 38px; }
+
+.ed-mast { text-align: left; }
+.ed-mast-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 9pt;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-ink-2);
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+.ed-name {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 42pt;
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+  margin: 0 0 10px 0;
+  word-break: keep-all;
+}
+.ed-mast-contact {
+  font-family: var(--font-mono);
+  font-size: 9.5pt;
+  color: var(--color-ink-2);
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ed-hatch-band {
+  height: 10px;
+  margin: 16px 0 18px;
+  border-top: 1px solid var(--color-ink);
+  border-bottom: 1px solid var(--color-ink);
+  position: relative;
+  overflow: hidden;
+}
+.ed-hatch-band::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent 0 2px,
+    var(--color-ink) 2px 3px
+  );
+  opacity: 0.35;
+}
+
+.ed-section { margin-bottom: 14px; }
+
+.ed-lede {
+  font-family: var(--font-display);
+  font-size: 10pt;
+  line-height: 1.32;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  max-width: 100%;
+  margin: 0 0 6px;
+}
+.ed-lede-2 { font-size: 10pt; color: var(--color-ink-2); margin-top: 12px; }
+
+.ed-h2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 16pt;
+  letter-spacing: -0.02em;
+  margin: 0 0 10px 0;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  border-bottom: 2px solid var(--color-ink);
+  padding-bottom: 5px;
+}
+.ed-num {
+  font-family: var(--font-mono);
+  font-size: 10pt;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  color: var(--color-accent-dark);
+  text-transform: uppercase;
+}
+
+.ed-job { display: grid; grid-template-columns: 120px 1fr; gap: 20px; padding: 8px 0; border-bottom: 1px dashed var(--color-ink-3); }
+.ed-job:last-child { border-bottom: 0; }
+.ed-job-meta { font-family: var(--font-mono); font-size: 8.5pt; line-height: 1.45; min-width: 0; }
+.ed-job-dates { color: var(--color-ink); font-weight: 500; letter-spacing: 0.04em; white-space: nowrap; }
+.ed-job-tags  { color: var(--color-ink-3); margin-top: 4px; letter-spacing: 0.04em; text-transform: uppercase; font-size: 7.5pt; line-height: 1.4; }
+.ed-job-body  { min-width: 0; }
+.ed-job-role  { font-family: var(--font-display); font-weight: 700; font-size: 12pt; margin: 0 0 4px; letter-spacing: -0.01em; line-height: 1.2; }
+.ed-at        { color: var(--color-ink-3); font-weight: 400; font-style: normal; }
+.ed-where     { color: var(--color-ink-3); font-weight: 400; font-style: normal; font-size: 10pt; }
+.ed-job-role em { color: var(--color-accent-dark); font-style: italic; }
+
+.ed-bullets { list-style: none; padding: 0; margin: 0; }
+.ed-bullets li { display: flex; align-items: flex-start; padding: 1.5px 0; font-size: 9pt; line-height: 1.38; }
+.ed-arrow { color: var(--color-accent-dark); font-weight: 600; margin-right: 6px; }
+
+.ed-side { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 24px; }
+.ed-side-name { font-family: var(--font-display); font-weight: 700; font-size: 11pt; }
+.ed-side-blurb { font-size: 9pt; color: var(--color-ink-2); line-height: 1.4; }
+
+.ed-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.ed-edu-school { font-family: var(--font-display); font-weight: 700; font-size: 12pt; }
+.ed-edu-degree { font-size: 10pt; }
+.ed-edu-dates  { font-family: var(--font-mono); font-size: 9pt; color: var(--color-ink-3); }
+
+.ed-award { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dotted var(--color-ink-3); font-size: 10pt; }
+.ed-award:last-child { border-bottom: 0; }
+.ed-award-date { font-family: var(--font-mono); font-size: 9pt; color: var(--color-ink-3); }
+
+.ed-foot {
+  position: absolute;
+  bottom: 18px; left: 52px; right: 52px;
+  display: flex; justify-content: space-between;
+  font-family: var(--font-mono); font-size: 7.5pt; color: var(--color-ink-3);
+  letter-spacing: 0.12em; text-transform: uppercase;
+  border-top: 1px solid var(--color-ink-3); padding-top: 6px;
+}
+
+.ed-early { font-family: var(--font-mono); font-size: 9pt; line-height: 1.55; color: var(--color-ink-2); border-top: 1px dotted var(--color-ink-3); padding-top: 12px; margin-top: 12px; }
+
+/* Page spacing */
+.resume-page + .resume-page { margin-top: 32px; }
+
+/* ======================================================================
+   Print
+   ====================================================================== */
+@media print {
+  html, body { margin: 0; padding: 0; background: white; }
+  .stage { padding: 0 !important; background: none !important; }
+  .page-shell { gap: 0 !important; }
+  .resume-page {
+    box-shadow: none !important;
+    margin: 0 !important;
+    page-break-after: always;
+    break-after: page;
+  }
+  .resume-page:last-child { page-break-after: auto; break-after: auto; }
+  .showcase-chrome, .footer-meta { display: none !important; }
+}
+
+/* ======================================================================
+   Showcase chrome
+   ====================================================================== */
+html, body { margin: 0; padding: 0; background: #2a2620; color: #f7f3ec; font-family: 'Source Sans 3', sans-serif; min-height: 100vh; }
+
+.showcase-chrome {
+  position: sticky; top: 0; z-index: 50;
+  background: #1b1813;
+  border-bottom: 2px solid #000;
+  color: #f7f3ec;
+  padding: 14px 24px;
+  display: flex; justify-content: space-between; align-items: center; gap: 24px;
+  flex-wrap: wrap;
+}
+.sc-brand { display: flex; align-items: center; gap: 14px; }
+.sc-logo {
+  width: 28px; height: 28px;
+  background: #f7f3ec; color: #1b1813;
+  display: grid; place-items: center;
+  font-family: 'Playfair Display', serif;
+  font-weight: 900; font-size: 18px; line-height: 1;
+  border: 1px solid #000;
+}
+.sc-title { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 18px; letter-spacing: -0.01em; }
+.sc-title em { color: #d4a85a; font-style: italic; }
+.sc-tag { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(247,243,236,0.5); margin-left: 8px; }
+
+.sc-controls { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+.sc-group { display: flex; align-items: center; gap: 8px; }
+.sc-label { font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(247,243,236,0.5); }
+
+.sc-tabs { display: inline-flex; border: 1px solid #f7f3ec; }
+.sc-tab {
+  background: transparent; color: #f7f3ec;
+  border: 0; border-right: 1px solid rgba(247,243,236,0.3);
+  padding: 6px 12px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+  cursor: pointer;
+  transition: background 80ms linear;
+}
+.sc-tab:last-child { border-right: 0; }
+.sc-tab:hover { background: rgba(247,243,236,0.1); }
+.sc-tab[data-active="true"] { background: #f7f3ec; color: #1b1813; }
+
+.sc-print {
+  background: #d4a85a; color: #1b1813;
+  border: 1px solid #f7f3ec;
+  box-shadow: 3px 3px 0 #000;
+  padding: 7px 14px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 80ms linear, box-shadow 80ms linear;
+}
+.sc-print:hover { transform: translate(-1px,-1px); box-shadow: 4px 4px 0 #000; }
+.sc-print:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 #000; }
+
+.stage {
+  padding: 56px 24px 96px;
+  display: flex; justify-content: center;
+  background-image: radial-gradient(circle, rgba(247,243,236,0.06) 1px, transparent 1px);
+  background-size: 24px 24px;
+  min-height: calc(100vh - 60px);
+}
+.page-shell { display: flex; flex-direction: column; gap: 32px; }
+.page-shell > div#root { display: contents; }
+.page-shell .resume-page { box-shadow: 12px 12px 0 #000, 0 0 0 1px #000; }
+
+.footer-meta {
+  text-align: center;
+  padding: 24px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(247,243,236,0.4);
+}
+</style>
+</head>
+<body>
+
+<header class="showcase-chrome">
+  <div class="sc-brand">
+    <div class="sc-logo">K</div>
+    <div>
+      <div class="sc-title">KHS Resume — <em>Latest</em></div>
+      <div class="sc-tag">8.5 × 11 in · Letter · Print-Ready</div>
+    </div>
+  </div>
+  <div class="sc-controls">
+    <div class="sc-group">
+      <span class="sc-label">Theme</span>
+      <div class="sc-tabs" id="theme-tabs">
+        <button class="sc-tab" data-theme-pick="amber" data-active="true">Amber</button>
+        <button class="sc-tab" data-theme-pick="print">Print</button>
+      </div>
+    </div>
+    <button class="sc-print" onclick="window.print()">Print / Save PDF →</button>
+  </div>
+</header>
+
+<main class="stage">
+  <div class="page-shell">
+    <div id="root"></div>
+  </div>
+</main>
+
+<div class="footer-meta">KHS Design System · Latest Resume · Hello there</div>
+
+<!-- React + Babel (SRI-pinned) -->
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script>
+/* ============================================================
+   Resume Data — Kareem Shirazi
+   ============================================================ */
+window.SAMPLE = {
+  name: "Kareem Shirazi",
+  title: "Product · AI · UX · Strategy",
+  location: "Brooklyn, NY",
+  email: "kareemshirazi@gmail.com",
+  phone: "",
+  website: "kareemshirazi.com",
+  links: [
+    { label: "kareemshirazi.com", href: "https://kareemshirazi.com" },
+    { label: "linkedin.com/in/kareemshirazi", href: "https://www.linkedin.com/in/kareemshirazi/" }
+  ],
+  status: "Available for new projects",
+
+  summary: "Product executive with 12+ years building and scaling consumer products at high-growth companies (Jet.com, Buzzfeed, The Infatuation). Proven track record of driving triple-digit growth through user-centric product strategy, experimentation, and team building. Deep expertise in ecommerce, marketplaces, media, and subscription businesses serving millions of users.",
+
+  consulting: "In 2025 I started my own consultancy (KHS Consulting) to help consumer, media, and e-commerce companies focus, move faster, and ship what matters.",
+
+  work: [
+    {
+      role: "Head of Product & Growth",
+      org: "Bond Holdings",
+      where: "Contract",
+      dates: "Dec '25 — Apr '26",
+      tags: ["DTC", "Portfolio", "AI Ads"],
+      bullets: [
+        "First cross-portfolio product + growth hire — embedded across 5 consumer brands (candy, supplements, men's wellness, jewelry, ODS).",
+        "Launched Don.co DTC brand from zero — built the e-comm site, onboarded vendors, stood up CS workflows, integrated a 3PL partner.",
+        "Built an in-house AI-powered static-ad production workflow; personally produced ~100 creatives to seed the testing pipeline.",
+        "Stabilized CAC/CPA, improved AOV, and restored declining revenue for a portfolio brand."
+      ]
+    },
+    {
+      role: "VP of Product",
+      org: "The Infatuation",
+      where: "Acquired by JPMorgan Chase",
+      dates: "Aug '22 — Oct '25",
+      tags: ["Media", "iOS/Android", "Leadership"],
+      bullets: [
+        "Built and led a team of 6 PMs, each running a cross-functional squad — collectively shipped 100+ roadmap items.",
+        "Owned redesign + GTM of iOS and Android apps: +30% sign-up rate, +150% monthly downloads, +15-20% MAU/mo, stable 30d retention.",
+        "Triple-digit growth in user accounts and newsletter subs; championed a design-forward, data-informed product culture.",
+        "Integrated into Chase post-acquisition; built premium experiences and drove incremental dining spend via Link & Dine and other promotional programs.",
+        "Developed the system to leverage our in-person food festival (Eeeeeatscon) as a product research lab, giving us a new way to test new features and iterate on the product.",
+        "Shaped Zagat reintegration into Chase and built the foundation for an AI-powered Infatuation restaurant discovery bot"
+      ]
+    },
+    {
+      role: "Head of Product",
+      org: "Pawp",
+      where: "",
+      dates: "Sep '21 — May '22",
+      tags: ["Health Tech", "0→1"],
+      bullets: [
+        "Led 10 engineers, 2 designers, 1 PM. Co-led launch of Pet Pharmacy + digital prescription — opened new acquisition channels, lifted CSAT/NPS, and expanded our SAM.",
+        "Delivered 15+ roadmap initiatives and launched 2 new business lines within 6 months.",
+        "Instituted a prototyping + research culture to de-risk future bets."
+      ]
+    },
+    {
+      role: "Staff Product Manager (Contract)",
+      org: "Buzzfeed",
+      where: "",
+      dates: "Jun '21 — Nov '21",
+      tags: ["Media", "Editorial"],
+      bullets: [
+        "Led the redesign of Buzzfeed.com homepage — 60-80M monthly visits, untouched since 2016.",
+        "Partnered with SVPs/VPs to align requirements, metrics, and KPIs; ran a lean team of 3 engineers, 1 designer, 1 analyst.",
+        "Advised on other internal projects within the organization; News, Quizzes, Video"
+      ]
+    },
+    {
+      role: "Director of Product",
+      org: "Trade",
+      where: "",
+      dates: "Oct '19 — Jun '21",
+      tags: ["Subscription", "DTC", "Growth"],
+      bullets: [
+        "Owned the customer experience for the business, focused on return users, LTV, and overall retention.",
+        "+330% subscriber base growth (+100k paying subs); reported to CEO and ran OKRs across the org.",
+        "Shipped features that materially changed payback economics, unlocking CAC flexibility.",
+        "Drove 20+ feature tests in 12 months; led a team of 1 PM, 5 devs, 2 designers."
+      ]
+    },
+    {
+      role: "Senior Product Manager, Mobile",
+      org: "Button",
+      where: "",
+      dates: "Jul '18 — Aug '19",
+      tags: ["Mobile", "Partnerships"],
+      bullets: [
+        "Owned the mobile SDK customer experience for partners.",
+        "Drove a team process refresh — more focus, less thrash, higher quality output for 6 devs + 1 designer.",
+        "Led the company effort to increase partner conversion via new mobile feature development."
+      ]
+    },
+    {
+      role: "Senior PM, Customer Experience",
+      org: "Jet.com",
+      where: "Acquired by Walmart",
+      dates: "Nov '14 — Jul '18",
+      tags: ["E-commerce", "Mobile"],
+      bullets: [
+        "Led mobile team of 6 iOS + 4 Android engineers and 2 designers; app share of GMS grew from 13% → 22%.",
+        "Launched the full UI/UX redesign of the iOS app; partnered with Apple Pay (featured in a 2018 commercial).",
+        "Developed a comprehensive mobile experience strategy that drew on ethnographic research, interviews, experience maps, persona development, and quantiative behavioral data.",
+        "Forged strategic partnerships with Google + Apple on iMessage Apps, ARKit/ARCore, Instant Apps.",
+        "Earlier as PM (employee #~60 → 1,500): built foundational platform — promo engine, order history, returns, search, PDP/PLP, checkout, nav."
+      ]
+    }
+  ],
+
+  earlyCareer: "Worked in entertainment 2010-2012, primarily at Creative Artists Agency. Moved into digital media at Fullscreen in 2012 before transitioning into Product.",
+
+  side: [
+    {
+      name: "Marketing Truth Checker",
+      blurb: "Chrome extension bringing AI-powered transparency to online shopping — analyzes product pages on Amazon, Shopify, and the open web for Supported / Misleading / Unverified verdicts. BYOK architecture, under a penny per analysis."
+    },
+    {
+      name: "FPL Optimizer",
+      blurb: "Web app that pulls live squad data from the official Fantasy Premier League API and solves a Mixed Integer Linear Program to maximize expected points across a three-gameweek horizon — accounting for budget, squad rules, and transfer hit penalties."
+    }
+  ],
+
+  education: [
+    { school: "University of California, Irvine", degree: "Economics, Sociology", dates: "2010" }
+  ],
+
+  skills: [
+    { group: "Product",    items: ["Strategy", "Roadmapping", "Discovery", "Experimentation", "Subscription Growth"] },
+    { group: "Domains",    items: ["E-commerce", "Marketplaces", "Media", "Subscription", "DTC", "AI"] },
+    { group: "Leadership", items: ["Team Building", "OKRs", "Cross-functional", "0→1 & 1→10"] }
+  ],
+
+  awards: [
+    { title: "Jet.com — Editors' Choice + Best Apps of 2015 (App Store + Play Store)", dates: "2015" }
+  ]
+};
+</script>
+
+<script type="text/babel">
+/* ============================================================
+   Editorial Resume — 2 pages, always rendered together
+   ============================================================ */
+const EditorialResume = ({ data = window.SAMPLE, theme = "amber" }) => {
+  const work = data.work || [];
+  const pageOneJobs = work.slice(0, 3);
+  const pageTwoJobs = work.slice(3);
+
+  return (
+    <>
+      {/* Page 1 */}
+      <div className="resume-page editorial" data-theme={theme} data-page="1">
+        <header className="ed-mast">
+          <div className="ed-mast-eyebrow">
+            <span>{data.title}</span>
+            <span>· {data.location}</span>
+          </div>
+          <h1 className="ed-name">
+            {data.name.split(" ").map((w, i, arr) => (
+              <span key={i} className={i === arr.length - 1 ? "ital-accent" : ""}>
+                {w}{i < arr.length - 1 ? " " : ""}
+              </span>
+            ))}
+          </h1>
+          <div className="ed-mast-contact">
+            <a href={`mailto:${data.email}`}>{data.email}</a>
+            <span>·</span>
+            <span>{data.website}</span>
+            {data.links.slice(1).map((l, i) => (
+              <React.Fragment key={i}><span>·</span><span>{l.label}</span></React.Fragment>
+            ))}
+          </div>
+        </header>
+
+        <div className="ed-hatch-band" />
+
+        <section className="ed-section">
+          <p className="ed-lede">{data.summary}</p>
+          {data.consulting && <p className="ed-lede ed-lede-2">{data.consulting}</p>}
+        </section>
+
+        <section className="ed-section">
+          <h2 className="ed-h2"><span className="ed-num">01</span> Selected Work</h2>
+          <div className="ed-work">
+            {pageOneJobs.map((job, i) => (
+              <article key={i} className="ed-job">
+                <div className="ed-job-meta">
+                  <div className="ed-job-dates">{job.dates}</div>
+                  <div className="ed-job-tags">{job.tags.join(" · ")}</div>
+                </div>
+                <div className="ed-job-body">
+                  <h3 className="ed-job-role">
+                    {job.role} <span className="ed-at">at</span> <em>{job.org}</em>
+                    {job.where && <span className="ed-where"> · {job.where}</span>}
+                  </h3>
+                  <ul className="ed-bullets">
+                    {job.bullets.map((b, j) => (
+                      <li key={j}><span className="ed-arrow">→</span> {b}</li>
+                    ))}
+                  </ul>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <footer className="ed-foot">
+          <span>{data.name}</span>
+          <span>—</span>
+          <span>Page 1 of 2 →</span>
+        </footer>
+      </div>
+
+      {/* Page 2 */}
+      <div className="resume-page editorial" data-theme={theme} data-page="2">
+        <section className="ed-section">
+          <h2 className="ed-h2"><span className="ed-num">01</span> Selected Work, cont.</h2>
+          <div className="ed-work">
+            {pageTwoJobs.map((job, i) => (
+              <article key={i} className="ed-job">
+                <div className="ed-job-meta">
+                  <div className="ed-job-dates">{job.dates}</div>
+                  <div className="ed-job-tags">{job.tags.join(" · ")}</div>
+                </div>
+                <div className="ed-job-body">
+                  <h3 className="ed-job-role">
+                    {job.role} <span className="ed-at">at</span> <em>{job.org}</em>
+                    {job.where && <span className="ed-where"> · {job.where}</span>}
+                  </h3>
+                  <ul className="ed-bullets">
+                    {job.bullets.map((b, j) => (
+                      <li key={j}><span className="ed-arrow">→</span> {b}</li>
+                    ))}
+                  </ul>
+                </div>
+              </article>
+            ))}
+          </div>
+          {data.earlyCareer && <p className="ed-early">{data.earlyCareer}</p>}
+        </section>
+
+        {data.side && data.side.length > 0 && (
+          <section className="ed-section">
+            <h2 className="ed-h2"><span className="ed-num">02</span> Side Projects</h2>
+            <div className="ed-side">
+              {data.side.map((s, i) => (
+                <div key={i}>
+                  <div className="ed-side-name">{s.name}</div>
+                  <div className="ed-side-blurb">{s.blurb}</div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        <section className="ed-section ed-grid">
+          <div>
+            <h2 className="ed-h2"><span className="ed-num">03</span> Education</h2>
+            {data.education.map((e, i) => (
+              <div key={i} className="ed-edu">
+                <div className="ed-edu-school">{e.school}</div>
+                <div className="ed-edu-degree">{e.degree}</div>
+                <div className="ed-edu-dates">{e.dates}</div>
+              </div>
+            ))}
+          </div>
+          <div>
+            <h2 className="ed-h2"><span className="ed-num">04</span> Recognition</h2>
+            {data.awards.map((a, i) => (
+              <div key={i} className="ed-award">
+                <span>{a.title}</span>
+                <span className="ed-award-date">{a.dates}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <footer className="ed-foot">
+          <span>{data.name}</span>
+          <span>—</span>
+          <span>← Page 2 of 2</span>
+        </footer>
+      </div>
+    </>
+  );
+};
+
+/* ============================================================
+   Controller — theme only
+   ============================================================ */
+const state = { theme: 'amber' };
+const root = ReactDOM.createRoot(document.getElementById('root'));
+
+function render() {
+  document.documentElement.setAttribute('data-theme', state.theme);
+  root.render(<EditorialResume theme={state.theme} />);
+  document.querySelectorAll('#theme-tabs .sc-tab').forEach(b => {
+    b.dataset.active = (b.dataset.themePick === state.theme) ? 'true' : 'false';
+  });
+}
+
+document.querySelectorAll('#theme-tabs .sc-tab').forEach(b => {
+  b.addEventListener('click', () => { state.theme = b.dataset.themePick; render(); });
+});
+
+render();
+</script>
+
+</body>
+</html>
