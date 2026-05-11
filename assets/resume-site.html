@@ -272,6 +272,44 @@
 .resume-page + .resume-page { margin-top: 32px; }
 
 /* ======================================================================
+   Mobile
+   ====================================================================== */
+@media screen and (max-width: 860px) {
+  .showcase-chrome {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+  }
+  .sc-controls { flex-wrap: wrap; gap: 12px; }
+  .sc-print { width: 100%; text-align: center; }
+
+  .stage { padding: 16px 0 48px; }
+  .page-shell .resume-page { box-shadow: 0 0 0 1px #000; }
+
+  .resume-page { width: 100%; max-height: none; overflow: visible; }
+  .resume-page.editorial { padding: 24px 20px; }
+
+  .ed-name { font-size: 28pt; }
+  .ed-h2 { font-size: 13pt; }
+
+  .ed-job { grid-template-columns: 1fr; gap: 4px; }
+  .ed-job-meta { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+  .ed-job-dates { white-space: normal; }
+
+  .ed-side { grid-template-columns: 1fr; }
+  .ed-grid { grid-template-columns: 1fr; }
+
+  .ed-foot {
+    position: static;
+    margin-top: 20px;
+    left: auto; right: auto; bottom: auto;
+  }
+
+  .resume-page + .resume-page { margin-top: 16px; }
+}
+
+/* ======================================================================
    Print
    ====================================================================== */
 @media print {
