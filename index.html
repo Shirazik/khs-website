@@ -30,80 +30,122 @@
 
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var(--bg-base); }
+html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var(--surface); }
 
 /* ── App layout ──────────────────────────────────────────── */
 .app { display: flex; flex-direction: column; height: 100vh; width: 100vw; overflow: hidden; }
 
-/* ── Menu bar ────────────────────────────────────────────── */
-.menu-bar {
-  height: 30px; background: var(--bg-inverse); display: flex; align-items: center;
-  padding: 0; flex-shrink: 0; z-index: 9999; gap: 0;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+/* ── Taskbar ─────────────────────────────────────────────── */
+/* Raised strip pinned to the bottom: Start button, one button per open
+   window, tray clock. The window buttons are a projection of App's
+   `windows` array — there is no separate taskbar state. */
+.taskbar {
+  flex-shrink: 0; min-height: 30px;
+  display: flex; align-items: center; gap: 3px;
+  padding: 2px 2px 2px 2px;
+  background: var(--surface);
+  box-shadow: inset 0 1px var(--button-highlight), inset 0 2px var(--button-face);
+  position: relative; z-index: 9000;
 }
-.menu-logo {
-  display: flex; align-items: center; gap: 8px;
-  padding: 0 14px 0 12px; height: 100%;
-  border-right: 1px solid rgba(255,255,255,0.1); cursor: pointer;
+.taskbar-btn-base {
+  font-family: var(--font-ui); font-size: 11px;
+  color: var(--text-color); background: var(--surface);
+  cursor: pointer; user-select: none;
+  box-shadow: inset -1px -1px var(--window-frame), inset 1px 1px var(--button-highlight),
+              inset -2px -2px var(--button-shadow), inset 2px 2px var(--button-face);
 }
-.menu-hex { flex-shrink: 0; }
-.menu-wordmark {
-  font-family: var(--font-mono); font-size: 10px; font-weight: 600;
-  letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.9);
-}
-.menu-item {
-  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em;
-  color: rgba(255,255,255,0.55); padding: 0 14px; height: 100%;
-  display: flex; align-items: center; cursor: default;
-  transition: color 80ms, background 80ms;
-  border-right: 1px solid rgba(255,255,255,0.06);
-}
-.menu-item:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.9); }
-.menu-item.active { color: var(--color-accent); opacity: 1; }
-.menu-popup {
-  position: fixed; top: 28px;
-  background: var(--bg-surface, #1a1a1a);
-  border: 1px solid rgba(255,255,255,0.15);
-  border-top: none;
-  padding: 10px 14px;
-  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em;
-  color: #000;
-  white-space: nowrap;
-  z-index: 10000;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
-  animation: menuPopupIn 120ms ease-out;
-  cursor: pointer;
-  max-width: 280px; white-space: normal; line-height: 1.5;
-}
-@keyframes menuPopupIn {
-  from { opacity: 0; transform: translateY(-3px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.about-inner-menu { margin: -20px -20px 20px; border-top: none; border-bottom: 2px solid var(--color-ink); z-index: 1; background: #202020; }
-.about-inner-menu .menu-item { cursor: pointer; }
-.about-me-placeholder { padding: 60px 20px; text-align: center; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; color: var(--color-ink); opacity: 0.45; }
-.menu-spacer { flex: 1; }
-.menu-right {
-  display: flex; align-items: center; height: 100%;
-  border-left: 1px solid rgba(255,255,255,0.1);
-}
-.menu-clock {
-  font-family: var(--font-mono); font-size: 10px; font-weight: 500;
-  color: rgba(255,255,255,0.8); padding: 0 16px;
-  letter-spacing: 0.06em;
-}
-.menu-date {
-  font-family: var(--font-mono); font-size: 9px;
-  color: rgba(255,255,255,0.4); padding: 0 14px;
-  letter-spacing: 0.08em; text-transform: uppercase;
-  border-left: 1px solid rgba(255,255,255,0.08);
+.taskbar-btn-base.pressed {
+  box-shadow: inset -1px -1px var(--button-highlight), inset 1px 1px var(--window-frame),
+              inset -2px -2px var(--button-face), inset 2px 2px var(--button-shadow);
 }
 
-/* ── Ticker ──────────────────────────────────────────────── */
-.ticker-bar {
-  height: 26px; background: var(--bg-surface); flex-shrink: 0;
-  border-bottom: 2px solid var(--color-ink); overflow: hidden;
+.taskbar-start {
+  display: flex; align-items: center; gap: 4px;
+  font-weight: 700; padding: 3px 7px 3px 4px; min-height: 22px;
+  flex-shrink: 0;
+}
+.taskbar-start.pressed { padding: 4px 6px 2px 5px; }
+.taskbar-start img { width: 16px; height: 16px; object-fit: contain; display: block; }
+
+.taskbar-divider {
+  width: 0; height: 22px; margin: 0 2px; flex-shrink: 0;
+  border-left: 1px solid var(--button-shadow);
+  border-right: 1px solid var(--button-highlight);
+}
+
+.taskbar-windows { flex: 1; display: flex; gap: 3px; overflow: hidden; min-width: 0; }
+.taskbar-btn {
+  flex: 0 1 158px; min-width: 40px;
   display: flex; align-items: center;
+  padding: 3px 7px; min-height: 22px;
+  text-align: left;
+}
+.taskbar-btn > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.taskbar-btn.pressed {
+  font-weight: 700; padding: 4px 6px 2px 8px;
+  /* Win98 dithered a depressed task button with a 50% checker. */
+  background-image: repeating-conic-gradient(var(--button-highlight) 0% 25%, transparent 0% 50%);
+  background-size: 2px 2px;
+}
+
+.taskbar-tray {
+  display: flex; align-items: center; gap: 6px; flex-shrink: 0;
+  padding: 3px 8px; min-height: 22px;
+  font-family: var(--font-ui); font-size: 11px; color: var(--text-color);
+  box-shadow: inset -1px -1px var(--button-highlight), inset 1px 1px var(--button-shadow);
+}
+
+/* ── Start menu ──────────────────────────────────────────── */
+.start-menu {
+  position: absolute; bottom: 100%; left: 2px; margin-bottom: 2px;
+  width: 224px; z-index: 9500; display: flex;
+  padding: 3px;
+  background: var(--surface);
+  box-shadow: inset -1px -1px var(--window-frame), inset 1px 1px var(--button-highlight),
+              inset -2px -2px var(--button-shadow), inset 2px 2px var(--button-face);
+}
+.start-menu-spine {
+  width: 22px; flex-shrink: 0; margin-right: 3px;
+  background: linear-gradient(0deg, var(--dialog-blue-light), var(--dialog-blue));
+  display: flex; align-items: flex-end; justify-content: center;
+  padding-bottom: 7px;
+}
+.start-menu-spine span {
+  writing-mode: vertical-rl; transform: rotate(180deg);
+  font-family: var(--font-ui); font-size: 13px; font-weight: 700;
+  color: var(--dialog-title-text); white-space: nowrap;
+}
+.start-menu-items { flex: 1; min-width: 0; }
+.start-menu-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 5px 6px; cursor: pointer; user-select: none;
+  font-family: var(--font-ui); font-size: 11px; color: var(--text-color);
+}
+.start-menu-item:hover { background: var(--dialog-blue); color: var(--dialog-title-text); }
+.start-menu-item svg { width: 24px; height: 24px; flex-shrink: 0; display: block; }
+.start-menu-sep {
+  height: 0; margin: 3px 2px;
+  border-top: 1px solid var(--button-shadow);
+  border-bottom: 1px solid var(--button-highlight);
+}
+
+.about-me-placeholder {
+  padding: 50px 20px; text-align: center;
+  font-family: var(--font-ui); font-size: 11px; color: var(--disabled-text);
+  text-shadow: 1px 1px 0 var(--button-highlight);
+}
+/* 98.css styles the tab strip; it just needs to sit flush and stay clickable. */
+.about-tabs { margin: 0 0 -2px; padding-left: 0; cursor: default; }
+.about-tabs > li > a { cursor: default; }
+
+/* ── Ticker ──────────────────────────────────────────────── */
+/* Sunken strip across the top of the desktop, in the spirit of the Win98
+   Channel Bar. The marquee animation is unchanged. */
+.ticker-bar {
+  height: 22px; flex-shrink: 0; overflow: hidden;
+  display: flex; align-items: center;
+  background: var(--surface);
+  box-shadow: inset -1px -1px var(--button-highlight), inset 1px 1px var(--button-shadow);
 }
 .ticker-inner {
   display: inline-flex; white-space: nowrap; gap: 0;
@@ -111,23 +153,25 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
 }
 @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 .ticker-item {
-  font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.14em;
-  text-transform: uppercase; color: var(--color-ink-2);
-  padding: 0 20px; display: flex; align-items: center; gap: 20px;
+  font-family: var(--font-ui); font-size: 11px;
+  color: var(--text-color);
+  padding: 0 16px; display: flex; align-items: center; gap: 16px;
 }
-.ticker-dot { width: 4px; height: 4px; background: var(--color-accent); flex-shrink: 0; }
+.ticker-dot { width: 4px; height: 4px; background: var(--dialog-blue); flex-shrink: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .ticker-inner { animation: none; }
+}
 
 /* ── Desktop ─────────────────────────────────────────────── */
 .desktop {
   flex: 1; position: relative; overflow: hidden;
-  background-color: var(--bg-base);
-  background-image: radial-gradient(circle, var(--color-ink) 1px, transparent 1px);
-  background-size: 24px 24px;
-  --dot-opacity: 0.04;
+  background-color: var(--desktop-bg);
+  --dot-opacity: 0.05;
 }
+/* Dots are white here, not ink: the desktop is a dark wallpaper now. */
 .desktop::before {
   content: ''; position: absolute; inset: 0; pointer-events: none;
-  background-image: radial-gradient(circle, var(--color-ink) 1px, transparent 1px);
+  background-image: radial-gradient(circle, #fff 1px, transparent 1px);
   background-size: 24px 24px; opacity: var(--dot-opacity);
 }
 
@@ -138,88 +182,84 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
   pointer-events: none; user-select: none;
   text-align: center; white-space: nowrap; z-index: 0;
 }
+/* Ghost text sits on the dark wallpaper, so it lightens rather than darkens. */
 .ghost-main {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-body);
   font-size: clamp(100px, 16vw, 200px);
-  font-weight: 900; letter-spacing: -0.04em;
-  color: var(--color-ink); opacity: 0.04; line-height: 0.9;
+  font-weight: 700; letter-spacing: -0.04em;
+  color: #fff; opacity: 0.07; line-height: 0.9;
   display: block;
 }
 .ghost-sub {
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: var(--font-mono);
   font-size: clamp(10px, 1.2vw, 16px);
   letter-spacing: 0.28em; text-transform: uppercase;
-  color: var(--color-ink); opacity: 0.07; display: block;
+  color: #fff; opacity: 0.11; display: block;
   margin-top: 12px;
 }
 .ghost-italic {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-body);
   font-size: clamp(32px, 5vw, 64px);
   font-weight: 400; font-style: italic;
-  color: var(--color-accent); opacity: 0.12; display: block;
+  color: #fff; opacity: 0.15; display: block;
   margin-top: 4px; letter-spacing: -0.02em;
 }
 
-/* ── Folder ──────────────────────────────────────────────── */
+/* ── Desktop icon ────────────────────────────────────────── */
+/* Win98 desktop icons: white label directly on the wallpaper, no plate.
+   Selecting one fills the label with the selection colour and draws the
+   dotted focus rectangle — the same treatment Explorer used. */
 .folder {
   position: absolute; display: flex; flex-direction: column;
-  align-items: center; gap: 4px; cursor: default;
-  user-select: none; width: 76px; z-index: 10;
+  align-items: center; gap: 3px; cursor: default;
+  user-select: none; width: 76px; z-index: 10; padding: 3px 2px;
 }
-.folder:hover .folder-label { opacity: 1; }
-.folder.selected .folder-label-inner {
-  background: var(--color-accent); color: #fff;
+.folder-icon { width: 40px; height: 40px; flex-shrink: 0; }
+.folder.selected .folder-icon {
+  /* Explorer tinted the selected icon toward the highlight colour. */
+  filter: brightness(0.78) saturate(1.35);
 }
-.folder-label {
-  width: 100%; text-align: center; opacity: 1;
-  transition: opacity 80ms;
-}
+.folder-label { width: 100%; text-align: center; }
 .folder-label-inner {
-  font-family: var(--font-mono); font-size: 12px;
-  letter-spacing: 0.04em; line-height: 1.35;
-  color: var(--color-ink); padding: 2px 4px;
+  font-family: var(--font-ui); font-size: 11px;
+  line-height: 1.3; color: #fff; padding: 1px 3px;
   display: inline-block;
-  background: color-mix(in oklch, var(--color-accent-light) 72%, var(--bg-base));
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.55);
+}
+.folder.selected .folder-label-inner {
+  background: var(--dialog-blue);
+  color: var(--dialog-title-text);
+  outline: 1px dotted var(--button-highlight);
+  outline-offset: -1px;
+  text-shadow: none;
 }
 .folder-year {
-  font-family: var(--font-mono); font-size: 8px;
-  color: var(--color-ink-3); letter-spacing: 0.06em;
-  text-align: center; margin-top: -2px; opacity: 0.7;
+  font-family: var(--font-ui); font-size: 9px;
+  color: #fff; opacity: 0.72; text-align: center;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.55);
 }
+.folder.selected .folder-year { opacity: 0.95; }
 
 /* ── OS Window ───────────────────────────────────────────── */
+/* The frame, background and bevel all come from 98.css's .window. This class
+   is applied alongside it and only handles placement, stacking and the
+   open/close animation. Do not set background or border here — that would
+   fight the bevel and break theming. */
 .os-window {
-  position: absolute; background: var(--bg-base);
-  border: 2px solid var(--color-ink);
-  box-shadow: 6px 6px 0 var(--color-ink);
-  z-index: 200; min-width: 300px;
+  position: absolute;
+  z-index: 200; min-width: 260px;
   transform-origin: top left;
   will-change: transform, opacity;
 }
-.os-window.focused { box-shadow: 6px 6px 0 var(--color-accent); z-index: 300; }
-.os-window.is-opening {
-  animation: window-open 340ms steps(6, end) both, window-crt-flicker 340ms steps(5, end) both;
-}
+.os-window.focused { z-index: 300; }
+.os-window.is-minimized { display: none; }
+/* Win98 zoomed a wireframe between the icon and the window. The transform
+   keyframes approximate that; the CRT flicker that used to ride along with
+   them was Mac-era and has been dropped. */
+.os-window.is-opening { animation: window-open 220ms steps(5, end) both; }
 .os-window.is-closing {
   pointer-events: none;
-  animation: window-close 280ms steps(6, end) both, window-crt-flicker 280ms steps(5, end) reverse both;
-}
-.os-window.is-opening::before,
-.os-window.is-closing::before {
-  content: '';
-  position: absolute; inset: -2px;
-  border: 2px solid var(--color-accent);
-  pointer-events: none;
-  opacity: 0.42;
-  mix-blend-mode: multiply;
-}
-.os-window.is-opening::after,
-.os-window.is-closing::after {
-  content: '';
-  position: absolute; inset: 0;
-  pointer-events: none;
-  background-image: repeating-linear-gradient(0deg, transparent 0 3px, var(--color-ink) 3px 4px);
-  opacity: 0.055;
+  animation: window-close 180ms steps(5, end) both;
 }
 @keyframes window-open {
   0% { opacity: 0; transform: translate(14px, 10px) scale(0.08, 0.03); filter: contrast(1.35); }
@@ -237,239 +277,272 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
   84% { opacity: 0.75; transform: translate(11px, 8px) scale(0.18, 0.05); }
   100% { opacity: 0; transform: translate(14px, 10px) scale(0.04, 0.02); filter: contrast(1.35); }
 }
-@keyframes window-crt-flicker {
-  0% { clip-path: inset(48% 0 48% 0); }
-  18% { clip-path: inset(38% 0 40% 0); }
-  36% { clip-path: inset(24% 0 28% 0); }
-  54% { clip-path: inset(12% 0 16% 0); }
-  72% { clip-path: inset(3% 0 4% 0); }
-  100% { clip-path: inset(0); }
-}
 @media (prefers-reduced-motion: reduce) {
   .os-window.is-opening,
   .os-window.is-closing {
     animation-duration: 1ms;
   }
 }
-.os-titlebar {
-  background: var(--bg-inverse); height: 28px;
-  display: flex; align-items: center; gap: 8px; padding: 0 10px;
-  cursor: grab; border-bottom: 2px solid var(--color-ink);
-  user-select: none; position: relative; overflow: hidden;
+
+/* Title bar: gradient, text colour and control glyphs come from 98.css.
+   Only the drag affordance and overflow behaviour are ours. */
+.os-window > .title-bar { cursor: grab; }
+.os-window > .title-bar:active { cursor: grabbing; }
+.os-window > .title-bar .title-bar-text {
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  margin-right: 12px;
 }
-.os-titlebar::after {
-  content: '';
-  position: absolute; inset: 0; pointer-events: none;
-  background-image: repeating-linear-gradient(0deg, transparent, transparent 3px, var(--color-ink) 3px, var(--color-ink) 4px);
-  opacity: 0.07;
+
+/* In-window menu bar. Win98 put File/Edit/View/Help inside each window
+   rather than in a global bar at the top of the screen. */
+.win-menubar {
+  display: flex; margin: 1px 3px 0; padding: 0;
+  font-family: var(--font-ui); font-size: 11px;
+  user-select: none;
 }
-.os-titlebar:active { cursor: grabbing; }
-.traffic-lights { display: flex; gap: 5px; flex-shrink: 0; }
-.tl {
-  width: 11px; height: 11px; border: 1px solid rgba(0,0,0,0.3);
-  cursor: pointer; flex-shrink: 0; display: flex;
-  align-items: center; justify-content: center;
+.win-menubar-item {
+  padding: 2px 7px; cursor: default; color: var(--text-color);
+  position: relative;
 }
-.tl-close { background: #ff5f57; }
-.tl-close:hover::after { content: '×'; font-size: 8px; color: rgba(0,0,0,0.6); }
-.tl-min { background: #febc2e; }
-.tl-max { background: #28c840; }
-.os-wintitle {
-  font-family: var(--font-mono); font-size: 10px;
-  letter-spacing: 0.1em; text-transform: uppercase;
-  color: rgba(255,255,255,0.7); flex: 1; text-align: center;
-  margin-left: -30px; pointer-events: none;
+.win-menubar-item:hover,
+.win-menubar-item.open {
+  background: var(--dialog-blue); color: var(--dialog-title-text);
 }
-.os-body { padding: 20px; }
-* { scrollbar-width: thin; scrollbar-color: var(--color-accent) transparent; }
-*::-webkit-scrollbar { width: 4px; }
-*::-webkit-scrollbar-track { background: transparent; }
-*::-webkit-scrollbar-thumb { background: var(--color-accent); }
-*::-webkit-scrollbar-thumb:hover { background: var(--color-accent-dark); }
-.os-body code {
+.win-menu-popup {
+  position: absolute; top: 100%; left: 0; z-index: 20;
+  min-width: 190px; max-width: 280px;
+  background: var(--surface);
+  box-shadow: inset -1px -1px var(--window-frame), inset 1px 1px var(--button-highlight),
+              inset -2px -2px var(--button-shadow), inset 2px 2px var(--button-face);
+  padding: 3px; cursor: default;
+  font-family: var(--font-ui); font-size: 11px;
+  color: var(--text-color); line-height: 1.5;
+  white-space: normal;
+}
+.win-menu-popup-body { padding: 4px 7px; }
+
+.os-window > .window-body { margin: 8px 10px 10px; }
+.os-window > .status-bar { margin: 0 3px 1px; }
+.os-window .status-bar-field {
+  font-family: var(--font-ui); font-size: 11px; color: var(--text-color);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.os-window .window-body code {
   font-family: var(--font-mono); font-size: 11px;
-  background: var(--color-surface-2, rgba(0,0,0,0.06));
-  padding: 1px 4px; border-radius: 2px;
+  background: var(--field-bg);
+  box-shadow: inset -1px -1px var(--button-highlight), inset 1px 1px var(--button-shadow);
+  padding: 1px 4px;
 }
 
 /* ── Project window content ──────────────────────────────── */
+/* Chrome-adjacent bits use the bitmap face; prose uses the body face so it
+   stays readable at length. */
 .win-tag {
-  font-family: var(--font-mono); font-size: 8px; letter-spacing: 0.16em;
-  text-transform: uppercase; padding: 2px 8px; border: 1px solid var(--color-ink);
-  display: inline-block; margin-bottom: 10px;
+  font-family: var(--font-ui); font-size: 11px;
+  padding: 1px 6px; display: inline-block; margin-bottom: 8px;
+  background: var(--dialog-blue); color: var(--dialog-title-text);
 }
 .win-year {
-  font-family: var(--font-mono); font-size: 9px; color: var(--color-ink-3);
-  letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px;
+  font-family: var(--font-ui); font-size: 11px; color: var(--text-color);
+  margin-bottom: 4px;
 }
 .win-title {
-  font-family: 'Playfair Display', serif; font-size: 24px;
-  font-weight: 700; letter-spacing: -0.02em; line-height: 1.15;
-  color: var(--color-ink); margin-bottom: 12px;
+  font-family: var(--font-body); font-size: 19px;
+  font-weight: 600; letter-spacing: -0.01em; line-height: 1.2;
+  color: var(--text-color); margin-bottom: 8px;
 }
 .win-desc {
-  font-family: 'Source Sans 3', sans-serif; font-size: 13px;
-  line-height: 1.6; color: var(--color-ink-2); margin-bottom: 16px;
+  font-family: var(--font-body); font-size: 13px;
+  line-height: 1.55; color: var(--text-color); margin-bottom: 12px;
 }
-.win-deliverables { display: flex; flex-direction: column; gap: 4px; margin-bottom: 18px; }
-.win-deliv-item {
-  font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.06em;
-  color: var(--color-ink-2); display: flex; align-items: center; gap: 8px;
+/* Deliverables render as a 98.css tree-view in the markup; this only sets
+   the type, the connector lines come from vendor/98.css. */
+.win-deliverables { margin-bottom: 12px; }
+.win-deliverables li { line-height: 1.6; }
+/* Win98 etched separator: one shadow line above one highlight line. */
+.win-divider {
+  height: 0; margin: 12px 0;
+  border-top: 1px solid var(--button-shadow);
+  border-bottom: 1px solid var(--button-highlight);
 }
-.win-deliv-item::before { content: '→'; color: var(--color-accent); }
-.win-divider { height: 1px; background: var(--color-ink); margin-bottom: 14px; }
+.win-cta-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+/* CTAs stay <a> so middle-click and right-click still work, but wear the
+   98.css raised-button bevel. Kept in sync with vendor/98.css `button`. */
 .win-cta {
-  font-family: var(--font-mono); font-size: 9px; font-weight: 500;
-  letter-spacing: 0.12em; text-transform: uppercase;
-  padding: 7px 14px; border: 2px solid var(--color-ink);
-  background: transparent; color: var(--color-ink); cursor: pointer;
-  display: inline-block; transition: background 80ms, color 80ms;
+  font-family: var(--font-ui); font-size: 11px;
+  text-decoration: none; color: var(--text-color);
+  background: var(--surface);
+  box-shadow: inset -1px -1px var(--window-frame), inset 1px 1px var(--button-highlight),
+              inset -2px -2px var(--button-shadow), inset 2px 2px var(--button-face);
+  min-height: 23px; padding: 4px 12px;
+  display: inline-flex; align-items: center; justify-content: center;
+  cursor: pointer;
 }
-.win-cta:hover { background: var(--color-ink); color: var(--color-ink-inv); }
+.win-cta:active {
+  box-shadow: inset -1px -1px var(--button-highlight), inset 1px 1px var(--window-frame),
+              inset -2px -2px var(--button-face), inset 2px 2px var(--button-shadow);
+  padding: 5px 11px 3px 13px;
+}
+.win-cta:focus { outline: 1px dotted #000; outline-offset: -4px; }
+
+/* Shared Win98 edges, so the content areas below stay consistent with the
+   bevels vendor/98.css draws on real controls. */
+.khs-raised {
+  box-shadow: inset -1px -1px var(--window-frame), inset 1px 1px var(--button-highlight),
+              inset -2px -2px var(--button-shadow), inset 2px 2px var(--button-face);
+}
+.khs-sunken {
+  box-shadow: inset -1px -1px var(--button-highlight), inset 1px 1px var(--button-shadow),
+              inset -2px -2px var(--button-face), inset 2px 2px var(--window-frame);
+}
+.khs-etched {
+  height: 0;
+  border-top: 1px solid var(--button-shadow);
+  border-bottom: 1px solid var(--button-highlight);
+}
 
 /* Services window */
 .svc-cat-label {
-  font-family: var(--font-mono); font-size: 7px; letter-spacing: 0.18em;
-  text-transform: uppercase; color: var(--color-ink-3);
-  margin: 16px 0 8px; padding-bottom: 4px;
-  border-bottom: 1px solid var(--color-ink); opacity: 0.6;
+  font-family: var(--font-ui); font-size: 11px; font-weight: 700;
+  color: var(--text-color); margin: 14px 0 7px; padding-bottom: 3px;
+  border-bottom: 1px solid var(--button-shadow);
 }
-.svc-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
-}
+.svc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 .svc-card {
-  border: 1px solid var(--color-ink); padding: 10px 12px;
-  background: var(--bg-base); position: relative; overflow: hidden;
-  transition: background 80ms;
-  cursor: default;
+  padding: 8px 10px; background: var(--field-bg); cursor: default;
+  box-shadow: inset -1px -1px var(--button-highlight), inset 1px 1px var(--button-shadow),
+              inset -2px -2px var(--button-face), inset 2px 2px var(--window-frame);
 }
-.svc-card::before {
-  content: ''; position: absolute; top: 0; left: 0;
-  width: 2px; height: 100%; background: var(--color-accent); opacity: 0;
-  transition: opacity 80ms;
-}
-.svc-card:hover { background: var(--bg-sunken); }
-.svc-card:hover::before { opacity: 1; }
 .svc-card-title {
-  font-family: var(--font-mono); font-size: 9px; font-weight: 600;
-  letter-spacing: 0.04em; color: var(--color-ink);
-  margin-bottom: 5px; line-height: 1.4;
+  font-family: var(--font-ui); font-size: 11px; font-weight: 700;
+  color: var(--text-color); margin-bottom: 4px; line-height: 1.4;
 }
 .svc-card-desc {
-  font-family: 'Source Sans 3', sans-serif; font-size: 11px;
-  line-height: 1.55; color: var(--color-ink-2);
+  font-family: var(--font-body); font-size: 12px;
+  line-height: 1.5; color: var(--text-color);
 }
 .svc-cta-row {
-  margin-top: 18px; padding-top: 14px;
-  border-top: 1px solid var(--color-ink);
-  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 14px; padding-top: 12px;
+  border-top: 1px solid var(--button-shadow);
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
 }
 .svc-avail {
-  font-family: var(--font-mono); font-size: 8px; letter-spacing: 0.1em;
-  color: var(--color-ink-3); display: flex; align-items: center; gap: 6px;
+  font-family: var(--font-ui); font-size: 11px;
+  color: var(--text-color); display: flex; align-items: center; gap: 6px;
 }
 
 /* About window */
-.about-hex { display: flex; justify-content: center; margin-bottom: 14px; }
+.about-hex { display: flex; justify-content: center; margin-bottom: 12px; }
 .about-name {
-  font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 900;
-  letter-spacing: -0.03em; color: var(--color-ink); text-align: center;
+  font-family: var(--font-body); font-size: 24px; font-weight: 700;
+  letter-spacing: -0.02em; color: var(--text-color); text-align: center;
   margin-bottom: 4px; line-height: 1;
 }
 .about-role {
-  font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.16em;
-  text-transform: uppercase; color: var(--color-accent);
-  text-align: center; margin-bottom: 14px;
+  font-family: var(--font-ui); font-size: 11px; font-weight: 700;
+  color: var(--text-color); text-align: center; margin-bottom: 12px;
 }
-.about-divider { height: 2px; background: var(--color-ink); margin-bottom: 14px; }
+.about-divider {
+  height: 0; margin: 12px 0;
+  border-top: 1px solid var(--button-shadow);
+  border-bottom: 1px solid var(--button-highlight);
+}
 .about-bio {
-  font-family: 'Source Sans 3', sans-serif; font-size: 13px; line-height: 1.65;
-  color: var(--color-ink-2); margin-bottom: 16px; text-align: center;
+  font-family: var(--font-body); font-size: 13px; line-height: 1.6;
+  color: var(--text-color); margin-bottom: 14px;
 }
-.about-skills { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 14px; }
+.about-skills { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 12px; }
+/* Skill chips wear the raised button bevel rather than a flat outline. */
 .about-skill {
-  font-family: var(--font-mono); font-size: 8px; letter-spacing: 0.14em;
-  text-transform: uppercase; padding: 3px 8px; border: 1px solid var(--color-ink);
-  color: var(--color-ink-2);
+  font-family: var(--font-ui); font-size: 11px;
+  padding: 3px 7px; color: var(--text-color); background: var(--surface);
+  box-shadow: inset -1px -1px var(--window-frame), inset 1px 1px var(--button-highlight),
+              inset -2px -2px var(--button-shadow), inset 2px 2px var(--button-face);
 }
 .about-status {
-  font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.08em;
-  color: var(--color-ink-3); text-align: center;
+  font-family: var(--font-ui); font-size: 11px;
+  color: var(--text-color);
   display: flex; align-items: center; justify-content: center; gap: 6px;
 }
 @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-.status-dot { width: 6px; height: 6px; background: var(--color-accent); flex-shrink: 0; animation: blink 1.2s step-start infinite; }
-
-/* ── Toolbar ─────────────────────────────────────────────── */
-.toolbar-wrap {
-  height: 68px; display: flex; align-items: center; justify-content: center;
-  background: var(--bg-base); border-top: 2px solid var(--color-ink);
-  flex-shrink: 0; z-index: 9999;
+.status-dot {
+  width: 8px; height: 8px; flex-shrink: 0;
+  background: var(--dialog-blue);
+  animation: blink 1.2s step-start infinite;
 }
-.toolbar {
-  display: inline-flex; border: 2px solid var(--color-ink);
-  background: var(--bg-surface);
-}
-.tb-cell {
-  width: 80px; padding: 5px 0 4px; display: flex; flex-direction: column;
-  align-items: center; gap: 3px; border-right: 1px solid rgba(0,0,0,0.12);
-  cursor: pointer;
-  border-top: 2px solid rgba(255,255,255,0.65);
-  border-left: 0; border-bottom: 2px solid rgba(0,0,0,0.12);
-  background: transparent; transition: background 80ms;
-}
-.tb-cell:first-child { border-left: 2px solid rgba(255,255,255,0.65); }
-.tb-cell:last-child { border-right: 2px solid rgba(0,0,0,0.12); }
-.tb-cell:hover { background: var(--color-accent-light); }
-.tb-cell:active { 
-  border-top: 2px solid rgba(0,0,0,0.15); 
-  border-left-color: rgba(0,0,0,0.1);
-  background: var(--bg-sunken); 
-}
-.tb-cell svg { width: 36px; height: 36px; }
-.tb-label {
-  font-family: var(--font-mono); font-size: 8.5px; letter-spacing: 0.03em;
-  color: var(--color-ink); text-align: center; line-height: 1.2;
-  pointer-events: none;
-}
+@media (prefers-reduced-motion: reduce) { .status-dot { animation: none; } }
 
 /* ── Tweaks panel ────────────────────────────────────────── */
+/* Kept working, restyled as a Win98 window. 98.css handles the inputs it
+   contains natively, so this only styles the frame and the option strips. */
 #tweaks-panel {
-  position: fixed; bottom: 88px; right: 20px; width: 200px;
-  background: var(--bg-base); border: 2px solid var(--color-ink);
-  box-shadow: 5px 5px 0 var(--color-ink); z-index: 9999;
+  position: fixed; bottom: 42px; right: 16px; width: 210px;
+  background: var(--surface);
+  box-shadow: inset -1px -1px var(--window-frame), inset 1px 1px var(--button-face),
+              inset -2px -2px var(--button-shadow), inset 2px 2px var(--button-highlight);
+  padding: 3px; z-index: 9999;
   display: none; flex-direction: column;
 }
 #tweaks-panel.visible { display: flex; }
-.tweaks-header { padding: 8px 12px; border-bottom: 2px solid var(--color-ink); font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; background: var(--bg-sunken); }
-.tweaks-body { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
-.tweak-lbl { font-size: 8px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-ink-3); margin-bottom: 4px; font-family: var(--font-mono); }
-.tweak-opts { display: flex; border: 1px solid var(--color-ink); }
-.tweak-o { flex: 1; font-family: var(--font-mono); font-size: 8px; letter-spacing: 0.04em; text-transform: uppercase; padding: 5px 4px; text-align: center; cursor: pointer; border-right: 1px solid var(--color-ink); color: var(--color-ink-2); }
-.tweak-o:last-child { border-right: none; }
-.tweak-o.on { background: var(--color-ink); color: var(--color-ink-inv); }
-.tweak-o:hover:not(.on) { background: var(--bg-sunken); }
-.btn { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; padding: 9px 20px; border: 2px solid var(--color-ink); cursor: pointer; display: inline-block; transition: transform 80ms, box-shadow 80ms; line-height: 1; text-decoration: none; }
-.btn-ghost { background: transparent; color: var(--color-ink); border: 2px dashed var(--color-ink-2); box-shadow: none; }
-.btn-ghost:hover { background: var(--color-bg-sunken); }
+.tweaks-header {
+  padding: 3px 4px; font-family: var(--font-ui); font-size: 11px; font-weight: 700;
+  color: var(--dialog-title-text);
+  background: linear-gradient(90deg, var(--dialog-blue), var(--dialog-blue-light));
+}
+.tweaks-body { padding: 8px; display: flex; flex-direction: column; gap: 9px; }
+.tweak-lbl {
+  font-family: var(--font-ui); font-size: 11px;
+  color: var(--text-color); margin-bottom: 3px;
+}
+.tweak-opts {
+  display: flex; gap: 2px;
+}
+.tweak-o {
+  flex: 1; font-family: var(--font-ui); font-size: 11px;
+  padding: 3px 2px; text-align: center; cursor: pointer;
+  color: var(--text-color); background: var(--surface);
+  box-shadow: inset -1px -1px var(--window-frame), inset 1px 1px var(--button-highlight),
+              inset -2px -2px var(--button-shadow), inset 2px 2px var(--button-face);
+}
+.tweak-o.on {
+  box-shadow: inset -1px -1px var(--button-highlight), inset 1px 1px var(--window-frame),
+              inset -2px -2px var(--button-face), inset 2px 2px var(--button-shadow);
+  background-image: repeating-conic-gradient(var(--button-highlight) 0% 25%, transparent 0% 50%);
+  background-size: 2px 2px;
+  font-weight: 700;
+}
+.btn {
+  font-family: var(--font-ui); font-size: 11px;
+  padding: 5px 14px; cursor: pointer; display: inline-block;
+  line-height: 1.2; text-decoration: none;
+  color: var(--text-color); background: var(--surface); min-height: 23px;
+  box-shadow: inset -1px -1px var(--window-frame), inset 1px 1px var(--button-highlight),
+              inset -2px -2px var(--button-shadow), inset 2px 2px var(--button-face);
+}
+.btn:active {
+  box-shadow: inset -1px -1px var(--button-highlight), inset 1px 1px var(--window-frame),
+              inset -2px -2px var(--button-face), inset 2px 2px var(--button-shadow);
+}
+.btn-ghost { background: var(--surface); }
 
 /* ── Contact rows (desktop window) ───────────────────────── */
-.contact-list { display: flex; flex-direction: column; gap: 8px; margin: 0 auto; max-width: 280px; }
+.contact-list { display: flex; flex-direction: column; gap: 4px; }
 .contact-row {
   display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
-  padding: 8px 12px; border: 1px solid var(--color-ink);
-  text-decoration: none; color: var(--color-ink);
-  transition: background 80ms, transform 80ms;
+  padding: 6px 9px; text-decoration: none; color: var(--text-color);
+  background: var(--surface);
+  box-shadow: inset -1px -1px var(--window-frame), inset 1px 1px var(--button-highlight),
+              inset -2px -2px var(--button-shadow), inset 2px 2px var(--button-face);
 }
-.contact-row:hover { background: var(--bg-sunken); }
-.contact-row:active { transform: translate(1px, 1px); }
+.contact-row:active {
+  box-shadow: inset -1px -1px var(--button-highlight), inset 1px 1px var(--window-frame),
+              inset -2px -2px var(--button-face), inset 2px 2px var(--button-shadow);
+}
 .contact-lbl {
-  font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.14em;
-  text-transform: uppercase; color: var(--color-ink-3);
+  font-family: var(--font-ui); font-size: 11px; color: var(--text-color);
 }
 .contact-val {
-  font-family: var(--font-mono); font-size: 11px; color: var(--color-ink);
-  letter-spacing: 0.02em;
+  font-family: var(--font-mono); font-size: 11px; color: var(--link-blue);
 }
 </style>
 </head>
@@ -763,52 +836,52 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
         </div>
         <div class="mob-card-body" style="padding: 20px;">
           <div style="margin-bottom: 18px;">
-            <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--color-ink);line-height:1.3;">1. How you do anything is how you do everything.</div>
+            <div style="font-family:var(--font-body);font-size:15px;font-weight:700;color:var(--color-ink);line-height:1.3;">1. How you do anything is how you do everything.</div>
             <div style="font-family:var(--font-body);font-size:13px;font-style:italic;color:var(--color-ink-2);line-height:1.6;margin-top:4px;">Character isn't situational. Bring full presence, humility, and care to every interaction.</div>
           </div>
           <div class="mob-card-divider"></div>
           <div style="margin-bottom: 18px;">
-            <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--color-ink);line-height:1.3;">2. Taste is your last defensible edge.</div>
+            <div style="font-family:var(--font-body);font-size:15px;font-weight:700;color:var(--color-ink);line-height:1.3;">2. Taste is your last defensible edge.</div>
             <div style="font-family:var(--font-body);font-size:13px;font-style:italic;color:var(--color-ink-2);line-height:1.6;margin-top:4px;">Data, knowledge, and execution are commoditized. Pattern recognition, sensitivity to nuance, and an eye for what's right, that's the differentiator.</div>
           </div>
           <div class="mob-card-divider"></div>
           <div style="margin-bottom: 18px;">
-            <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--color-ink);line-height:1.3;">3. Simplicity is a competitive advantage.</div>
+            <div style="font-family:var(--font-body);font-size:15px;font-weight:700;color:var(--color-ink);line-height:1.3;">3. Simplicity is a competitive advantage.</div>
             <div style="font-family:var(--font-body);font-size:13px;font-style:italic;color:var(--color-ink-2);line-height:1.6;margin-top:4px;">Work small, think big. Strip to the essential. The complicated is common; the awesomely simple is rare.</div>
           </div>
           <div class="mob-card-divider"></div>
           <div style="margin-bottom: 18px;">
-            <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--color-ink);line-height:1.3;">4. Iteration is the method. The work reveals itself.</div>
+            <div style="font-family:var(--font-body);font-size:15px;font-weight:700;color:var(--color-ink);line-height:1.3;">4. Iteration is the method. The work reveals itself.</div>
             <div style="font-family:var(--font-body);font-size:13px;font-style:italic;color:var(--color-ink-2);line-height:1.6;margin-top:4px;">Measure, cut, measure again. 1% better every day. Quality emerges from selection, not perfection.</div>
           </div>
           <div class="mob-card-divider"></div>
           <div style="margin-bottom: 18px;">
-            <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--color-ink);line-height:1.3;">5. White space is where the real work happens.</div>
+            <div style="font-family:var(--font-body);font-size:15px;font-weight:700;color:var(--color-ink);line-height:1.3;">5. White space is where the real work happens.</div>
             <div style="font-family:var(--font-body);font-size:13px;font-style:italic;color:var(--color-ink-2);line-height:1.6;margin-top:4px;">Ideas don't come from meetings or dashboards. They emerge in reflection and mental slack. Protect it like a resource.</div>
           </div>
           <div class="mob-card-divider"></div>
           <div style="margin-bottom: 18px;">
-            <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--color-ink);line-height:1.3;">6. The urgent destroys the important.</div>
+            <div style="font-family:var(--font-body);font-size:15px;font-weight:700;color:var(--color-ink);line-height:1.3;">6. The urgent destroys the important.</div>
             <div style="font-family:var(--font-body);font-size:13px;font-style:italic;color:var(--color-ink-2);line-height:1.6;margin-top:4px;">Guard your attention. Ruthlessly. Most "fires" aren't.</div>
           </div>
           <div class="mob-card-divider"></div>
           <div style="margin-bottom: 18px;">
-            <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--color-ink);line-height:1.3;">7. Authenticity compounds.</div>
+            <div style="font-family:var(--font-body);font-size:15px;font-weight:700;color:var(--color-ink);line-height:1.3;">7. Authenticity compounds.</div>
             <div style="font-family:var(--font-body);font-size:13px;font-style:italic;color:var(--color-ink-2);line-height:1.6;margin-top:4px;">Make decisions you'd stand behind with no audience. The personal leads to the universal. Genuineness builds asymmetric trust.</div>
           </div>
           <div class="mob-card-divider"></div>
           <div style="margin-bottom: 18px;">
-            <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--color-ink);line-height:1.3;">8. Seek disagreement from smart people.</div>
+            <div style="font-family:var(--font-body);font-size:15px;font-weight:700;color:var(--color-ink);line-height:1.3;">8. Seek disagreement from smart people.</div>
             <div style="font-family:var(--font-body);font-size:13px;font-style:italic;color:var(--color-ink-2);line-height:1.6;margin-top:4px;">Embed humility in all interactions. Listen more than you talk. You're not the smartest person in the room — and if you are, change rooms.</div>
           </div>
           <div class="mob-card-divider"></div>
           <div style="margin-bottom: 18px;">
-            <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--color-ink);line-height:1.3;">9. Build systems that let ideas emerge.</div>
+            <div style="font-family:var(--font-body);font-size:15px;font-weight:700;color:var(--color-ink);line-height:1.3;">9. Build systems that let ideas emerge.</div>
             <div style="font-family:var(--font-body);font-size:13px;font-style:italic;color:var(--color-ink-2);line-height:1.6;margin-top:4px;">Promote aligned autonomy. Beginner's mind over expertise. Preconceptions limit possibilities. Create conditions for insight and do not force it.</div>
           </div>
           <div class="mob-card-divider"></div>
           <div>
-            <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--color-ink);line-height:1.3;">10. Failure is tuition. Enthusiasm is rocket fuel.</div>
+            <div style="font-family:var(--font-body);font-size:15px;font-weight:700;color:var(--color-ink);line-height:1.3;">10. Failure is tuition. Enthusiasm is rocket fuel.</div>
             <div style="font-family:var(--font-body);font-size:13px;font-style:italic;color:var(--color-ink-2);line-height:1.6;margin-top:4px;">It's only a failure if you didn't learn anything. And being enthusiastic is worth ~25 IQ points — energy is contagious and underrated.</div>
           </div>
         </div>
@@ -1168,30 +1241,26 @@ const DEFAULT_POS = {
 const TICKER = 'STRATEGY · PRODUCT · AI · AGENTS · KHS CONSULTING · EST. 2021  · ';
 
 // ─── Folder SVG ───────────────────────────────────────────
-function FolderSVG({ selected }) {
-  const body      = selected ? 'var(--color-accent)'       : 'var(--color-accent-light)';
-  const tab       = selected ? 'var(--color-accent-dark)'  : 'var(--color-accent)';
-  const highlight = 'var(--color-accent-light)';
-  const spine     = 'var(--color-accent-dark)';
-  const bottom    = 'var(--color-accent-dark)';
-  const ink       = 'var(--color-ink)';
+// Win98 folders were the same manila yellow under every colour scheme, so
+// these are deliberately literals rather than theme tokens. The selected
+// state is a CSS filter on .folder-icon.
+function FolderSVG() {
   return (
-    <svg viewBox="0 0 56 48" style={{ width: 56, height: 48 }} shapeRendering="crispEdges">
-      <rect x="1" y="6" width="20" height="6" style={{fill: tab}} stroke={ink} strokeWidth="1" />
-      <rect x="1" y="6" width="7" height="6" style={{fill: highlight}} />
-      <rect x="1" y="11" width="54" height="36" style={{fill: body}} stroke={ink} strokeWidth="1.5" />
-      <rect x="1" y="11" width="9" height="36" style={{fill: spine}} />
-      <rect x="1" y="11" width="54" height="5" style={{fill: highlight}} />
-      <rect x="1" y="43" width="54" height="4" style={{fill: bottom}} />
-      <rect x="14" y="27" width="28" height="2" style={{fill: ink}} opacity="0.15" />
-      <rect x="14" y="33" width="20" height="2" style={{fill: ink}} opacity="0.15" />
+    <svg className="folder-icon" viewBox="0 0 32 32" shapeRendering="crispEdges" aria-hidden="true">
+      <rect x="2" y="6" width="12" height="4" fill="#e8a200" stroke="#000" strokeWidth="1" />
+      <rect x="3" y="7" width="10" height="1" fill="#ffe9a8" />
+      <rect x="2" y="9" width="28" height="18" fill="#ffcc66" stroke="#000" strokeWidth="1" />
+      <rect x="3" y="10" width="26" height="2" fill="#ffe9a8" />
+      <rect x="3" y="10" width="2" height="16" fill="#ffe9a8" />
+      <rect x="3" y="24" width="26" height="2" fill="#e8a200" />
+      <rect x="27" y="10" width="2" height="16" fill="#e8a200" />
     </svg>);
 }
 
 // ─── Gear icon (Services desktop icon) ───────────────────
 function GearIconSVG() {
   return (
-    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" shapeRendering="crispEdges" style={{ width: 56, height: 56 }}>
+    <svg className="folder-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" shapeRendering="crispEdges" aria-hidden="true">
       <rect x="26" y="4" width="12" height="10" fill="#9c9890"/>
       <rect x="26" y="4" width="4" height="10" fill="#c0bcb4"/>
       <rect x="26" y="4" width="12" height="10" fill="none" stroke="#1c1c14" strokeWidth="1"/>
@@ -1254,71 +1323,50 @@ function HexMark({ size = 18, color = 'rgba(255,255,255,0.9)' }) {
 
 }
 
-// ─── Menu Bar Popup ───────────────────────────────────────
+// ─── In-window menu bar ───────────────────────────────────
+// Windows 98 put File/Edit/View/Help inside each window rather than in a
+// single bar at the top of the screen, so this renders per-window.
 const MENU_MESSAGES = {
   File: "Don't file me away.",
-  Go:   "Where do you want to go? I can help you get there.",
+  Edit: "Nothing to edit here. This one already shipped.",
   Help: "Help? Yea, I can help you.",
 };
 
-function MenuPopup({ popup, onClose }) {
+function WindowMenuBar({ onThemeCycle }) {
+  const [open, setOpen] = React.useState(null);
+  const ref = React.useRef(null);
+
+  // Close on any mousedown outside the menu. Clicks inside are ignored so the
+  // window underneath still receives the event and takes focus.
   React.useEffect(() => {
-    if (!popup) return;
-    const id = setTimeout(onClose, 3000);
-    return () => clearTimeout(id);
-  }, [popup]);
+    if (!open) return;
+    const close = (e) => {
+      if (!ref.current || !ref.current.contains(e.target)) setOpen(null);
+    };
+    document.addEventListener('mousedown', close);
+    return () => document.removeEventListener('mousedown', close);
+  }, [open]);
 
-  if (!popup) return null;
-
-  const clampedLeft = Math.min(popup.x, window.innerWidth - 296);
-  return (
-    <div
-      className="menu-popup"
-      style={{ left: clampedLeft }}
-      onClick={onClose}
-    >
-      {MENU_MESSAGES[popup.menu]}
-    </div>
-  );
-}
-
-// ─── Menu Bar ─────────────────────────────────────────────
-function MenuBar({ time, onAbout, onThemeCycle }) {
-  const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
-  const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
-  const d = time;
-  const dateStr = `${days[d.getDay()]} ${String(d.getDate()).padStart(2, '0')} ${months[d.getMonth()]} ${d.getFullYear()}`;
-  const timeStr = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
-
-  const [popup, setPopup] = React.useState(null);
-  const closePopup = React.useCallback(() => setPopup(null), []);
-
-  function handleMenuClick(m, e) {
-    if (m === 'View') { onThemeCycle(); return; }
-    if (m in MENU_MESSAGES) {
-      const rect = e.currentTarget.getBoundingClientRect();
-      setPopup(prev => prev?.menu === m ? null : { menu: m, x: rect.left });
-    }
+  function handleClick(m) {
+    if (m === 'View') { onThemeCycle(); setOpen(null); return; }
+    setOpen((prev) => prev === m ? null : m);
   }
 
   return (
-    <React.Fragment>
-      <div className="menu-bar">
-        <div className="menu-logo" onClick={onAbout}>
-          <img src="assets/khs-logo-transparent.png" alt="KHS" style={{ filter: 'invert(1)', display: 'block', width: "35px", height: "33px", objectFit: "contain" }} />
+    <div className="win-menubar" ref={ref}>
+      {['File', 'Edit', 'View', 'Help'].map((m) =>
+        <div
+          key={m}
+          className={`win-menubar-item${open === m ? ' open' : ''}`}
+          onMouseDown={() => handleClick(m)}>
+          <u>{m[0]}</u>{m.slice(1)}
+          {open === m && MENU_MESSAGES[m] &&
+            <div className="win-menu-popup">
+              <div className="win-menu-popup-body">{MENU_MESSAGES[m]}</div>
+            </div>}
         </div>
-        {['File', 'View', 'Go', 'Help'].map((m) =>
-          <div key={m} className="menu-item" onClick={(e) => handleMenuClick(m, e)}>{m}</div>
-        )}
-        <div className="menu-spacer" />
-        <div className="menu-right">
-          <div className="menu-date">{dateStr}</div>
-          <div className="menu-clock">{timeStr}</div>
-        </div>
-      </div>
-      <MenuPopup popup={popup} onClose={closePopup} />
-    </React.Fragment>
-  );
+      )}
+    </div>);
 
 }
 
@@ -1344,26 +1392,37 @@ function TickerBar() {
 }
 
 // ─── OS Window ────────────────────────────────────────────
-function OSWindow({ win, focused, onClose, onFocus, onTitleBarDown, onAnimationEnd, children, bodyStyle }) {
+function OSWindow({ win, focused, onClose, onMinimize, onFocus, onTitleBarDown, onAnimationEnd, onThemeCycle, children, bodyStyle, status }) {
   const animClass = win.animState ? ` is-${win.animState}` : '';
   return (
     <div
-      className={`os-window${focused ? ' focused' : ''}${animClass}`}
+      className={`window os-window${focused ? ' focused' : ''}${animClass}${win.minimized ? ' is-minimized' : ''}`}
       style={{ left: win.x, top: win.y, width: win.width || 340, zIndex: win.z }}
       onMouseDown={win.animState === 'closing' ? undefined : onFocus}
       onAnimationEnd={(e) => {
         if (e.target === e.currentTarget) onAnimationEnd(win.id);
       }}>
-      
-      <div className="os-titlebar" onMouseDown={onTitleBarDown}>
-        <div className="traffic-lights">
-          <div className="tl tl-close" onMouseDown={(e) => e.stopPropagation()} onClick={onClose} />
-          <div className="tl tl-min" />
-          <div className="tl tl-max" />
+
+      {/* .inactive is what 98.css uses to grey out an unfocused title bar. */}
+      <div className={`title-bar${focused ? '' : ' inactive'}`} onMouseDown={onTitleBarDown}>
+        <div className="title-bar-text">{win.title}</div>
+        {/* stopPropagation keeps a control click from starting a window drag. */}
+        <div className="title-bar-controls" onMouseDown={(e) => e.stopPropagation()}>
+          <button aria-label="Minimize" onClick={() => onMinimize(win.id)} />
+          <button aria-label="Maximize" disabled />
+          <button aria-label="Close" onClick={onClose} />
         </div>
-        <div className="os-wintitle">{win.title}</div>
       </div>
-      <div className="os-body" style={bodyStyle}>{children}</div>
+
+      <WindowMenuBar onThemeCycle={onThemeCycle} />
+
+      <div className="window-body" style={bodyStyle}>{children}</div>
+
+      <div className="status-bar">
+        {(status || ['Ready']).map((f, i) =>
+          <p key={i} className="status-bar-field">{f}</p>
+        )}
+      </div>
     </div>);
 
 }
@@ -1374,24 +1433,24 @@ function ProjectContent({ project }) {
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
         <span className="win-tag">{project.tag}</span>
-        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.1em', color: 'var(--color-ink-3)', textTransform: 'uppercase' }}>{project.year}</span>
+        <span style={{ fontFamily: 'var(--font-ui)', fontSize: 11, color: 'var(--text-color)',  }}>{project.year}</span>
       </div>
       <div className="win-title">{project.name}</div>
       <div className="win-desc">{project.desc}</div>
       <div className="win-divider" />
-      <div className="win-deliverables">
+      {/* tree-view draws the Win98 connector lines for us */}
+      <ul className="tree-view win-deliverables">
         {project.deliverables.map((d, i) =>
-        <div key={i} className="win-deliv-item">{d}</div>
+        <li key={i}>{d}</li>
         )}
-      </div>
-      {(project.url || project.githubUrl) && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 4 }}>
+      </ul>
+      {(project.url || project.githubUrl) &&
+        <div className="win-cta-row">
           {project.url &&
-            <a href={project.url} target="_blank" rel="noopener noreferrer" className="win-cta" style={{display:'block',textAlign:'center',textDecoration:'none'}}>View Project →</a>}
+            <a href={project.url} target="_blank" rel="noopener noreferrer" className="win-cta">View Project</a>}
           {project.githubUrl &&
-            <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="win-cta" style={{display:'block',textAlign:'center',textDecoration:'none'}}>View on GitHub →</a>}
-        </div>
-      )}
+            <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="win-cta">View on GitHub</a>}
+        </div>}
     </div>);
 
 }
@@ -1451,14 +1510,15 @@ function AboutContent() {
   const [activeTab, setActiveTab] = React.useState('work');
   return (
     <div>
-      <div className="menu-bar about-inner-menu">
-        <span
-          className={`menu-item${activeTab === 'work' ? ' active' : ''}`}
-          onClick={() => setActiveTab('work')}>WORK</span>
-        <span
-          className={`menu-item${activeTab === 'me' ? ' active' : ''}`}
-          onClick={() => setActiveTab('me')}>ME</span>
-      </div>
+      {/* 98.css tabs: menu[role=tablist] draws the notched tab strip. */}
+      <menu role="tablist" className="about-tabs">
+        <li role="tab" aria-selected={activeTab === 'work'} onClick={() => setActiveTab('work')}>
+          <a>Work</a>
+        </li>
+        <li role="tab" aria-selected={activeTab === 'me'} onClick={() => setActiveTab('me')}>
+          <a>Me</a>
+        </li>
+      </menu>
       {activeTab === 'work' ? (
         <div>
           <div className="about-hex">
@@ -1492,10 +1552,10 @@ function AboutContent() {
 function ResumeContent() {
   return (
     <div style={{ textAlign: 'center', padding: '16px 0' }}>
-      <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--color-ink-3)', marginBottom: 8 }}>Kareem Shirazi</div>
-      <div style={{ fontFamily: "'Playfair Display'", fontSize: 20, fontWeight: 700, color: 'var(--color-ink)', marginBottom: 4 }}>Resume</div>
+      <div style={{ fontFamily: 'var(--font-ui)', fontSize: 11, fontWeight: 700, color: 'var(--text-color)', marginBottom: 8 }}>Kareem Shirazi</div>
+      <div style={{ fontFamily: 'var(--font-body)', fontSize: 20, fontWeight: 700, color: 'var(--text-color)', marginBottom: 4 }}>Resume</div>
       <div className="about-divider" style={{ margin: '12px auto', width: 40 }} />
-      <div style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--color-ink-3)', marginBottom: 20, lineHeight: 1.6 }}>
+      <div style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--text-color)', marginBottom: 20, lineHeight: 1.6 }}>
         Product · UX · Strategy
       </div>
       <a href="assets/resume-site.html" target="_blank" rel="noopener noreferrer" className="btn btn-ghost">View Resume</a>
@@ -1507,10 +1567,10 @@ function ResumeContent() {
 function ContactContent() {
   return (
     <div style={{ textAlign: 'center', padding: '16px 0' }}>
-      <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--color-ink-3)', marginBottom: 8 }}>Kareem Shirazi</div>
-      <div style={{ fontFamily: "'Playfair Display'", fontSize: 20, fontWeight: 700, color: 'var(--color-ink)', marginBottom: 4 }}>Get in Touch</div>
+      <div style={{ fontFamily: 'var(--font-ui)', fontSize: 11, fontWeight: 700, color: 'var(--text-color)', marginBottom: 8 }}>Kareem Shirazi</div>
+      <div style={{ fontFamily: 'var(--font-body)', fontSize: 20, fontWeight: 700, color: 'var(--text-color)', marginBottom: 4 }}>Get in Touch</div>
       <div className="about-divider" style={{ margin: '12px auto', width: 40 }} />
-      <div style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--color-ink-3)', marginBottom: 16, lineHeight: 1.6 }}>
+      <div style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--text-color)', marginBottom: 16, lineHeight: 1.6 }}>
         Product · UX · Strategy
       </div>
       <div className="contact-list">
@@ -1536,13 +1596,13 @@ function ContactContent() {
 function AboutSiteContent() {
   return (
     <div style={{ padding: '16px 4px' }}>
-      <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--color-ink-3)', marginBottom: 8 }}>Meta</div>
-      <div style={{ fontFamily: "'Playfair Display'", fontSize: 20, fontWeight: 700, color: 'var(--color-ink)', marginBottom: 12 }}>About This Site</div>
+      <div style={{ fontFamily: 'var(--font-ui)', fontSize: 11, fontWeight: 700, color: 'var(--text-color)', marginBottom: 8 }}>Meta</div>
+      <div style={{ fontFamily: 'var(--font-body)', fontSize: 20, fontWeight: 700, color: 'var(--text-color)', marginBottom: 12 }}>About This Site</div>
       <div className="about-divider" style={{ marginBottom: 14, width: 40 }} />
-      <div style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--color-ink-2)', lineHeight: 1.7 }}>
+      <div style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--text-color)', lineHeight: 1.7 }}>
         This site is a hand-written static website — just <code>index.html</code> plus two CSS files (<code>colors_and_type.css</code> for the design tokens and typography, and <code>mobile.css</code> for the responsive layout), with no build step, bundler, or JavaScript framework in the way. Started in Claude Design, then Claude Code.
       </div>
-      <div style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--color-ink-2)', lineHeight: 1.7, marginTop: 10 }}>
+      <div style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--text-color)', lineHeight: 1.7, marginTop: 10 }}>
         Source lives in a GitHub repo (<a href="https://github.com/Shirazik/khs-website" target="_blank" rel="noopener noreferrer"><code>shirazik/khs-website</code></a>) and is deployed via GitHub Pages, which serves the files straight from the <code>main</code> branch; a <code>CNAME</code> file in the repo points the deployment at the custom domain <code>kareemshirazi.com</code>, so every push to <code>main</code> is effectively a production release. Designed, built, and maintained by me.
       </div>
     </div>
@@ -1575,16 +1635,16 @@ function PhilosophiesContent() {
   ];
   return (
     <div style={{ padding: '16px 4px' }}>
-      <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--color-ink-3)', marginBottom: 6 }}>Principles</div>
-      <div style={{ fontFamily: "'Playfair Display'", fontSize: 20, fontWeight: 700, color: 'var(--color-ink)', marginBottom: 10 }}>Philosophies</div>
+      <div style={{ fontFamily: 'var(--font-ui)', fontSize: 11, fontWeight: 700, color: 'var(--text-color)', marginBottom: 6 }}>Principles</div>
+      <div style={{ fontFamily: 'var(--font-body)', fontSize: 20, fontWeight: 700, color: 'var(--text-color)', marginBottom: 10 }}>Philosophies</div>
       <div className="about-divider" style={{ marginBottom: 14, width: 40 }} />
       <div style={{ maxHeight: 420, overflowY: 'auto' }}>
         {items.map((item) => (
           <div key={item.n} style={{ marginBottom: 18 }}>
-            <div style={{ fontFamily: "'Playfair Display'", fontSize: 16, fontWeight: 700, color: 'var(--color-ink)', lineHeight: 1.3 }}>
+            <div style={{ fontFamily: 'var(--font-body)', fontSize: 16, fontWeight: 700, color: 'var(--text-color)', lineHeight: 1.3 }}>
               {item.n}. {item.bold}
             </div>
-            <div style={{ fontFamily: 'var(--font-body)', fontSize: 13, fontStyle: 'italic', color: 'var(--color-ink-2)', lineHeight: 1.65, marginTop: 4 }}>
+            <div style={{ fontFamily: 'var(--font-body)', fontSize: 13, fontStyle: 'italic', color: 'var(--text-color)', lineHeight: 1.65, marginTop: 4 }}>
               {item.italic}
             </div>
           </div>
@@ -1605,18 +1665,76 @@ const TOOLBAR_ICONS = [
 { label: 'Contact', action: 'contact', svg: `<svg viewBox="0 0 64 64" shape-rendering="crispEdges"><rect x="20" y="6" width="24" height="14" fill="#3c3830"/><rect x="20" y="6" width="8" height="14" fill="#504c48"/><rect x="20" y="6" width="24" height="5" fill="#585450"/><rect x="20" y="6" width="24" height="14" fill="none" stroke="#1c1c14" stroke-width="1.5"/><rect x="25" y="9" width="3" height="1" fill="#282820"/><rect x="29" y="9" width="3" height="1" fill="#282820"/><rect x="33" y="9" width="3" height="1" fill="#282820"/><rect x="25" y="12" width="3" height="1" fill="#282820"/><rect x="29" y="12" width="3" height="1" fill="#282820"/><rect x="33" y="12" width="3" height="1" fill="#282820"/><rect x="24" y="19" width="16" height="26" fill="#3c3830"/><rect x="24" y="19" width="5" height="26" fill="#504c48"/><rect x="24" y="19" width="16" height="26" fill="none" stroke="#1c1c14" stroke-width="1"/><rect x="27" y="32" width="4" height="5" fill="#282820"/><rect x="27" y="32" width="4" height="5" fill="none" stroke="#1c1c14" stroke-width="1"/><rect x="20" y="44" width="24" height="14" fill="#3c3830"/><rect x="20" y="44" width="8" height="14" fill="#504c48"/><rect x="20" y="53" width="24" height="5" fill="#2a2820"/><rect x="20" y="44" width="24" height="14" fill="none" stroke="#1c1c14" stroke-width="1.5"/><rect x="25" y="48" width="3" height="1" fill="#282820"/><rect x="29" y="48" width="3" height="1" fill="#282820"/><rect x="33" y="48" width="3" height="1" fill="#282820"/><rect x="25" y="51" width="3" height="1" fill="#282820"/><rect x="29" y="51" width="3" height="1" fill="#282820"/><rect x="33" y="51" width="3" height="1" fill="#282820"/></svg>` }];
 
 
-// ─── Toolbar ──────────────────────────────────────────────
-function DockToolbar({ onAction }) {
+// ─── Taskbar ──────────────────────────────────────────────
+// Replaces the old Mac-style dock and global menu bar. The window buttons
+// are derived straight from App's `windows` array, so there is no taskbar
+// state to keep in sync — the only local state is whether Start is open.
+function Taskbar({ time, windows, focusedWin, onAction, onWindowClick }) {
+  const [startOpen, setStartOpen] = React.useState(false);
+  const ref = React.useRef(null);
+
+  React.useEffect(() => {
+    if (!startOpen) return;
+    const close = (e) => {
+      if (!ref.current || !ref.current.contains(e.target)) setStartOpen(false);
+    };
+    const esc = (e) => { if (e.key === 'Escape') setStartOpen(false); };
+    document.addEventListener('mousedown', close);
+    document.addEventListener('keydown', esc);
+    return () => {
+      document.removeEventListener('mousedown', close);
+      document.removeEventListener('keydown', esc);
+    };
+  }, [startOpen]);
+
+  const timeStr = time.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+  const dateStr = time.toLocaleDateString([], { weekday: 'short', day: '2-digit', month: 'short' });
+
+  // Closing windows are already animating out; don't give them a button.
+  const buttons = windows.filter((w) => w.animState !== 'closing');
+
   return (
-    <div className="toolbar-wrap">
-      <div className="toolbar">
-        {TOOLBAR_ICONS.map((icon) =>
-        <div key={icon.action} className="tb-cell" onClick={() => onAction(icon.action)}>
-            <div dangerouslySetInnerHTML={{ __html: icon.svg }} style={{ width: 36, height: 36, flexShrink: 0 }} />
-            <div className="tb-label">{icon.label}</div>
+    <div className="taskbar" ref={ref}>
+      <div
+        className={`taskbar-btn-base taskbar-start${startOpen ? ' pressed' : ''}`}
+        onClick={() => setStartOpen((v) => !v)}>
+        <img src="assets/khs-logo-transparent.png" alt="" />
+        <span>Start</span>
+      </div>
+
+      {startOpen &&
+        <div className="start-menu">
+          <div className="start-menu-spine"><span>KHS&nbsp;98</span></div>
+          <div className="start-menu-items">
+            {TOOLBAR_ICONS.map((icon, i) =>
+              <React.Fragment key={icon.action}>
+                {icon.action === 'contact' && <div className="start-menu-sep" />}
+                <div
+                  className="start-menu-item"
+                  onClick={() => { setStartOpen(false); onAction(icon.action); }}>
+                  <div dangerouslySetInnerHTML={{ __html: icon.svg }} style={{ width: 24, height: 24, flexShrink: 0 }} />
+                  <span>{icon.label}</span>
+                </div>
+              </React.Fragment>
+            )}
+          </div>
+        </div>}
+
+      <div className="taskbar-divider" />
+
+      <div className="taskbar-windows">
+        {buttons.map((w) =>
+          <div
+            key={w.id}
+            className={`taskbar-btn-base taskbar-btn${!w.minimized && focusedWin === w.id ? ' pressed' : ''}`}
+            title={w.title}
+            onClick={() => onWindowClick(w.id)}>
+            <span>{w.title}</span>
           </div>
         )}
       </div>
+
+      <div className="taskbar-tray" title={dateStr}>{timeStr}</div>
     </div>);
 
 }
@@ -1637,8 +1755,13 @@ const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
 
 function TweaksPanel({ setFolderPos }) {
   const [vals, setVals] = React.useState(() => {
-    try { return { ...TWEAK_DEFAULTS, ...JSON.parse(localStorage.getItem('khs-tweaks') || '{}') }; }
-    catch { return { ...TWEAK_DEFAULTS }; }
+    // Theme is owned by localStorage('khs-theme') and already applied to
+    // <html> before React mounts. Seed from the live attribute so the panel
+    // shows the real selection instead of fighting the restore — see the
+    // mount effect below.
+    const live = document.documentElement.getAttribute('data-theme') || TWEAK_DEFAULTS.theme;
+    try { return { ...TWEAK_DEFAULTS, ...JSON.parse(localStorage.getItem('khs-tweaks') || '{}'), theme: live }; }
+    catch { return { ...TWEAK_DEFAULTS, theme: live }; }
   });
 
   const apply = (key, val) => {
@@ -1650,6 +1773,9 @@ function TweaksPanel({ setFolderPos }) {
     // Live effects
     if (key === 'theme') {
       document.documentElement.setAttribute('data-theme', val);
+      // Keep the one source of truth in sync so the View menu, this panel and
+      // the page-load restore all agree.
+      localStorage.setItem('khs-theme', val);
     }
     if (key === 'dotGrid') {
       document.querySelector('.desktop')?.style.setProperty('--dot-opacity', val ? '0.05' : '0');
@@ -1698,9 +1824,12 @@ function TweaksPanel({ setFolderPos }) {
     }
   };
 
-  // Restore on mount
+  // Restore on mount. Theme is deliberately excluded: <html data-theme> is
+  // already set from localStorage('khs-theme') by the inline script at the
+  // bottom of this file, and replaying it here would clobber that restore
+  // with this panel's stale default on every load.
   React.useEffect(() => {
-    Object.entries(vals).forEach(([k, v]) => apply(k, v));
+    Object.entries(vals).forEach(([k, v]) => { if (k !== 'theme') apply(k, v); });
   }, []);
 
   const Opt = ({ k, v, label }) => (
@@ -1722,7 +1851,7 @@ function TweaksPanel({ setFolderPos }) {
       </div>
       <div className="tweaks-body" style={{maxHeight:'70vh',overflowY:'auto'}}>
 
-        <div style={{fontFamily:'var(--font-mono)',fontSize:7,letterSpacing:'0.14em',textTransform:'uppercase',color:'var(--color-ink-3)',marginBottom:8,borderBottom:'1px solid var(--color-ink)',paddingBottom:4}}>— Palette —</div>
+        <div style={{fontFamily:'var(--font-ui)',fontSize:11,fontWeight:700,color:'var(--text-color)',marginBottom:8,borderBottom:'1px solid var(--text-color)',paddingBottom:4}}>— Palette —</div>
 
         <Row label="Color Theme">
           <Opt k="theme" v="terminal" label="Term"/>
@@ -1743,7 +1872,7 @@ function TweaksPanel({ setFolderPos }) {
           <Opt k="logoFilter" v="ghost" label="Ghost"/>
         </Row>
 
-        <div style={{fontFamily:'var(--font-mono)',fontSize:7,letterSpacing:'0.14em',textTransform:'uppercase',color:'var(--color-ink-3)',margin:'12px 0 8px',borderBottom:'1px solid var(--color-ink)',paddingBottom:4}}>— Desktop —</div>
+        <div style={{fontFamily:'var(--font-ui)',fontSize:11,fontWeight:700,color:'var(--text-color)',margin:'12px 0 8px',borderBottom:'1px solid var(--text-color)',paddingBottom:4}}>— Desktop —</div>
 
         <Row label="Dot Grid">
           <Opt k="dotGrid" v={true} label="On"/>
@@ -1763,7 +1892,7 @@ function TweaksPanel({ setFolderPos }) {
           <Opt k="folderDensity" v="tight" label="Tight"/>
         </Row>
 
-        <div style={{fontFamily:'var(--font-mono)',fontSize:7,letterSpacing:'0.14em',textTransform:'uppercase',color:'var(--color-ink-3)',margin:'12px 0 8px',borderBottom:'1px solid var(--color-ink)',paddingBottom:4}}>— Windows —</div>
+        <div style={{fontFamily:'var(--font-ui)',fontSize:11,fontWeight:700,color:'var(--text-color)',margin:'12px 0 8px',borderBottom:'1px solid var(--text-color)',paddingBottom:4}}>— Windows —</div>
 
         <Row label="Focused Shadow">
           <Opt k="shadowColor" v="accent" label="Accent"/>
@@ -1771,7 +1900,7 @@ function TweaksPanel({ setFolderPos }) {
           <Opt k="shadowColor" v="none" label="None"/>
         </Row>
 
-        <div style={{fontFamily:'var(--font-mono)',fontSize:7,letterSpacing:'0.14em',textTransform:'uppercase',color:'var(--color-ink-3)',margin:'12px 0 8px',borderBottom:'1px solid var(--color-ink)',paddingBottom:4}}>— Ticker —</div>
+        <div style={{fontFamily:'var(--font-ui)',fontSize:11,fontWeight:700,color:'var(--text-color)',margin:'12px 0 8px',borderBottom:'1px solid var(--text-color)',paddingBottom:4}}>— Ticker —</div>
 
         <Row label="Ticker Speed">
           <Opt k="tickerSpeed" v="slow" label="Slow"/>
@@ -1780,7 +1909,7 @@ function TweaksPanel({ setFolderPos }) {
           <Opt k="tickerSpeed" v="off" label="Off"/>
         </Row>
 
-        <div style={{marginTop:12,borderTop:'1px solid var(--color-ink)',paddingTop:10}}>
+        <div style={{marginTop:12,borderTop:'1px solid var(--text-color)',paddingTop:10}}>
           <div className="tweak-lbl" style={{marginBottom:6}}>Reset</div>
           <div style={{display:'flex',gap:6}}>
             <div className="tweak-o" style={{flex:1,textAlign:'center',cursor:'pointer'}} onClick={() => {
@@ -1876,10 +2005,12 @@ function App() {
     return () => {document.removeEventListener('mousemove', onMove);document.removeEventListener('mouseup', onUp);};
   }, []);
 
+  // Focusing also restores: reopening a project from a folder or the Start
+  // menu should surface it even if it is currently minimised to the taskbar.
   const focusWindow = useCallback((id) => {
     winCounter++;
     setFocusedWin(id);
-    setWindows((ws) => ws.map((w) => w.id === id && w.animState !== 'closing' ? { ...w, z: winCounter } : w));
+    setWindows((ws) => ws.map((w) => w.id === id && w.animState !== 'closing' ? { ...w, z: winCounter, minimized: false } : w));
   }, []);
 
   const finishWindowAnimation = useCallback((id) => {
@@ -1921,6 +2052,24 @@ function App() {
     if (dragging.current?.type === 'window' && dragging.current.id === id) dragging.current = null;
     setWindows((ws) => ws.map((w) => w.id === id ? { ...w, animState: 'closing' } : w));
   }, []);
+
+  // Unlike close — which flags animState:'closing' so finishWindowAnimation
+  // can drop the object — minimise must keep the window alive. It just stops
+  // rendering; the taskbar holds the only handle back to it.
+  const minimizeWindow = useCallback((id) => {
+    if (dragging.current?.type === 'window' && dragging.current.id === id) dragging.current = null;
+    setWindows((ws) => ws.map((w) => w.id === id ? { ...w, minimized: true } : w));
+    setFocusedWin((f) => f === id ? null : f);
+  }, []);
+
+  // Taskbar button: focused window minimises, anything else focuses (which
+  // also restores it, see focusWindow).
+  const taskbarClick = useCallback((id) => {
+    const w = windows.find((x) => x.id === id);
+    if (!w) return;
+    if (!w.minimized && focusedWin === id) { minimizeWindow(id); return; }
+    focusWindow(id);
+  }, [windows, focusedWin, focusWindow, minimizeWindow]);
 
   const handleToolbarAction = useCallback((action) => {
     if (action === 'about') {openAbout();return;}
@@ -1994,7 +2143,6 @@ function App() {
 
   return (
     <div className="app">
-      <MenuBar time={time} onAbout={openAbout} onThemeCycle={cycleTheme} />
       <TickerBar />
       <div
         className="desktop"
@@ -2024,7 +2172,7 @@ function App() {
               }}
               onDoubleClick={() => openProject(project)}>
               
-              <FolderSVG selected={isSelected} />
+              <FolderSVG />
               <div className="folder-label">
                 <span className="folder-label-inner">{project.name}</span>
               </div>
@@ -2062,8 +2210,14 @@ function App() {
           win={win}
           focused={focusedWin === win.id}
           onClose={() => closeWindow(win.id)}
+          onMinimize={minimizeWindow}
           onFocus={() => focusWindow(win.id)}
+          onThemeCycle={cycleTheme}
           onAnimationEnd={finishWindowAnimation}
+          status={win.type === 'project'
+            ? [PROJECTS.find((p) => p.id === win.projectId)?.tag || 'Project',
+               PROJECTS.find((p) => p.id === win.projectId)?.year || '']
+            : undefined}
           bodyStyle={win.type === 'services'
             ? { maxHeight: 'calc(100vh - 260px)', overflowY: 'auto' }
             : undefined}
@@ -2084,11 +2238,11 @@ function App() {
           }
             {win.type === 'placeholder' &&
           <div style={{ textAlign: 'center', padding: '20px 0' }}>
-                <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--color-ink-3)', marginBottom: 12 }}>Coming Soon</div>
-                <div style={{ fontFamily: "'Playfair Display'", fontSize: 22, fontWeight: 700, color: 'var(--color-ink)' }}>
+                <div style={{ fontFamily: 'var(--font-ui)', fontSize: 11, fontWeight: 700, color: 'var(--text-color)', marginBottom: 12 }}>Coming Soon</div>
+                <div style={{ fontFamily: 'var(--font-body)', fontSize: 22, fontWeight: 700, color: 'var(--text-color)' }}>
                   {win.title}
                 </div>
-                <div style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--color-ink-3)', marginTop: 10, lineHeight: 1.6 }}>
+                <div style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--text-color)', marginTop: 10, lineHeight: 1.6 }}>
                   This section is in progress.
                 </div>
               </div>
@@ -2097,7 +2251,12 @@ function App() {
         )}
       </div>
 
-      <DockToolbar onAction={handleToolbarAction} />
+      <Taskbar
+        time={time}
+        windows={windows}
+        focusedWin={focusedWin}
+        onAction={handleToolbarAction}
+        onWindowClick={taskbarClick} />
 
       {/* Tweaks Panel */}
       <TweaksPanel setFolderPos={setFolderPos} />

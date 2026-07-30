@@ -105,7 +105,7 @@
   --link-blue:          oklch(42% 0.140 250);
 
   /* Desktop wallpaper — Win98's default was teal; each scheme gets its own */
-  --desktop-bg:         oklch(45% 0.055 175);
+  --desktop-bg:         oklch(40% 0.065 178);
 
   /* Theme label */
   --theme-name: "Terminal Green";
@@ -158,7 +158,7 @@
   --dialog-title-text:  oklch(98% 0.006 78);
   --link-blue:          oklch(42% 0.140 250);
 
-  --desktop-bg:         oklch(48% 0.045 85);
+  --desktop-bg:         oklch(38% 0.055 128);
 }
 
 /* ============================================================
@@ -206,7 +206,7 @@
   --dialog-title-text:  oklch(98% 0.005 240);
   --link-blue:          oklch(40% 0.150 250);
 
-  --desktop-bg:         oklch(40% 0.055 245);
+  --desktop-bg:         oklch(33% 0.065 250);
 }
 
 /* ============================================================
