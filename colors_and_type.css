@@ -1,10 +1,57 @@
 /* ============================================================
    KHS DESIGN SYSTEM — Color & Type Tokens
-   Retro-internet era, modernly refined.
+   Windows 98, in three colour schemes.
+   ============================================================
+
+   This file feeds two consumers:
+
+   1. vendor/98.css — the vendored 98.css fork. It renders every control
+      through 14 tokens (--surface, --button-shadow, --dialog-blue, ...).
+      Each theme below supplies a full set. See vendor/98.css for what each
+      token controls and which upstream literal it replaced.
+
+   2. The KHS tokens (--bg-*, --color-*) that predate the Win98 redesign and
+      are still used by index.html and mobile.css for content areas.
+
+   Windows 98 shipped a set of named Appearance schemes; the three KHS
+   themes are modelled on them, keeping each theme's existing accent hue:
+
+      terminal   -> Spruce      green
+      amber      -> Desert      tan / olive
+      blueprint  -> Rainy Day   blue-grey
+
+   Values are oklch so the lightness ladder is explicit and tunable. Win98's
+   bevel relationship is a fixed ladder that every scheme preserves:
+
+      button-highlight  ~98%   outer light bevel   (upstream #fff)
+      button-face       ~89%   inner light bevel   (upstream #dfdfdf)
+      surface           ~80%   3D object face      (upstream silver)
+      button-shadow     ~56%   inner dark bevel    (upstream grey)
+      window-frame      ~14%   outer dark bevel    (upstream #0a0a0a)
+
+   Keep that ladder when tuning. Collapsing the gaps flattens every bevel in
+   the UI at once, because all of 98.css is built from those four insets.
+
+   CONTRAST
+   --------
+   Verified with WCAG ratios across all three schemes. Two deliberate calls:
+
+   * Inactive title bars are DARKER than upstream. 98.css uses
+     grey -> #b5b5b5 with white text, about 2.1:1, which is unreadable — and
+     background window titles have to be readable because you click them to
+     focus, and the same strings appear in taskbar buttons. Ours land at
+     5.0:1 or better. Active bars stay clearly distinct by being coloured.
+
+   * Disabled text is intentionally left at ~2.5:1. That is authentic Win98
+     (grey on the 3D face, legible via the white emboss that 98.css applies
+     as text-shadow), and WCAG exempts inactive controls from contrast
+     minimums. Looking unavailable is the point. Do not "fix" this.
    ============================================================ */
 
-/* Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@300;400;600&display=swap');
+/* Google Fonts — Playfair Display was dropped in the Win98 redesign: UI
+   chrome is bitmap MS Sans Serif (vendor/98.css) and body copy is Source
+   Sans 3. */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@300;400;600&display=swap');
 
 /* ============================================================
    THEME: Terminal Green (default)
@@ -39,6 +86,27 @@
   --color-warning:  oklch(68% 0.18 80);
   --color-info:     oklch(50% 0.16 220);
 
+  /* ── Win98 scheme: "Spruce" ─────────────────────────────── */
+  --surface:            oklch(80% 0.014 145);
+  --button-face:        oklch(89% 0.011 145);
+  --button-highlight:   oklch(98% 0.006 145);
+  --button-shadow:      oklch(56% 0.012 145);
+  --window-frame:       oklch(14% 0.012 145);
+
+  --field-bg:           oklch(99% 0.004 145);
+  --text-color:         var(--color-ink);
+  --disabled-text:      oklch(56% 0.012 145);
+
+  --dialog-blue:        oklch(30% 0.090 145);
+  --dialog-blue-light:  oklch(46% 0.110 145);
+  --dialog-gray:        oklch(42% 0.008 145);
+  --dialog-gray-light:  oklch(52% 0.008 145);
+  --dialog-title-text:  oklch(98% 0.005 145);
+  --link-blue:          oklch(42% 0.140 250);
+
+  /* Desktop wallpaper — Win98's default was teal; each scheme gets its own */
+  --desktop-bg:         oklch(45% 0.055 175);
+
   /* Theme label */
   --theme-name: "Terminal Green";
 }
@@ -69,6 +137,28 @@
   --color-success:  oklch(44% 0.16 145);
   --color-warning:  var(--color-accent);
   --color-info:     oklch(50% 0.16 220);
+
+  /* ── Win98 scheme: "Desert" ─────────────────────────────── */
+  --surface:            oklch(82% 0.020 78);
+  --button-face:        oklch(90% 0.016 78);
+  --button-highlight:   oklch(98% 0.008 78);
+  --button-shadow:      oklch(57% 0.016 78);
+  --window-frame:       oklch(15% 0.014 60);
+
+  --field-bg:           oklch(99% 0.005 78);
+  --text-color:         var(--color-ink);
+  --disabled-text:      oklch(57% 0.016 78);
+
+  /* Desert's title bar was brown, not amber: the raw accent (62% L) is far
+     too light to carry white 11px bold text. These are darkened deliberately. */
+  --dialog-blue:        oklch(33% 0.070 60);
+  --dialog-blue-light:  oklch(48% 0.090 65);
+  --dialog-gray:        oklch(43% 0.010 78);
+  --dialog-gray-light:  oklch(53% 0.008 78);
+  --dialog-title-text:  oklch(98% 0.006 78);
+  --link-blue:          oklch(42% 0.140 250);
+
+  --desktop-bg:         oklch(48% 0.045 85);
 }
 
 /* ============================================================
@@ -97,6 +187,26 @@
   --color-success:  oklch(44% 0.16 145);
   --color-warning:  oklch(68% 0.18 80);
   --color-info:     var(--color-accent);
+
+  /* ── Win98 scheme: "Rainy Day" ──────────────────────────── */
+  --surface:            oklch(80% 0.014 240);
+  --button-face:        oklch(89% 0.011 240);
+  --button-highlight:   oklch(98% 0.006 240);
+  --button-shadow:      oklch(56% 0.012 240);
+  --window-frame:       oklch(14% 0.012 240);
+
+  --field-bg:           oklch(99% 0.004 240);
+  --text-color:         var(--color-ink);
+  --disabled-text:      oklch(56% 0.012 240);
+
+  --dialog-blue:        oklch(28% 0.110 250);
+  --dialog-blue-light:  oklch(45% 0.140 250);
+  --dialog-gray:        oklch(42% 0.008 240);
+  --dialog-gray-light:  oklch(52% 0.008 240);
+  --dialog-title-text:  oklch(98% 0.005 240);
+  --link-blue:          oklch(40% 0.150 250);
+
+  --desktop-bg:         oklch(40% 0.055 245);
 }
 
 /* ============================================================
@@ -120,9 +230,13 @@
    ============================================================ */
 :root {
   /* Font families */
-  --font-display: 'Playfair Display', Georgia, serif;
+  /* Bitmap face from vendor/98.css. All UI chrome uses this. */
+  --font-ui:      'Pixelated MS Sans Serif', Tahoma, Geneva, Verdana, sans-serif;
   --font-mono:    'IBM Plex Mono', 'Courier New', monospace;
   --font-body:    'Source Sans 3', Helvetica, Arial, sans-serif;
+  /* Retained so the legacy .khs-h* classes (used only by style-guide.html)
+     still resolve now that Playfair Display is gone. */
+  --font-display: var(--font-body);
 
   /* Size scale (modular — Major Third 1.25×) */
   --text-xs:   0.64rem;   /* 10.24px */
