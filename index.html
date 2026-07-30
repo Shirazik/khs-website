@@ -182,28 +182,6 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
   pointer-events: none; user-select: none;
   text-align: center; white-space: nowrap; z-index: 0;
 }
-/* Ghost text sits on the dark wallpaper, so it lightens rather than darkens. */
-.ghost-main {
-  font-family: var(--font-body);
-  font-size: clamp(100px, 16vw, 200px);
-  font-weight: 700; letter-spacing: -0.04em;
-  color: #fff; opacity: 0.07; line-height: 0.9;
-  display: block;
-}
-.ghost-sub {
-  font-family: var(--font-mono);
-  font-size: clamp(10px, 1.2vw, 16px);
-  letter-spacing: 0.28em; text-transform: uppercase;
-  color: #fff; opacity: 0.11; display: block;
-  margin-top: 12px;
-}
-.ghost-italic {
-  font-family: var(--font-body);
-  font-size: clamp(32px, 5vw, 64px);
-  font-weight: 400; font-style: italic;
-  color: #fff; opacity: 0.15; display: block;
-  margin-top: 4px; letter-spacing: -0.02em;
-}
 
 /* ── Desktop icon ────────────────────────────────────────── */
 /* Win98 desktop icons: white label directly on the wallpaper, no plate.
@@ -344,7 +322,7 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
 }
 .win-year {
   font-family: var(--font-ui); font-size: 11px; color: var(--text-color);
-  margin-bottom: 4px;
+  white-space: nowrap;
 }
 .win-title {
   font-family: var(--font-body); font-size: 19px;
@@ -384,22 +362,6 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
   padding: 5px 11px 3px 13px;
 }
 .win-cta:focus { outline: 1px dotted #000; outline-offset: -4px; }
-
-/* Shared Win98 edges, so the content areas below stay consistent with the
-   bevels vendor/98.css draws on real controls. */
-.khs-raised {
-  box-shadow: inset -1px -1px var(--window-frame), inset 1px 1px var(--button-highlight),
-              inset -2px -2px var(--button-shadow), inset 2px 2px var(--button-face);
-}
-.khs-sunken {
-  box-shadow: inset -1px -1px var(--button-highlight), inset 1px 1px var(--button-shadow),
-              inset -2px -2px var(--button-face), inset 2px 2px var(--window-frame);
-}
-.khs-etched {
-  height: 0;
-  border-top: 1px solid var(--button-shadow);
-  border-bottom: 1px solid var(--button-highlight);
-}
 
 /* Services window */
 .svc-cat-label {
@@ -1469,7 +1431,7 @@ function ProjectContent({ project }) {
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
         <span className="win-tag">{project.tag}</span>
-        <span style={{ fontFamily: 'var(--font-ui)', fontSize: 11, color: 'var(--text-color)',  }}>{project.year}</span>
+        <span className="win-year">{project.year}</span>
       </div>
       <div className="win-title">{project.name}</div>
       <div className="win-desc">{project.desc}</div>
@@ -1776,17 +1738,18 @@ function Taskbar({ time, windows, focusedWin, onAction, onWindowClick }) {
 }
 
 // ─── Tweaks Panel ────────────────────────────────────────
+// Controls dropped in the Win98 redesign, and why:
+//   menubarStyle  the global .menu-bar no longer exists (menus moved in-window)
+//   logoFilter    targeted .menu-logo img, which went with the menu bar
+//   shadowColor   hard-offset shadows were replaced by 98.css bevels
+//   windowStyle   never had a UI control
+//   dockPosition  the dock was replaced by a fixed taskbar
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "theme": "amber",
   "dotGrid": true,
   "tickerSpeed": "slow",
   "ghostOpacity": "low",
-  "windowStyle": "classic",
-  "folderDensity": "scattered",
-  "menubarStyle": "dark",
-  "shadowColor": "ink",
-  "dockPosition": "bottom",
-  "logoFilter": "invert"
+  "folderDensity": "scattered"
 }/*EDITMODE-END*/;
 
 function TweaksPanel({ setFolderPos }) {
@@ -1825,21 +1788,6 @@ function TweaksPanel({ setFolderPos }) {
       const ops = { off: 0, low: 0.06, med: 0.12, high: 0.22 };
       const ghost = document.querySelector('.ghost-layer img');
       if (ghost) ghost.style.opacity = ops[val];
-    }
-    if (key === 'menubarStyle') {
-      const bar = document.querySelector('.menu-bar');
-      if (bar) {
-        bar.style.background = val === 'dark' ? 'var(--bg-inverse)' : val === 'transparent' ? 'rgba(0,0,0,0.4)' : 'var(--color-accent-dark)';
-      }
-    }
-    if (key === 'shadowColor') {
-      const wins = document.querySelectorAll('.os-window.focused');
-      document.documentElement.style.setProperty('--shadow-accent-override',
-        val === 'accent' ? 'var(--color-accent)' : val === 'ink' ? 'var(--color-ink)' : 'transparent');
-    }
-    if (key === 'logoFilter') {
-      const filters = { invert: 'invert(1)', normal: 'none', sepia: 'sepia(0.8)', ghost: 'invert(1) opacity(0.4)' };
-      document.querySelectorAll('.menu-logo img').forEach(i => i.style.filter = filters[val] || 'none');
     }
     if (key === 'folderDensity') {
       if (val === 'grid') {
@@ -1895,19 +1843,6 @@ function TweaksPanel({ setFolderPos }) {
           <Opt k="theme" v="blueprint" label="Blue"/>
         </Row>
 
-        <Row label="Menu Bar">
-          <Opt k="menubarStyle" v="dark" label="Dark"/>
-          <Opt k="menubarStyle" v="accent" label="Accent"/>
-          <Opt k="menubarStyle" v="transparent" label="Glass"/>
-        </Row>
-
-        <Row label="Logo Filter">
-          <Opt k="logoFilter" v="invert" label="White"/>
-          <Opt k="logoFilter" v="normal" label="Black"/>
-          <Opt k="logoFilter" v="sepia" label="Sepia"/>
-          <Opt k="logoFilter" v="ghost" label="Ghost"/>
-        </Row>
-
         <div style={{fontFamily:'var(--font-ui)',fontSize:11,fontWeight:700,color:'var(--text-color)',margin:'12px 0 8px',borderBottom:'1px solid var(--text-color)',paddingBottom:4}}>— Desktop —</div>
 
         <Row label="Dot Grid">
@@ -1926,14 +1861,6 @@ function TweaksPanel({ setFolderPos }) {
           <Opt k="folderDensity" v="scattered" label="Free"/>
           <Opt k="folderDensity" v="grid" label="Grid"/>
           <Opt k="folderDensity" v="tight" label="Tight"/>
-        </Row>
-
-        <div style={{fontFamily:'var(--font-ui)',fontSize:11,fontWeight:700,color:'var(--text-color)',margin:'12px 0 8px',borderBottom:'1px solid var(--text-color)',paddingBottom:4}}>— Windows —</div>
-
-        <Row label="Focused Shadow">
-          <Opt k="shadowColor" v="accent" label="Accent"/>
-          <Opt k="shadowColor" v="ink" label="Ink"/>
-          <Opt k="shadowColor" v="none" label="None"/>
         </Row>
 
         <div style={{fontFamily:'var(--font-ui)',fontSize:11,fontWeight:700,color:'var(--text-color)',margin:'12px 0 8px',borderBottom:'1px solid var(--text-color)',paddingBottom:4}}>— Ticker —</div>
