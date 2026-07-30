@@ -1,3 +1,15 @@
+/* ============================================================
+   Mobile layout — Windows 98
+   ============================================================
+   The mobile layer is static HTML outside React's #root, swapped in by the
+   media query below. It reads as a scrolling stack of Win98 windows sitting
+   on the desktop wallpaper, with a fixed Start taskbar.
+
+   Colours come from the same theme tokens as the desktop (see
+   colors_and_type.css); the bevels are hand-written here rather than reusing
+   98.css classes so the mobile markup can stay plain semantic HTML.
+   ============================================================ */
+
 /* ── Mobile layout: hidden on desktop ─────────────────────── */
 .mobile-layout { display: none; }
 
@@ -8,11 +20,26 @@
   #root          { display: none !important; }
   .mobile-layout { display: block; }
 
-  /* Unlock scrolling — !important overrides the inline <style> overflow:hidden rule */
+  /* Unlock scrolling — !important overrides the inline <style> overflow:hidden
+     rule in index.html, which is parsed after this file and would win.
+     overflow-x stays hidden so a stray wide child can never sideways-scroll
+     the whole page. */
   html, body {
-    overflow: auto !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
     height: auto !important;
-    background: var(--bg-base);
+    width: 100%;
+    background: var(--desktop-bg);
+  }
+  .mobile-layout {
+    /* clear the fixed taskbar */
+    padding-bottom: calc(46px + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* Shared Win98 edges */
+  .mob-raised {
+    box-shadow: inset -1px -1px var(--window-frame), inset 1px 1px var(--button-highlight),
+                inset -2px -2px var(--button-shadow), inset 2px 2px var(--button-face);
   }
 
   /* ── Header ──────────────────────────────────────────────── */
@@ -20,43 +47,40 @@
     position: sticky;
     top: 0;
     z-index: 100;
-    height: 48px;
-    background: var(--bg-inverse);
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 0 20px;
-    border-bottom: 2px solid var(--color-ink);
+    gap: 8px;
+    padding: 4px 6px;
+    background: linear-gradient(90deg, var(--dialog-blue), var(--dialog-blue-light));
+    border-bottom: 1px solid var(--window-frame);
   }
   .mob-header-logo {
-    width: 32px;
-    height: 32px;
+    width: 20px;
+    height: 20px;
     object-fit: contain;
     filter: invert(1);
     flex-shrink: 0;
   }
   .mob-header-wordmark {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.9);
+    font-family: var(--font-ui);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--dialog-title-text);
     flex: 1;
   }
   .mob-status-dot {
-    width: 7px;
-    height: 7px;
-    background: var(--color-accent);
+    width: 8px;
+    height: 8px;
+    background: var(--dialog-title-text);
     flex-shrink: 0;
     animation: blink 1.2s step-start infinite;
   }
 
   /* ── Ticker ──────────────────────────────────────────────── */
   .mob-ticker {
-    height: 28px;
-    background: var(--bg-surface);
-    border-bottom: 2px solid var(--color-ink);
+    height: 22px;
+    background: var(--surface);
+    box-shadow: inset -1px -1px var(--button-highlight), inset 1px 1px var(--button-shadow);
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -71,432 +95,436 @@
     100% { transform: translateX(-50%); }
   }
   .mob-ticker-text {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--color-ink-2);
-    padding: 0 24px;
+    font-family: var(--font-ui);
+    font-size: 11px;
+    color: var(--text-color);
+    padding: 0 20px;
   }
 
   /* ── Hero ────────────────────────────────────────────────── */
+  /* A window panel floating on the wallpaper. */
   .mob-hero {
-    padding: 40px 20px 32px;
-    border-bottom: 1px solid rgba(128,128,128,0.15);
+    margin: 14px 12px;
+    padding: 14px 14px 18px;
     text-align: center;
+    background: var(--surface);
+    box-shadow: inset -1px -1px var(--window-frame), inset 1px 1px var(--button-face),
+                inset -2px -2px var(--button-shadow), inset 2px 2px var(--button-highlight);
   }
   .mob-hero-logo {
-    width: min(220px, 60vw);
+    width: min(200px, 56vw);
     height: auto;
     display: block;
     margin: 0 auto 10px;
   }
   .mob-hero-role {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--color-accent);
-    margin-bottom: 20px;
+    font-family: var(--font-ui);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-color);
+    margin-bottom: 14px;
   }
   .mob-hero-bio {
-    font-family: 'Source Sans 3', sans-serif;
-    font-size: 16px;
-    line-height: 1.65;
-    color: var(--color-ink-2);
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text-color);
     max-width: 340px;
-    margin: 0 auto 24px;
+    margin: 0 auto 16px;
+    text-align: left;
   }
   .mob-hero-availability {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    font-family: 'IBM Plex Mono', monospace;
+    font-family: var(--font-ui);
     font-size: 11px;
-    letter-spacing: 0.08em;
-    color: var(--color-ink-3);
+    color: var(--text-color);
   }
+  .mob-hero-availability .mob-status-dot { background: var(--dialog-blue); }
 
   /* ── Skills ──────────────────────────────────────────────── */
   .mob-skills {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 4px;
     justify-content: center;
-    padding: 0 20px 32px;
-    border-bottom: 1px solid rgba(128,128,128,0.15);
-    padding-top: 24px;
+    margin: 0 12px 16px;
   }
   .mob-skill {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    padding: 5px 12px;
-    border: 1px solid var(--color-ink);
-    color: var(--color-ink-2);
+    font-family: var(--font-ui);
+    font-size: 11px;
+    padding: 4px 8px;
+    color: var(--text-color);
+    background: var(--surface);
+    box-shadow: inset -1px -1px var(--window-frame), inset 1px 1px var(--button-highlight),
+                inset -2px -2px var(--button-shadow), inset 2px 2px var(--button-face);
   }
 
   /* ── Section wrapper ─────────────────────────────────────── */
+  /* Section headings sit directly on the wallpaper, so they are light with a
+     hard shadow — the same treatment as desktop icon labels. */
   .mob-section {
-    padding: 32px 20px;
-    border-bottom: 1px solid rgba(128,128,128,0.15);
+    padding: 18px 12px 8px;
   }
   .mob-section-label {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--color-ink-3);
-    margin-bottom: 4px;
+    font-family: var(--font-ui);
+    font-size: 11px;
+    color: #fff;
+    opacity: 0.75;
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.55);
+    margin-bottom: 3px;
   }
   .mob-section-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 28px;
+    font-family: var(--font-body);
+    font-size: 24px;
     font-weight: 700;
-    letter-spacing: -0.02em;
-    color: var(--color-ink);
-    margin-bottom: 24px;
-    border-bottom: 2px solid var(--color-ink);
-    padding-bottom: 12px;
+    letter-spacing: -0.01em;
+    color: #fff;
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.55);
+    margin-bottom: 14px;
   }
 
   /* ── Project cards ───────────────────────────────────────── */
   .mob-cards {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 14px;
   }
   .mob-card {
-    background: var(--bg-base);
-    border: 2px solid var(--color-ink);
-    box-shadow: 4px 4px 0 var(--color-ink);
+    background: var(--surface);
+    padding: 3px;
+    box-shadow: inset -1px -1px var(--window-frame), inset 1px 1px var(--button-face),
+                inset -2px -2px var(--button-shadow), inset 2px 2px var(--button-highlight);
   }
   .mob-card-titlebar {
-    background: var(--bg-inverse);
-    height: 30px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 8px;
-    padding: 0 12px;
-    border-bottom: 2px solid var(--color-ink);
+    padding: 3px 2px 3px 3px;
+    background: linear-gradient(90deg, var(--dialog-blue), var(--dialog-blue-light));
   }
-  .mob-card-tl {
-    width: 10px;
-    height: 10px;
-    border: 1px solid rgba(0,0,0,0.3);
-    flex-shrink: 0;
-  }
-  .mob-card-tl-red  { background: #ff5f57; }
-  .mob-card-tl-yel  { background: #febc2e; }
-  .mob-card-tl-grn  { background: #28c840; }
   .mob-card-wintitle {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.7);
-    flex: 1;
-    text-align: center;
-    margin-left: -38px;
+    font-family: var(--font-ui);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--dialog-title-text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
   }
+  /* The control buttons are real 98.css .title-bar-controls markup, so their
+     bevels and glyphs come from vendor/98.css. They are decorative here. */
+  .mob-card-titlebar .title-bar-controls { flex-shrink: 0; }
+  .mob-card-titlebar .title-bar-controls button { pointer-events: none; }
+
   .mob-card-body {
-    padding: 18px 16px 16px;
+    padding: 12px 12px 12px;
   }
   .mob-card-meta {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 10px;
+    gap: 8px;
+    margin-bottom: 8px;
   }
   .mob-card-tag {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 9px;
-    font-weight: 500;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    padding: 3px 9px;
-    border: var(--border);
-    color: var(--color-ink);
+    font-family: var(--font-ui);
+    font-size: 11px;
+    padding: 1px 6px;
+    background: var(--dialog-blue);
+    color: var(--dialog-title-text);
     display: inline-block;
     line-height: 1.5;
   }
   .mob-card-year {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    color: var(--color-ink-3);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
+    font-family: var(--font-ui);
+    font-size: 11px;
+    color: var(--text-color);
+    white-space: nowrap;
   }
   .mob-card-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 22px;
-    font-weight: 700;
-    letter-spacing: -0.02em;
+    font-family: var(--font-body);
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
     line-height: 1.2;
-    color: var(--color-ink);
-    margin-bottom: 10px;
+    color: var(--text-color);
+    margin-bottom: 8px;
   }
   .mob-card-desc {
-    font-family: 'Source Sans 3', sans-serif;
+    font-family: var(--font-body);
     font-size: 14px;
-    line-height: 1.6;
-    color: var(--color-ink-2);
-    margin-bottom: 14px;
+    line-height: 1.55;
+    color: var(--text-color);
+    margin-bottom: 12px;
   }
   .mob-card-desc code {
-    font-family: 'IBM Plex Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 12px;
-    background: var(--color-surface-2, rgba(0,0,0,0.06));
+    background: var(--field-bg);
+    box-shadow: inset -1px -1px var(--button-highlight), inset 1px 1px var(--button-shadow);
     padding: 1px 4px;
-    border-radius: 2px;
   }
   .mob-career-note {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    line-height: 1.6;
-    color: var(--color-ink-2);
+    font-family: var(--font-body);
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--text-color);
     font-style: italic;
-    margin: 16px 0 4px;
-    padding: 0 2px;
-    opacity: 0.8;
+    margin: 14px 0 4px;
   }
+  /* Win98 etched separator */
   .mob-card-divider {
-    height: 1px;
-    background: var(--color-ink);
+    height: 0;
     margin-bottom: 12px;
-    opacity: 0.3;
+    border-top: 1px solid var(--button-shadow);
+    border-bottom: 1px solid var(--button-highlight);
   }
   .mob-card-deliverables {
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    margin-bottom: 16px;
+    gap: 5px;
+    margin-bottom: 14px;
   }
   .mob-card-deliv {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.06em;
-    color: var(--color-ink-2);
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--text-color);
     display: flex;
     align-items: flex-start;
-    gap: 8px;
-    line-height: 1.4;
+    gap: 7px;
+    line-height: 1.45;
   }
   .mob-card-deliv::before {
-    content: '→';
-    color: var(--color-accent);
+    content: '';
+    width: 7px;
+    height: 7px;
+    margin-top: 5px;
     flex-shrink: 0;
-    margin-top: 1px;
+    background: var(--dialog-blue);
+    box-shadow: inset -1px -1px var(--button-shadow), inset 1px 1px var(--button-highlight);
   }
   .mob-card-cta {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    padding: 9px 16px;
-    border: 2px solid var(--color-ink);
-    background: transparent;
-    color: var(--color-ink);
+    font-family: var(--font-ui);
+    font-size: 11px;
+    min-height: 26px;
+    padding: 6px 14px;
+    color: var(--text-color);
+    background: var(--surface);
     cursor: pointer;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
     text-decoration: none;
-    box-shadow: 5px 5px 0 var(--color-ink);
-    transition: background 80ms, color 80ms, box-shadow 80ms linear, transform 80ms linear;
-  }
-  .mob-card-cta:hover {
-    box-shadow: 7px 7px 0 var(--color-ink);
-    transform: translate(-1px, -1px);
+    box-shadow: inset -1px -1px var(--window-frame), inset 1px 1px var(--button-highlight),
+                inset -2px -2px var(--button-shadow), inset 2px 2px var(--button-face);
   }
   .mob-card-cta:active {
-    background: var(--color-ink);
-    color: var(--color-ink-inv);
-    box-shadow: 2px 2px 0 var(--color-ink);
-    transform: translate(3px, 3px);
+    box-shadow: inset -1px -1px var(--button-highlight), inset 1px 1px var(--window-frame),
+                inset -2px -2px var(--button-face), inset 2px 2px var(--button-shadow);
+    padding: 7px 13px 5px 15px;
   }
 
   /* ── Contact rows ─────────────────────────────────── */
   .mob-contact-list {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    margin: 0 auto;
-    max-width: 320px;
+    gap: 5px;
   }
   .mob-contact-row {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
     gap: 12px;
-    padding: 10px 12px;
-    border: 1px solid var(--color-ink);
+    padding: 9px 11px;
     text-decoration: none;
-    color: var(--color-ink);
-    transition: background 80ms, transform 80ms;
+    color: var(--text-color);
+    background: var(--surface);
+    box-shadow: inset -1px -1px var(--window-frame), inset 1px 1px var(--button-highlight),
+                inset -2px -2px var(--button-shadow), inset 2px 2px var(--button-face);
   }
   .mob-contact-row:active {
-    background: var(--bg-sunken);
-    transform: translate(1px, 1px);
+    box-shadow: inset -1px -1px var(--button-highlight), inset 1px 1px var(--window-frame),
+                inset -2px -2px var(--button-face), inset 2px 2px var(--button-shadow);
   }
   .mob-contact-lbl {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--color-ink-3);
+    font-family: var(--font-ui);
+    font-size: 11px;
+    color: var(--text-color);
   }
   .mob-contact-val {
-    font-family: 'IBM Plex Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 12px;
-    color: var(--color-ink);
-    letter-spacing: 0.02em;
+    color: var(--link-blue);
+    word-break: break-all;
   }
 
   /* ── Footer ────────────────────────────────────────────── */
   .mob-footer {
-    padding: 24px 20px;
+    padding: 20px;
     text-align: center;
-    border-top: 2px solid var(--color-ink);
   }
   .mob-footer-wordmark {
-    font-family: 'IBM Plex Mono', monospace;
+    font-family: var(--font-ui);
     font-size: 11px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--color-ink);
-    margin-bottom: 6px;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.55);
+    margin-bottom: 5px;
   }
   .mob-footer-copy {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    color: var(--color-ink-3);
+    font-family: var(--font-ui);
+    font-size: 11px;
+    color: #fff;
+    opacity: 0.7;
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.55);
   }
 
-  /* ── FAB ────────────────────────────────────────────────── */
-  .mob-fab {
+  /* ── Taskbar + Start button ──────────────────────────────── */
+  .mob-taskbar {
     position: fixed;
-    bottom: 24px;
-    right: 20px;
-    width: 54px;
-    height: 54px;
-    background: var(--bg-inverse);
-    border: 2px solid var(--color-ink);
-    box-shadow: 4px 4px 0 var(--color-ink);
-    cursor: pointer;
+    left: 0; right: 0; bottom: 0;
     z-index: 500;
     display: flex;
     align-items: center;
-    justify-content: center;
-    transition: box-shadow 80ms, transform 80ms;
+    gap: 4px;
+    padding: 2px 2px calc(2px + env(safe-area-inset-bottom, 0px));
+    background: var(--surface);
+    box-shadow: inset 0 1px var(--button-highlight), inset 0 2px var(--button-face);
   }
-  .mob-fab:active {
-    box-shadow: 2px 2px 0 var(--color-ink);
-    transform: translate(2px, 2px);
+  .mob-fab {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--font-ui);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-color);
+    background: var(--surface);
+    border: none;
+    min-height: 30px;
+    padding: 4px 12px 4px 6px;
+    cursor: pointer;
+    box-shadow: inset -1px -1px var(--window-frame), inset 1px 1px var(--button-highlight),
+                inset -2px -2px var(--button-shadow), inset 2px 2px var(--button-face);
+  }
+  .mob-fab img { width: 18px; height: 18px; object-fit: contain; display: block; }
+  /* .pressed is toggled in JS alongside the menu — the overlay is a later
+     sibling than the taskbar, so a CSS-only sibling selector cannot reach it. */
+  .mob-fab:active,
+  .mob-fab.pressed {
+    box-shadow: inset -1px -1px var(--button-highlight), inset 1px 1px var(--window-frame),
+                inset -2px -2px var(--button-face), inset 2px 2px var(--button-shadow);
+    padding: 5px 11px 3px 7px;
+  }
+  .mob-taskbar-tray {
+    margin-left: auto;
+    font-family: var(--font-ui);
+    font-size: 11px;
+    color: var(--text-color);
+    padding: 5px 10px;
+    min-height: 26px;
+    display: flex;
+    align-items: center;
+    box-shadow: inset -1px -1px var(--button-highlight), inset 1px 1px var(--button-shadow);
   }
 
-  /* ── Grid menu overlay ───────────────────────────────────── */
+  /* ── Start menu sheet ────────────────────────────────────── */
   .mob-menu-overlay {
     position: fixed;
     inset: 0;
     z-index: 600;
     pointer-events: none;
   }
-  .mob-menu-overlay.open {
-    pointer-events: auto;
-  }
+  .mob-menu-overlay.open { pointer-events: auto; }
   .mob-menu-backdrop {
     position: absolute;
     inset: 0;
     background: rgba(0,0,0,0);
     transition: background 200ms;
   }
-  .mob-menu-overlay.open .mob-menu-backdrop {
-    background: rgba(0,0,0,0.5);
-  }
+  .mob-menu-overlay.open .mob-menu-backdrop { background: rgba(0,0,0,0.45); }
   .mob-menu-panel {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: var(--bg-base);
-    border-top: 2px solid var(--color-ink);
-    box-shadow: 0 -4px 0 var(--color-ink);
-    transform: translateY(100%);
-    transition: transform 220ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    padding-bottom: env(safe-area-inset-bottom, 0px);
+    bottom: calc(34px + env(safe-area-inset-bottom, 0px));
+    left: 2px;
+    right: 2px;
+    background: var(--surface);
+    padding: 3px;
+    box-shadow: inset -1px -1px var(--window-frame), inset 1px 1px var(--button-highlight),
+                inset -2px -2px var(--button-shadow), inset 2px 2px var(--button-face);
+    transform: translateY(calc(100% + 40px));
+    transition: transform 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
-  .mob-menu-overlay.open .mob-menu-panel {
-    transform: translateY(0);
-  }
+  .mob-menu-overlay.open .mob-menu-panel { transform: translateY(0); }
   .mob-menu-header {
-    height: 36px;
-    background: var(--bg-inverse);
-    border-bottom: 2px solid var(--color-ink);
     display: flex;
     align-items: center;
-    padding: 0 14px;
+    padding: 3px 2px 3px 4px;
+    background: linear-gradient(90deg, var(--dialog-blue), var(--dialog-blue-light));
   }
   .mob-menu-title {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.7);
+    font-family: var(--font-ui);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--dialog-title-text);
     flex: 1;
-    text-align: center;
-    margin-left: 24px;
   }
   .mob-menu-close {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 14px;
-    color: rgba(255,255,255,0.6);
-    background: none;
+    font-family: var(--font-ui);
+    font-size: 11px;
+    color: var(--text-color);
+    background: var(--surface);
     border: none;
     cursor: pointer;
-    padding: 4px;
+    width: 20px;
+    height: 16px;
     line-height: 1;
+    box-shadow: inset -1px -1px var(--window-frame), inset 1px 1px var(--button-highlight),
+                inset -2px -2px var(--button-shadow), inset 2px 2px var(--button-face);
   }
   .mob-menu-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    padding: 4px 2px 2px;
   }
   .mob-menu-cell {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 16px 8px 12px;
-    gap: 8px;
+    justify-content: flex-start;
+    padding: 8px 4px 6px;
+    gap: 5px;
     cursor: pointer;
-    background: var(--bg-surface);
+    background: transparent;
     border: none;
-    border-right: 1px solid var(--color-ink);
-    border-bottom: 1px solid var(--color-ink);
-    border-top: 2px solid rgba(255,255,255,0.55);
-    border-left: 1px solid rgba(255,255,255,0.4);
-    transition: background 80ms;
-  }
-  .mob-menu-cell:nth-child(4n) {
-    border-right: none;
+    color: var(--text-color);
   }
   .mob-menu-cell:active {
-    background: var(--bg-sunken);
-    border-top-color: rgba(0,0,0,0.15);
+    background: var(--dialog-blue);
+    color: var(--dialog-title-text);
   }
   .mob-menu-cell svg {
-    width: 44px;
-    height: 44px;
+    width: 32px;
+    height: 32px;
     flex-shrink: 0;
   }
   .mob-menu-cell-label {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.04em;
-    color: var(--color-ink);
+    font-family: var(--font-ui);
+    font-size: 11px;
     text-align: center;
-    line-height: 1.3;
+    line-height: 1.25;
     pointer-events: none;
+    color: inherit;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mob-ticker-inner { animation: none; }
+    .mob-status-dot { animation: none; }
+    .mob-menu-panel { transition: none; }
   }
 
 } /* end @media */
