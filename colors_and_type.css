@@ -55,9 +55,8 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap');
 
 /* ============================================================
-   THEME: Terminal Green (default)
+   THEME: Terminal Green
    ============================================================ */
-:root,
 [data-theme="terminal"] {
   /* Backgrounds */
   --bg-base:        oklch(96% 0.015 100);   /* warm cream */
@@ -163,8 +162,13 @@
 }
 
 /* ============================================================
-   THEME: Blueprint Navy
+   THEME: Blueprint Navy — DEFAULT
+   ------------------------------------------------------------
+   :root is paired with this block so the bare fallback matches the default
+   declared on <html data-theme> in index.html and in TWEAK_DEFAULTS. If you
+   change the default theme, change all three together.
    ============================================================ */
+:root,
 [data-theme="blueprint"] {
   --bg-base:        oklch(97% 0.008 230);    /* cool white */
   --bg-surface:     oklch(93% 0.012 230);

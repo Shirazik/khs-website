@@ -88,9 +88,9 @@ Appearance schemes, keeping each theme's existing accent hue:
 
 | Theme | Win98 scheme | Reads as |
 |-------|--------------|----------|
-| `terminal` (default) | Spruce | green |
+| `terminal` | Spruce | green |
 | `amber` | Desert | tan / olive |
-| `blueprint` | Rainy Day | blue-grey |
+| `blueprint` **(default)** | Rainy Day | blue-grey |
 
 Each theme defines **14 tokens** that `vendor/98.css` consumes (`--surface`,
 `--button-face`, `--button-highlight`, `--button-shadow`, `--window-frame`, `--field-bg`,
