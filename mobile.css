@@ -2,8 +2,12 @@
    Mobile layout — Windows 98
    ============================================================
    The mobile layer is static HTML outside React's #root, swapped in by the
-   media query below. It reads as a scrolling stack of Win98 windows sitting
-   on the desktop wallpaper, with a fixed Start taskbar.
+   media query below. It reads as a scrolling stack of Win98 windows on a light
+   grey document surface, with a fixed Start taskbar.
+
+   Text outside a window card therefore sits on --surface and must be ink, not
+   white. See the note on the html/body background rule below for why this
+   file cannot change that background on its own.
 
    Colours come from the same theme tokens as the desktop (see
    colors_and_type.css); the bevels are hand-written here rather than reusing
@@ -29,7 +33,11 @@
     overflow-x: hidden !important;
     height: auto !important;
     width: 100%;
-    background: var(--desktop-bg);
+    /* Mobile is a light document surface, not the desktop wallpaper. Note this
+       cannot be set to anything else from here without !important: the inline
+       <style> in index.html declares `html, body, #root { background: ... }`
+       at equal specificity and is parsed later, so it always wins. */
+    background: var(--surface);
   }
   .mobile-layout {
     /* clear the fixed taskbar */
@@ -162,17 +170,16 @@
   }
 
   /* ── Section wrapper ─────────────────────────────────────── */
-  /* Section headings sit directly on the wallpaper, so they are light with a
-     hard shadow — the same treatment as desktop icon labels. */
+  /* Section headings sit directly on the wallpaper. They are black by request;
+     the dark drop shadow that paired with the previous white text is dropped,
+     since a dark shadow under dark text does nothing. */
   .mob-section {
     padding: 18px 12px 8px;
   }
   .mob-section-label {
     font-family: var(--font-ui);
     font-size: 11px;
-    color: #fff;
-    opacity: 0.75;
-    text-shadow: 1px 1px 0 rgba(0,0,0,0.55);
+    color: #000;
     margin-bottom: 3px;
   }
   .mob-section-title {
@@ -180,8 +187,7 @@
     font-size: 24px;
     font-weight: 700;
     letter-spacing: -0.01em;
-    color: #fff;
-    text-shadow: 1px 1px 0 rgba(0,0,0,0.55);
+    color: #000;
     margin-bottom: 14px;
   }
 
@@ -366,20 +372,20 @@
     padding: 20px;
     text-align: center;
   }
+  /* Ink, not white: the footer sits on the same light page background as the
+     section headings above, where white was effectively invisible. */
   .mob-footer-wordmark {
     font-family: var(--font-ui);
     font-size: 11px;
     font-weight: 700;
-    color: #fff;
-    text-shadow: 1px 1px 0 rgba(0,0,0,0.55);
+    color: var(--text-color);
     margin-bottom: 5px;
   }
   .mob-footer-copy {
     font-family: var(--font-ui);
     font-size: 11px;
-    color: #fff;
+    color: var(--text-color);
     opacity: 0.7;
-    text-shadow: 1px 1px 0 rgba(0,0,0,0.55);
   }
 
   /* ── Taskbar + Start button ──────────────────────────────── */
