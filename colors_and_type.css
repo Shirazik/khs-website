@@ -234,9 +234,9 @@
   /* Bitmap face from vendor/98.css. All UI chrome uses this. */
   --font-ui:      'Pixelated MS Sans Serif', Tahoma, Geneva, Verdana, sans-serif;
   --font-mono:    'IBM Plex Mono', 'Courier New', monospace;
-  /* System Helvetica — no webfont needed. Arial is the Windows fallback,
-     which is what Helvetica maps to there anyway. */
-  --font-body:    Helvetica, 'Helvetica Neue', Arial, sans-serif;
+  /* System Arial — no webfont needed. Also the fallback 98.css itself names
+     after the bitmap face, so the whole site resolves to one non-bitmap font. */
+  --font-body:    Arial, Helvetica, sans-serif;
   /* Retained so the legacy .khs-h* classes (used only by style-guide.html)
      still resolve now that Playfair Display is gone. */
   --font-display: var(--font-body);
