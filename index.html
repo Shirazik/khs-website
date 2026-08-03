@@ -333,10 +333,27 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
   font-family: var(--font-body); font-size: 13px;
   line-height: 1.55; color: var(--text-color); margin-bottom: 12px;
 }
-/* Deliverables render as a 98.css tree-view in the markup; this only sets
-   the type, the connector lines come from vendor/98.css. */
+/* Deliverables render as a 98.css tree-view, which gives us the sunken panel.
+   98.css sets `list-style-type: none` on tree-view items and only draws its
+   dotted connectors on NESTED lists, so a flat list like this has no marker at
+   all — hence the explicit bullet below. Matches .mob-card-deliv on mobile. */
 .win-deliverables { margin-bottom: 12px; }
-.win-deliverables li { line-height: 1.6; }
+.win-deliverables li {
+  line-height: 1.5;
+  position: relative;
+  /* hanging indent: wrapped lines align under the text, not under the bullet */
+  padding-left: 13px;
+}
+.win-deliverables li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.4em;
+  width: 6px;
+  height: 6px;
+  background: var(--dialog-blue);
+  box-shadow: inset -1px -1px var(--button-shadow), inset 1px 1px var(--button-highlight);
+}
 /* Win98 etched separator: one shadow line above one highlight line. */
 .win-divider {
   height: 0; margin: 12px 0;
