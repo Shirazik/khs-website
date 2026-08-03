@@ -48,10 +48,11 @@
      minimums. Looking unavailable is the point. Do not "fix" this.
    ============================================================ */
 
-/* Google Fonts — Playfair Display was dropped in the Win98 redesign: UI
-   chrome is bitmap MS Sans Serif (vendor/98.css) and body copy is Source
-   Sans 3. */
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@300;400;600&display=swap');
+/* Google Fonts — IBM Plex Mono only.
+   UI chrome uses bitmap MS Sans Serif, self-hosted via vendor/98.css.
+   Body copy uses system Helvetica, so it needs no webfont. Playfair Display
+   and Source Sans 3 were both dropped. */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap');
 
 /* ============================================================
    THEME: Terminal Green (default)
@@ -233,7 +234,9 @@
   /* Bitmap face from vendor/98.css. All UI chrome uses this. */
   --font-ui:      'Pixelated MS Sans Serif', Tahoma, Geneva, Verdana, sans-serif;
   --font-mono:    'IBM Plex Mono', 'Courier New', monospace;
-  --font-body:    'Source Sans 3', Helvetica, Arial, sans-serif;
+  /* System Helvetica — no webfont needed. Arial is the Windows fallback,
+     which is what Helvetica maps to there anyway. */
+  --font-body:    Helvetica, 'Helvetica Neue', Arial, sans-serif;
   /* Retained so the legacy .khs-h* classes (used only by style-guide.html)
      still resolve now that Playfair Display is gone. */
   --font-display: var(--font-body);

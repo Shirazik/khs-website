@@ -12,7 +12,7 @@ The visual language is [98.css](https://jdan.github.io/98.css/), vendored and to
 - **Babel Standalone** for inline JSX transpilation (`<script type="text/babel">`)
 - **98.css v0.1.21**, vendored to `vendor/98.css` and tokenised (see below)
 - **CSS custom properties** for theming (3 Win98 colour schemes)
-- **Fonts**: Pixelated MS Sans Serif (self-hosted, from 98.css) for all UI chrome; IBM Plex Mono and Source Sans 3 from Google Fonts for body copy. Playfair Display was dropped.
+- **Fonts**: Pixelated MS Sans Serif (self-hosted, from 98.css) for all UI chrome; system Helvetica for body copy; IBM Plex Mono from Google Fonts. Playfair Display and Source Sans 3 were both dropped — Google Fonts now serves only IBM Plex Mono.
 
 ## File Structure
 
