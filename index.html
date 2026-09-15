@@ -403,11 +403,7 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
 .svc-cta-row {
   margin-top: 14px; padding-top: 12px;
   border-top: 1px solid var(--button-shadow);
-  display: flex; align-items: center; justify-content: space-between; gap: 10px;
-}
-.svc-avail {
-  font-family: var(--font-ui); font-size: 11px;
-  color: var(--text-color); display: flex; align-items: center; gap: 6px;
+  display: flex; align-items: center; justify-content: flex-end; gap: 10px;
 }
 
 /* About window */
@@ -438,18 +434,6 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
   box-shadow: inset -1px -1px var(--window-frame), inset 1px 1px var(--button-highlight),
               inset -2px -2px var(--button-shadow), inset 2px 2px var(--button-face);
 }
-.about-status {
-  font-family: var(--font-ui); font-size: 11px;
-  color: var(--text-color);
-  display: flex; align-items: center; justify-content: center; gap: 6px;
-}
-@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-.status-dot {
-  width: 8px; height: 8px; flex-shrink: 0;
-  background: var(--dialog-blue);
-  animation: blink 1.2s step-start infinite;
-}
-@media (prefers-reduced-motion: reduce) { .status-dot { animation: none; } }
 
 /* ── Tweaks panel ────────────────────────────────────────── */
 /* Kept working, restyled as a Win98 window. 98.css handles the inputs it
@@ -534,7 +518,6 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
   <header class="mob-header">
     <img class="mob-header-logo" src="assets/khs-logo-transparent.png" alt="KHS">
     <span class="mob-header-wordmark">KHS Consulting</span>
-    <div class="mob-status-dot"></div>
   </header>
 
   <div class="mob-ticker">
@@ -547,11 +530,7 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var
   <section class="mob-hero" id="mob-hero">
     <img class="mob-hero-logo" src="assets/khs-logo-transparent.png" alt="KHS Consulting">
     <div class="mob-hero-role">Product · UX · AI · Strategy</div>
-    <p class="mob-hero-bio">Product exec and builder with 12+ years building consumer products at Jet.com, BuzzFeed, Trade, and The Infatuation. Deep expertise in e-commerce, marketplaces, media, DTC, and subscription businesses.</p>
-    <div class="mob-hero-availability">
-      <div class="mob-status-dot"></div>
-      Available for new projects
-    </div>
+    <p class="mob-hero-bio">Product leader with 12+ years building and scaling products at high-growth companies. Proven track record of driving triple-digit growth through user-centric product strategy, experimentation, and team building. Deep expertise in ecommerce, marketplaces, media, and subscription businesses serving millions of users. In 2025 I started my own consultancy to help companies focus, move faster, and ship what matters. Attracted to complex problem spaces that require thoughtful human-centered design.</p>
   </section>
 
   <div class="mob-skills"></div>
@@ -1510,10 +1489,6 @@ function ServicesContent({ onGetInTouch }) {
         </div>
       ))}
       <div className="svc-cta-row">
-        <div className="svc-avail">
-          <span className="status-dot" />
-          Available for new engagements — 2026
-        </div>
         <button className="win-cta" onClick={onGetInTouch}>Get in Touch →</button>
       </div>
     </div>
@@ -1544,17 +1519,12 @@ function AboutContent() {
           <div className="about-role">PRODUCT · UX · AI · STRATEGY</div>
           <div className="about-divider" />
           <div className="about-bio">
-            Product exec and builder with 12+ years building and scaling consumer products at high-growth companies — Jet.com, BuzzFeed, Trade, and The Infatuation. Deep expertise in e-commerce, marketplaces, media, DTC, and subscription businesses. After starting in entertainment at CAA and Fullscreen, I've spent the last decade working at the intersection of strategy, product, and design.
+            Product leader with 12+ years building and scaling products at high-growth companies. Proven track record of driving triple-digit growth through user-centric product strategy, experimentation, and team building. Deep expertise in ecommerce, marketplaces, media, and subscription businesses serving millions of users. In 2025 I started my own consultancy to help companies focus, move faster, and ship what matters. Attracted to complex problem spaces that require thoughtful human-centered design.
           </div>
           <div className="about-skills">
             {SKILLS.map((s) =>
             <span key={s} className="about-skill">{s}</span>
             )}
-          </div>
-          <div className="about-divider" />
-          <div className="about-status">
-            <span className="status-dot" />
-            Available for new projects
           </div>
         </div>
       ) : (

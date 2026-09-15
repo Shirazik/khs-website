@@ -76,13 +76,6 @@
     color: var(--dialog-title-text);
     flex: 1;
   }
-  .mob-status-dot {
-    width: 8px;
-    height: 8px;
-    background: var(--dialog-title-text);
-    flex-shrink: 0;
-    animation: blink 1.2s step-start infinite;
-  }
 
   /* ── Ticker ──────────────────────────────────────────────── */
   .mob-ticker {
@@ -141,15 +134,6 @@
     margin: 0 auto 16px;
     text-align: left;
   }
-  .mob-hero-availability {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-family: var(--font-ui);
-    font-size: 11px;
-    color: var(--text-color);
-  }
-  .mob-hero-availability .mob-status-dot { background: var(--dialog-blue); }
 
   /* ── Skills ──────────────────────────────────────────────── */
   .mob-skills {
@@ -529,7 +513,6 @@
 
   @media (prefers-reduced-motion: reduce) {
     .mob-ticker-inner { animation: none; }
-    .mob-status-dot { animation: none; }
     .mob-menu-panel { transition: none; }
   }
 
