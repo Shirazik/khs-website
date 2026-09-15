@@ -49,21 +49,69 @@ All React code is inline in a single `<script type="text/babel">` block.
 | `TweaksPanel` | Hidden settings panel (toggled via postMessage from parent frame) |
 | `App` | Root: manages window state, folder positions, dragging |
 
-### Data
+### Data — the `CONTENT` block
 
-- `PROJECTS` array — 9 projects: 7 work history (bond, infatuation, trade, jetcom, pawp, buzzfeed, button) + 2 AI side projects (chrome-extension, fpl-analyzer)
-  - **AI projects** (`chrome-extension`, `fpl-analyzer`) are a distinct classification from work history. When the user says "my AI projects" or "add another AI project", treat these as the reference group. More AI projects may be added over time.
-- `DEFAULT_POS` — default x/y desktop coordinates for each desktop icon; keys must match `PROJECTS` IDs **plus** the special `aboutsite` key. AI project folders are fixed at `y:560` to the right of the `aboutsite` gear icon (`x:30`). New AI projects should continue extending rightward along that row.
-- `aboutsite` — a special non-project desktop icon (gear icon, rendered separately from `PROJECTS` in `App`). Double-clicking opens an `AboutSiteContent` window (type `'aboutsite'`) describing the site's stack and deployment. It has a `DEFAULT_POS` entry (`x:30, y:560`) but is **not** in the `PROJECTS` array.
-- `SKILLS` array — single source of truth for skill pills. Defined in a plain `<script>` block before the React/Babel block so it's available synchronously to both the desktop `AboutContent` component and the mobile JS that populates `.mob-skills`. **Only edit this one array** — both layouts update automatically.
-- `TOOLBAR_ICONS` — 7 icons with inline SVG strings and action names (Home, Portfolio, Philosophies, Contact, Services, Resume, About). These now populate the **Start menu**; the name is retained from the retired dock.
-- `TWEAK_DEFAULTS` — default values for the tweaks panel controls (theme, dotGrid, tickerSpeed, ghostOpacity, folderDensity). Controls tied to retired chrome were removed; the comment above the object records which and why.
+**All site copy lives in one place: the `CONTENT` object**, in a plain `<script>`
+(deliberately *not* `type="text/babel"`) near the top of `<body>`. It evaluates
+synchronously, before React and Babel load, so both layouts can read it:
 
-> **Sync rule:** The `PROJECTS` array (React) and the `.mob-cards` block (static HTML) are **not linked** — they must be updated together manually. Any time a project is added, removed, or renamed in `PROJECTS`, make the equivalent change to the corresponding `.mob-card` in the mobile section. The two sources of truth are:
-> 1. `PROJECTS` array → drives desktop icon labels and `OSWindow` content
-> 2. `.mob-cards` HTML block → drives mobile project cards
->
-> Work history projects go in `#mob-projects-section`; AI side projects go in `#mob-ai-projects`. The `aboutsite` section (`#mob-aboutsite`) is static and does not correspond to a `PROJECTS` entry — no sync needed for it.
+- **desktop** — the React block aliases it (`const PROJECTS = CONTENT.projects;`,
+  `SERVICES`, `SKILLS`, `TOOLBAR_ICONS`, `TICKER`). The components are unchanged;
+  they just read from the aliases.
+- **mobile** — the render layer before `</body>` builds every `[data-render]`
+  host element from the same object.
+
+> **Edit copy in `CONTENT` and nowhere else.** There is no longer a desktop copy
+> and a mobile copy to keep in sync — removing that split is the whole point of
+> the block. If you find yourself typing a project description into the mobile
+> HTML, stop: that markup is generated now.
+
+| Key | Drives |
+|-----|--------|
+| `identity` | name, brand, role, bio, tagline, ticker phrase, résumé URL, email, career note, footer lines |
+| `skills` | desktop `AboutContent` pills + mobile `.mob-skills` |
+| `projects` | desktop icons + `OSWindow` content + both mobile project sections |
+| `services` | desktop `ServicesContent` + mobile `#mob-services` (grouped by `cat`, first-seen order) |
+| `philosophies` | desktop `PhilosophiesContent` + mobile `#mob-philosophies` |
+| `contact` | desktop `ContactContent` rows + mobile `.mob-contact-row` rows |
+| `aboutSite` | desktop `AboutSiteContent` + mobile `#mob-aboutsite`. **Trusted HTML** — these strings carry `<code>` and a repo link, so they are injected unescaped. |
+| `nav` | desktop Start menu + mobile Start sheet + `mobNavigate` scroll targets |
+
+Notes on individual keys:
+
+- `projects` — 9 entries: 7 work history (bond, infatuation, trade, jetcom, pawp,
+  buzzfeed, button) + 2 AI side projects flagged `isAI: true` (chrome-extension,
+  fpl-analyzer). Both layouts split on `isAI`, so adding an AI project is one edit.
+  - **AI projects** are a distinct classification from work history. When the user
+    says "my AI projects" or "add another AI project", treat these as the reference
+    group. More AI projects may be added over time.
+- `nav` — 8 entries. `anchor` is the mobile scroll target (`null` = scroll to top);
+  `inStartMenu: false` keeps an entry out of the *desktop* Start menu, which is how
+  `aboutsite` appears in the mobile sheet but not the desktop one (it has its own
+  gear desktop icon). Each entry carries its pixel-art SVG as a string; the mobile
+  renderer injects `width`/`height` when it draws a cell, and `GearIconSVG` injects
+  the `aboutsite` artwork into a real JSX `<svg className="folder-icon">` shell so
+  the `.folder.selected` filter still applies.
+  - **Trap:** never run an unanchored regex over these SVG strings to adjust the
+    `<svg>` tag's `width`/`height`. The gear contains two inner
+    `<rect ... width="44" height="44">` elements (its rounded body plate and that
+    plate's stroke) — a global strip collapses them to zero and silently deletes the
+    gear's body in *both* layouts, leaving only the teeth. Anchor any such edit to
+    the opening tag. Store artwork verbatim and let each consumer size it.
+
+Outside `CONTENT` (structure, not copy):
+
+- `DEFAULT_POS` — default x/y desktop coordinates for each desktop icon; keys must
+  match `CONTENT.projects` IDs **plus** the special `aboutsite` key. AI project
+  folders are fixed at `y:560` to the right of the `aboutsite` gear icon (`x:30`).
+  New AI projects should continue extending rightward along that row.
+- `aboutsite` — a special non-project desktop icon (gear icon, rendered separately
+  from `PROJECTS` in `App`). Double-clicking opens an `AboutSiteContent` window
+  (type `'aboutsite'`). It has a `DEFAULT_POS` entry but is **not** in
+  `CONTENT.projects`.
+- `TWEAK_DEFAULTS` — default values for the tweaks panel controls (theme, dotGrid,
+  tickerSpeed, ghostOpacity, folderDensity). Controls tied to retired chrome were
+  removed; the comment above the object records which and why.
 
 ### Desktop Interaction Model
 
@@ -123,27 +171,52 @@ Two-layer swap via CSS media query at `≤ 768px`:
 - `#root` is hidden (`display: none !important`)
 - `.mobile-layout` static HTML section is shown
 
-The mobile layout is **static HTML** outside React's `#root`, so it's always in the DOM and requires no JS to reveal content.
+The mobile layout lives outside React's `#root`, so it is always in the DOM and the
+CSS swap alone reveals it — no React, no Babel, no framework cost on a phone.
+
+Its **section shells are static HTML; its content is rendered from `CONTENT`** by a
+plain-JS layer before `</body>`. So mobile does need JS to show copy, but only a
+small inline script that runs during parse — never the React/Babel pipeline. The
+trade was taken deliberately: it buys one source of truth for every string on the
+site. See "Data — the `CONTENT` block" above.
 
 ### Mobile Layout Sections
+
+Section *shells* (the element, its label, its title and — critically — its `id`,
+which `mobNavigate` scrolls to) are static HTML. Anything marked `[data-render]`
+below is **generated** from `CONTENT` by the render layer; do not hand-edit it.
 
 ```
 .mob-header          — sticky top bar styled as a Win98 title bar
 .mob-ticker          — CSS-animated marquee strip (sunken)
+  .mob-ticker-inner    [data-render="ticker"]
 .mob-hero#mob-hero   — hero rendered as a window panel on the wallpaper
-.mob-skills          — skill chips with raised button bevels
-.mob-section#mob-projects-section — 7 work history project cards (.mob-card)
-.mob-section#mob-ai-projects      — AI side project cards
+  .mob-hero-role       [data-render="heroRole"]
+  .mob-hero-bio        [data-render="heroBio"]
+.mob-skills            [data-render="skills"]   — chips with raised button bevels
+.mob-section#mob-projects-section
+  .mob-cards           [data-render="projects"]    — 7 work cards + .mob-career-note
+.mob-section#mob-ai-projects
+  .mob-cards           [data-render="aiProjects"]  — projects with isAI: true
+.mob-section#mob-philosophies
+  .mob-cards           [data-render="philosophies"]
+.mob-section#mob-services
+  .mob-cards           [data-render="services"]    — one card per category
+.mob-section#mob-resume
+  .mob-cards           [data-render="resume"]
+.mob-section#mob-contact
+  .mob-cards           [data-render="contact"]
+.mob-section#mob-aboutsite
+  .mob-cards           [data-render="aboutSite"]
   .mob-card          — a Win98 window: .mob-card-titlebar + real .title-bar-controls
                        (98.css markup; the buttons are decorative here) + body
-.mob-section#mob-aboutsite        — "About This Site" section
-placeholder anchors  — #mob-writing, #mob-contact, #mob-services, #mob-resume
-.mob-footer          — copyright line
+placeholder anchor   — #mob-writing
+.mob-footer          — [data-render="footerBrand" | "footerCopy" | "footerNote"]
 .mob-taskbar         — fixed bottom taskbar: Start button + #mob-clock tray
   .mob-fab           — the Start button (id kept for the existing JS)
 .mob-menu-overlay    — full-screen overlay with the Start menu sheet
   .mob-menu-panel    — slides up from the taskbar
-  .mob-menu-grid     — 4-column grid of destinations
+  .mob-menu-grid       [data-render="menu"]  — 4-column grid, built from CONTENT.nav
 ```
 
 ### Start Button + Menu Sheet
@@ -168,14 +241,29 @@ placeholder anchors  — #mob-writing, #mob-contact, #mob-services, #mob-resume
 ### Mobile JS (`<script>` before `</body>`)
 
 Four blocks outside React:
-- IIFE populates `.mob-skills` from the global `SKILLS` array
+
+- **Render layer IIFE** — builds every `[data-render]` host from `CONTENT`. It
+  holds one `RENDER` map of small template functions and dispatches over
+  `document.querySelectorAll('[data-render]')`. Notes:
+  - `esc()` escapes text on the way through `innerHTML`. This is not optional
+    cosmetics: the copy is full of `&` (e.g. "Head of P & G · Contract").
+  - `CONTENT.aboutSite` is the one exception — those strings are trusted HTML
+    (they carry `<code>` and a link) and are injected raw.
+  - A renderer that throws takes out only its own section; the shells and their
+    scroll anchors survive.
 - IIFE sets up the Start toggle + backdrop/close listeners (and the `.pressed` class)
 - IIFE drives the `#mob-clock` taskbar tray clock
-- `mobNavigate(action)` — global function called by `onclick` on grid cells
+- `mobNavigate(action)` — global called by `onclick` on grid cells. Scroll targets
+  come from `CONTENT.nav` (`anchor: null` means scroll to top), so adding a menu
+  destination is a `CONTENT.nav` edit, not a JS edit.
 
 ## Known Limitations / Future Work
 
-- Placeholder sections needed for: Writing, Contact, Services, Resume (anchors exist)
+- Placeholder section needed for: Writing (anchor `#mob-writing` exists)
+- Mobile copy now requires JS. The render layer is inline and framework-free, so it
+  runs during parse, but a JS-off visitor sees empty sections. If that ever matters,
+  the fix is a `<noscript>` summary or build-time prerendering of `[data-render]`
+  hosts — not a return to hand-synced HTML.
 - Touch drag not implemented on desktop (mouse-only)
 - Maximize is deliberately `disabled` — only minimize/close are implemented
 - Colours in 98.css's SVG data URIs don't follow the theme (see Theming above)
@@ -187,7 +275,14 @@ Four blocks outside React:
 
 No test suite and no build step. Babel transpiles in the browser, so **a JSX syntax error
 produces a blank page rather than a build failure** — always load the page after editing
-the `<script type="text/babel">` block. Check the console, confirm `#root` has content,
+the `<script type="text/babel">` block.
+
+**A syntax error in the `CONTENT` block is worse**: it runs before React, so it blanks
+the desktop *and* leaves every mobile section empty, with one console error as the only
+clue. After editing `CONTENT`, check both layouts, not just the one you were working on.
+The fastest regression check is a text diff: capture
+`document.querySelector('.mobile-layout').innerText` before and after a change and
+compare — that is how this consolidation was verified. Check the console, confirm `#root` has content,
 and confirm `assets/fonts/*` return 200 (a 404 silently falls back to Arial, which looks
 almost right).
 
