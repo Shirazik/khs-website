@@ -83,11 +83,8 @@ summary time { color: var(--muted); font-variant-numeric: tabular-nums; white-sp
 summary:hover em, summary:hover time { color: var(--text); }
 details[open] summary { font-weight: 500; }
 details > :not(summary) { margin-left: 0; }
-details > ul, details > dl, details > p:last-child { margin-bottom: 16px; }
+details > ul, details > p:last-child { margin-bottom: 16px; }
 details ul li { position: relative; padding-left: 18px; }
-dl { margin: 0; }
-dt { font-weight: 500; }
-dd { margin: 0 0 8px; color: var(--muted); }
 
 footer { color: var(--muted); font-size: 13px; }
 
