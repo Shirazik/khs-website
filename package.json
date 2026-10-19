@@ -1,0 +1,12 @@
+{
+  "name": "khs-website",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "preview": "node build.mjs --drafts"
+  },
+  "dependencies": {
+    "marked": "18.0.14"
+  }
+}
