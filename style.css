@@ -45,8 +45,20 @@ header .name { font-weight: 500; text-decoration: none; }
 header nav { display: flex; gap: 16px; align-items: center; font-size: 13px; }
 header nav a { text-decoration: none; color: var(--muted); }
 header nav a:hover { color: var(--text); }
-#theme { background: none; border: 0; padding: 0; font: inherit; color: var(--muted); cursor: pointer; }
+#theme { display: flex; background: none; border: 0; padding: 0; color: var(--muted); cursor: pointer; }
 #theme:hover { color: var(--text); }
+header nav a, #theme { display: flex; align-items: center; }
+.icon { width: 15px; height: 15px; }
+
+/* Moon in light mode, sun in dark mode. Same three conditions as the
+   colour tokens above, so the icon always matches the colours on screen. */
+.sun { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .moon { display: none; }
+  :root:not([data-theme="light"]) .sun { display: block; }
+}
+:root[data-theme="dark"] .moon { display: none; }
+:root[data-theme="dark"] .sun { display: block; }
 
 section { margin-bottom: 48px; }
 h2 { font-size: 14px; font-weight: 600; margin: 0 0 12px; }
