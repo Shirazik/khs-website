@@ -14,7 +14,6 @@ style.css    — the only stylesheet: light + dark colour tokens, one column.
 assets/
   khs-logo.png        — og:image only
   KHS_favicon.jpg
-  resume-site.html    — old standalone résumé page; not linked, kept because its URL may be shared
 CNAME        — kareemshirazi.com
 ```
 
