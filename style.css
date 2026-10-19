@@ -93,3 +93,23 @@ footer { color: var(--muted); font-size: 13px; }
   header { margin-bottom: 40px; }
   summary em { display: block; margin-left: 0; }
 }
+
+/* Writing list on the home page: title on the left, short date on the right. */
+.writing h3 { font-size: 14px; font-weight: 400; color: var(--muted); margin: 16px 0 4px; }
+.writing h2 + h3 { margin-top: 0; }
+.posts li { display: flex; justify-content: space-between; gap: 16px; padding: 2px 0; }
+.posts time { color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* Post pages. Lists get their markers back, since the global reset removes them. */
+.post { margin-bottom: 48px; }
+.post h1 { font-size: 14px; font-weight: 600; margin: 0; }
+.post h1 + .muted { margin-bottom: 24px; }
+.post h2, .post h3 { margin: 32px 0 12px; }
+.post ul, .post ol { margin: 0 0 12px; padding-left: 20px; }
+.post ul { list-style: disc; }
+.post ol { list-style: decimal; }
+.post blockquote { margin: 0 0 12px; padding-left: 16px; border-left: 2px solid var(--rule); color: var(--muted); }
+.post code { font: 13px ui-monospace, SFMono-Regular, Menlo, monospace; }
+.post pre { margin: 0 0 12px; padding: 12px 16px; overflow-x: auto; border: 1px solid var(--rule); border-radius: 4px; }
+.post img { max-width: 100%; height: auto; }
+.post hr { border: 0; border-top: 1px solid var(--rule); margin: 32px 0; }

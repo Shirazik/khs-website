@@ -4,13 +4,17 @@
 
 Personal site for Kareem Shirazi / KHS Consulting. A single page of plain text in the
 style of karrisaarinen.com: about, notes on building, work history, AI projects,
-contact. No framework, no build step, no separate mobile layout.
+contact, plus a Writing section of posts. No framework, no separate mobile layout; one
+small build script (`build.mjs`, one dependency: `marked`) turns Markdown posts into pages.
 
 ## Files
 
 ```
-index.html   — the whole site. All copy lives here, written directly in the HTML.
+index.html   — the home page and the layout for post pages. All home copy lives here.
 style.css    — the only stylesheet: light + dark colour tokens, one column.
+posts/*.md   — one Markdown file per post, with front matter (see Writing below).
+build.mjs    — builds the site into _site/ (gitignored). Nothing else is generated.
+.github/workflows/deploy.yml — builds and deploys to GitHub Pages.
 assets/
   khs-logo.png        — og:image only
   KHS_favicon.jpg
@@ -19,7 +23,9 @@ CNAME        — kareemshirazi.com
 
 ## Conventions
 
-- **Edit copy in `index.html`.** There is one copy of every string; nothing is generated.
+- **Edit home copy in `index.html`.** There is one copy of every string. The build only
+  fills the `<!-- writing: ... -->` marker with the Writing section; leave that line in
+  place (move it to move the section).
 - Work and AI projects use the same row pattern: a `<details>` whose
   `<summary>` holds `<span>Name <em>role</em></span><time>years</time>`, followed by a
   paragraph and a bullet list. Copy an existing row to add one.
@@ -30,6 +36,35 @@ CNAME        — kareemshirazi.com
   and saves it to `localStorage('theme')`. Dark colours are defined twice in `style.css`
   (media query and `[data-theme="dark"]`) — change both.
 
+## Writing
+
+Each post is `posts/<anything>.md`:
+
+```
+---
+title: Post title
+date: 2026-10-19
+slug: post-title          # optional; defaults to the file name; becomes /posts/<slug>/
+draft: true               # optional; drafts are never built for the live site
+description: One line.    # optional; used for meta description
+---
+
+Markdown body.
+```
+
+- `node build.mjs` builds what goes live (drafts skipped). `node build.mjs --drafts`
+  (or `npm run preview`) includes drafts, tagged "(draft)", for local checking only.
+- The home page gets a "Writing" section, newest first under year headings, only when
+  there is at least one post to show. Post pages reuse `index.html`'s header, footer and
+  theme script, with `<main>` swapped for the article.
+- The build also writes `rss.xml` (full post HTML) and `sitemap.xml`.
+- The build fails on bad front matter (missing title, date not `YYYY-MM-DD`, bad or
+  duplicate slug), so a broken post fails CI instead of shipping.
+- The repo is public, so draft posts are readable on GitHub even though they're not on
+  the site. Keep anonymising rules (client names, figures as XX) in drafts too.
+- Phase 3 hook: `loadPosts()` in `build.mjs` is the only place that reads `posts/`.
+  A Linear-backed version only has to return the same post objects.
+
 ## Fallback
 
 The previous Windows 98 desktop site is preserved at tag `win98-site` and branch
@@ -39,17 +74,22 @@ reset `main` to that tag.
 ## Roadmap
 
 1. ✅ Phase 1 — strip to a single static page.
-2. Phase 2 — add writing: `build.mjs` turns Markdown posts into pages, a year-grouped
+2. ✅ Phase 2 — add writing: `build.mjs` turns Markdown posts into pages, a year-grouped
    index, `rss.xml` and `sitemap.xml`; GitHub Pages deploys from a GitHub Actions workflow.
 3. Phase 3 — write in Linear: each post is a Linear document; the build pulls published
    documents through Linear's API and an agent publishes on request.
 
 ## Verifying changes
 
-Open `index.html` in a browser at desktop and phone widths, in light and dark mode.
+Run `npm install` once, then `node build.mjs --drafts` and serve `_site/` over HTTP
+(e.g. `npx serve _site`). Check it at desktop and phone widths, in light and dark mode.
+Opening `index.html` directly still works for home-copy edits, minus the Writing section.
 
 ## Deployment
 
 - GitHub: `https://github.com/Shirazik/khs-website`, branch `main`
-- Custom domain: `kareemshirazi.com` (via CNAME)
-- Push to `main` deploys via GitHub Pages
+- Custom domain: `kareemshirazi.com` (set in Settings → Pages; `CNAME` is also copied
+  into the build)
+- Pages source must be **GitHub Actions** (Settings → Pages → Build and deployment).
+  Push to `main` runs `.github/workflows/deploy.yml`: `npm ci`, `node build.mjs`, deploy
+  `_site/`. Pull requests run the build only, as a check.
