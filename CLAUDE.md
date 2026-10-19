@@ -5,15 +5,20 @@
 Personal site for Kareem Shirazi / KHS Consulting. A single page of plain text in the
 style of karrisaarinen.com: about, notes on building, work history, AI projects,
 contact, plus a Writing section of posts. No framework, no separate mobile layout; one
-small build script (`build.mjs`, one dependency: `marked`) turns Markdown posts into pages.
+small build script (`build.mjs`, one dependency: `marked`) turns posts into pages. Posts
+are written as Linear documents and published by asking an agent (see Publishing).
 
 ## Files
 
 ```
 index.html   — the home page and the layout for post pages. All home copy lives here.
 style.css    — the only stylesheet: light + dark colour tokens, one column.
-posts/*.md   — one Markdown file per post, with front matter (see Writing below).
+posts/*.md   — optional Markdown posts, with front matter (see Writing below).
 build.mjs    — builds the site into _site/ (gitignored). Nothing else is generated.
+lib/linear.mjs — the only code that talks to Linear (read posts, move documents).
+lib/posts.mjs  — front matter, slugs, and Linear document metadata.
+scripts/publish.mjs — publish / unpublish / redeploy; what an agent runs.
+.claude/skills/publish/ — tells Claude how to publish on request.
 .github/workflows/deploy.yml — builds and deploys to GitHub Pages.
 assets/
   khs-logo.png        — og:image only
@@ -36,9 +41,54 @@ CNAME        — kareemshirazi.com
   and saves it to `localStorage('theme')`. Dark colours are defined twice in `style.css`
   (media query and `[data-theme="dark"]`) — change both.
 
-## Writing
+## Writing in Linear
 
-Each post is `posts/<anything>.md`:
+Each post is a Linear document. Which project it sits in is its status:
+
+- **Website: Drafts** — not on the site; shown by `node build.mjs --drafts` only.
+- **Website: Published** — built into the live site.
+
+The document title is the post title. The slug comes from the title (`Café & Taste` →
+`cafe-and-taste`) and the date from when the document was created. Renaming a published
+post changes its URL, so to pin either one, start the document with front matter:
+
+```
+---
+date: 2026-10-20
+slug: my-post
+description: One line for search and link previews.
+---
+```
+
+Images and files uploaded into a document are private to Linear, so the build downloads
+each one into `posts/<slug>/files/` and links to that copy. Override the project names
+with `LINEAR_PUBLISHED_PROJECT` / `LINEAR_DRAFTS_PROJECT` if they're ever renamed.
+
+## Publishing (agent on request)
+
+Say "publish <post>" to an agent with this repo. It runs `scripts/publish.mjs`, which
+moves the document into Website: Published and starts the Deploy workflow; the site is
+rebuilt from Linear in a minute or two. See `.claude/skills/publish/SKILL.md`.
+
+```
+node scripts/publish.mjs "<Linear document URL or title>"
+node scripts/publish.mjs --unpublish "<Linear document URL or title>"
+node scripts/publish.mjs --deploy        # after editing a post that is already live
+```
+
+- Credentials: `LINEAR_API_KEY` (a personal API key from Linear's settings)
+  in the environment or a gitignored `.env`; deploying uses the signed-in `gh` CLI
+  or `GH_TOKEN`. The same `LINEAR_API_KEY` must be a repository secret for the workflow.
+- Linear's own agent can do this too: give it this repo through Linear's GitHub
+  integration, and add `LINEAR_API_KEY` and `GH_TOKEN` (fine-grained, Actions: write on
+  this repo) to its environment secrets.
+- Edits to a live post appear on the next deploy: any push to `main`, or `--deploy`.
+- Deploys fail if the secret is missing or a project is renamed, rather than silently
+  taking Linear posts offline.
+
+## Markdown posts
+
+Posts can also be Markdown files in the repo. Each is `posts/<anything>.md`:
 
 ```
 ---
@@ -62,8 +112,8 @@ Markdown body.
   duplicate slug), so a broken post fails CI instead of shipping.
 - The repo is public, so draft posts are readable on GitHub even though they're not on
   the site. Keep anonymising rules (client names, figures as XX) in drafts too.
-- Phase 3 hook: `loadPosts()` in `build.mjs` is the only place that reads `posts/`.
-  A Linear-backed version only has to return the same post objects.
+- Markdown and Linear posts are merged by `loadPosts()`; a slug used by both fails the
+  build.
 
 ## Fallback
 
@@ -76,8 +126,8 @@ reset `main` to that tag.
 1. ✅ Phase 1 — strip to a single static page.
 2. ✅ Phase 2 — add writing: `build.mjs` turns Markdown posts into pages, a year-grouped
    index, `rss.xml` and `sitemap.xml`; GitHub Pages deploys from a GitHub Actions workflow.
-3. Phase 3 — write in Linear: each post is a Linear document; the build pulls published
-   documents through Linear's API and an agent publishes on request.
+3. ✅ Phase 3 — write in Linear: each post is a Linear document; the build pulls
+   Website: Published through Linear's API and an agent publishes on request.
 
 ## Verifying changes
 
@@ -93,3 +143,4 @@ Opening `index.html` directly still works for home-copy edits, minus the Writing
 - Pages source must be **GitHub Actions** (Settings → Pages → Build and deployment).
   Push to `main` runs `.github/workflows/deploy.yml`: `npm ci`, `node build.mjs`, deploy
   `_site/`. Pull requests run the build only, as a check.
+- Repository secret `LINEAR_API_KEY` is required for deploys (`--require-linear`).
