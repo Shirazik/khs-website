@@ -12,7 +12,6 @@ contact. No framework, no build step, no separate mobile layout.
 index.html   — the whole site. All copy lives here, written directly in the HTML.
 style.css    — the only stylesheet: light + dark colour tokens, one column.
 assets/
-  resume.pdf          — not linked from the page; kept because its URL may be shared
   khs-logo.png        — og:image only
   KHS_favicon.jpg
   resume-site.html    — old standalone résumé page; not linked, kept because its URL may be shared
