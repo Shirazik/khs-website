@@ -149,7 +149,7 @@ function postPage(layout, post) {
   html = replaceOnce(html, /<meta property="og:type" content=".*">/, `<meta property="og:type" content="article">`);
   html = replaceOnce(html, /<main>[\s\S]*<\/main>/, `<main>
 <article class="post">
-  <h1>${escape(post.title)}${draftTag(post)}</h1>
+  <h1 class="title">${escape(post.title)}${draftTag(post)}</h1>
   <p class="muted"><time datetime="${post.date.toISOString().slice(0, 10)}">${fmt(post.date, { month: 'long', day: 'numeric', year: 'numeric' })}</time></p>
 ${post.html}</article>
 </main>`);
