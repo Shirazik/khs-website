@@ -94,11 +94,15 @@ footer { color: var(--muted); font-size: 13px; }
   summary em { display: block; margin-left: 0; }
 }
 
-/* Writing list on the home page: title on the left, short date on the right. */
-.writing h3 { font-size: 14px; font-weight: 400; color: var(--muted); margin: 16px 0 4px; }
-.writing h2 + h3 { margin-top: 0; }
-.posts li { display: flex; justify-content: space-between; gap: 16px; padding: 2px 0; }
-.posts time { color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+/* Writing list on the home page: year in a left column, then each title
+   with its date underneath. */
+.writing .year { display: grid; grid-template-columns: 96px 1fr; gap: 0 16px; margin-bottom: 16px; }
+.writing h3 { font-size: 14px; font-weight: 400; color: var(--muted); margin: 0; line-height: 1.5; font-variant-numeric: tabular-nums; }
+.posts li { margin-bottom: 14px; line-height: 1.5; }
+.posts a { text-decoration: none; }
+.posts a:hover { text-decoration: underline; text-decoration-color: var(--muted); }
+.posts time { display: block; color: var(--muted); font-size: 13px; }
+@media (max-width: 480px) { .writing .year { grid-template-columns: 48px 1fr; } }
 
 /* Post pages. Lists get their markers back, since the global reset removes them. */
 .post { margin-bottom: 48px; }
