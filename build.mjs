@@ -108,10 +108,12 @@ function writingSection(posts) {
     if (!years.has(year)) years.set(year, []);
     years.get(year).push(post);
   }
-  const groups = [...years].map(([year, list]) => `  <h3>${year}</h3>
+  const groups = [...years].map(([year, list]) => `  <div class="year">
+  <h3>${year}</h3>
   <ul class="posts">
-${list.map((p) => `    <li><span><a href="posts/${p.slug}/">${escape(p.title)}</a>${draftTag(p)}</span><time datetime="${p.date.toISOString().slice(0, 10)}">${fmt(p.date, { month: 'short', day: 'numeric' })}</time></li>`).join('\n')}
-  </ul>`);
+${list.map((p) => `    <li><a href="posts/${p.slug}/">${escape(p.title)}</a>${draftTag(p)}<time datetime="${p.date.toISOString().slice(0, 10)}">${fmt(p.date, { month: 'long', day: 'numeric' })}</time></li>`).join('\n')}
+  </ul>
+  </div>`);
   return `<section class="writing">
   <h2>Writing</h2>
 ${groups.join('\n')}
