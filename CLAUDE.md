@@ -3,7 +3,7 @@
 ## Project Overview
 
 Personal site for Kareem Shirazi / KHS Consulting. A single page of plain text in the
-style of karrisaarinen.com: about, notes on building, work history, AI projects,
+style of karrisaarinen.com: about, philosophies, work history, AI projects,
 contact, plus a Writing section of posts. No framework, no separate mobile layout; one
 small build script (`build.mjs`; dependencies: `marked`, and `sharp` for images) turns
 posts into pages. Posts are written as Linear documents and published by asking an agent
