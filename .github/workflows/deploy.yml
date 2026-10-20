@@ -1,6 +1,11 @@
 # Builds the site with build.mjs and deploys _site/ to GitHub Pages.
 # Pull requests only run the build, so a broken post fails the check
 # instead of the deploy. Requires Settings → Pages → Source: GitHub Actions.
+#
+# Posts written in Linear are pulled at build time, so publishing one is
+# just a run of this workflow: scripts/publish.mjs moves the document and
+# starts it (workflow_dispatch). Needs the LINEAR_API_KEY repository secret;
+# deploys fail without it rather than take Linear posts offline.
 name: Deploy
 
 on:
@@ -28,7 +33,9 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
-      - run: node build.mjs
+      - run: node build.mjs ${{ github.event_name != 'pull_request' && '--require-linear' || '' }}
+        env:
+          LINEAR_API_KEY: ${{ secrets.LINEAR_API_KEY }}
       - if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v4
         with:

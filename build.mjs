@@ -1,51 +1,45 @@
 // Builds the site into _site/.
 //
-//   node build.mjs           what GitHub Actions deploys: published posts only
-//   node build.mjs --drafts  local preview that includes draft posts
+//   node build.mjs                   published posts only
+//   node build.mjs --drafts          local preview that also includes drafts
+//   node build.mjs --require-linear  what GitHub Actions deploys: fails rather
+//                                    than build without Linear's posts
 //
 // index.html stays the hand-written home page and the layout for every post
 // page: the build swaps its <main> and head metadata, and fills the
-// <!-- writing --> marker with the Writing section. Posts come from
-// loadPosts(); Phase 3 can replace it with a Linear fetch that returns the
-// same shape.
+// <!-- writing --> marker with the Writing section. Posts come from two
+// places, both returned in the same shape by loadPosts(): Markdown files in
+// posts/, and Linear documents (see lib/linear.mjs), which need
+// LINEAR_API_KEY in the environment or in a gitignored .env file.
 
 import { readFile, readdir, writeFile, mkdir, rm, cp } from 'node:fs/promises';
 import { marked } from 'marked';
+import { parseFrontMatter, linearMeta, SLUG, DATE } from './lib/posts.mjs';
+import { hasKey, findProject, projectDocuments, rehostFiles, PUBLISHED_PROJECT, DRAFTS_PROJECT } from './lib/linear.mjs';
+
+try { process.loadEnvFile('.env'); } catch {}
 
 const SITE = 'https://kareemshirazi.com';
 const AUTHOR = 'Kareem Shirazi';
 const OUT = '_site';
 const STATIC = ['style.css', 'assets', 'CNAME'];
 const includeDrafts = process.argv.includes('--drafts');
+const requireLinear = process.argv.includes('--require-linear');
 
 const escape = (s) =>
   String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
 const fmt = (date, opts) => date.toLocaleDateString('en-US', { timeZone: 'UTC', ...opts });
 
-// Front matter is a small YAML subset: one `key: value` per line between ---.
-function parseFrontMatter(file, text) {
-  const m = text.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
-  if (!m) throw new Error(`${file}: missing front matter`);
-  const data = {};
-  for (const line of m[1].split(/\r?\n/)) {
-    if (!line.trim() || line.trimStart().startsWith('#')) continue;
-    const kv = line.match(/^(\w+):\s*(.*)$/);
-    if (!kv) throw new Error(`${file}: can't read front matter line "${line}"`);
-    data[kv[1]] = kv[2].trim().replace(/^(['"])(.*)\1$/, '$2');
-  }
-  return { data, body: m[2] };
-}
-
-async function loadPosts() {
+async function loadFilePosts() {
   const files = (await readdir('posts')).filter((f) => f.endsWith('.md'));
   const posts = [];
   for (const file of files) {
     const { data, body } = parseFrontMatter(file, await readFile(`posts/${file}`, 'utf8'));
     const slug = data.slug || file.replace(/\.md$/, '');
     if (!data.title) throw new Error(`${file}: title is required`);
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(data.date || '')) throw new Error(`${file}: date must be YYYY-MM-DD`);
-    if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(slug)) throw new Error(`${file}: slug must be lowercase-with-dashes`);
+    if (!DATE.test(data.date || '')) throw new Error(`${file}: date must be YYYY-MM-DD`);
+    if (!SLUG.test(slug)) throw new Error(`${file}: slug must be lowercase-with-dashes`);
     posts.push({
       slug,
       title: data.title,
@@ -53,8 +47,43 @@ async function loadPosts() {
       description: data.description || '',
       draft: data.draft === 'true',
       html: marked.parse(body),
+      files: [],
     });
   }
+  return posts;
+}
+
+async function loadLinearPosts() {
+  if (!hasKey()) {
+    // A deploy without the key would quietly take every Linear post offline.
+    if (requireLinear) throw new Error('LINEAR_API_KEY is not set, so Linear posts can\'t be built');
+    console.warn('LINEAR_API_KEY is not set: building without Linear posts.');
+    return [];
+  }
+  const sources = [{ project: PUBLISHED_PROJECT, draft: false }];
+  if (includeDrafts) sources.push({ project: DRAFTS_PROJECT, draft: true });
+  const posts = [];
+  for (const { project, draft } of sources) {
+    await findProject(project); // a renamed or missing project is an error, not "no posts"
+    for (const doc of await projectDocuments(project)) {
+      const meta = linearMeta(doc);
+      const { markdown, files } = await rehostFiles(meta.body, `Linear document "${doc.title}"`);
+      posts.push({
+        slug: meta.slug,
+        title: doc.title,
+        date: new Date(`${meta.date}T00:00:00Z`),
+        description: meta.description,
+        draft,
+        html: marked.parse(markdown),
+        files,
+      });
+    }
+  }
+  return posts;
+}
+
+async function loadPosts() {
+  const posts = [...(await loadFilePosts()), ...(await loadLinearPosts())];
   const slugs = posts.map((p) => p.slug);
   const dupe = slugs.find((s, i) => slugs.indexOf(s) !== i);
   if (dupe) throw new Error(`two posts use the slug "${dupe}"`);
@@ -115,13 +144,18 @@ ${post.html}</article>
   return html;
 }
 
+// Feed readers don't resolve links against the post's URL, so a post's own
+// files (rehosted Linear uploads) need absolute links in the feed.
+const absolute = (post) =>
+  post.html.replace(/(href|src)="(files\/[^"]+)"/g, `$1="${SITE}/posts/${post.slug}/$2"`);
+
 function rss(posts) {
   const items = posts.map((p) => `    <item>
       <title>${escape(p.title)}</title>
       <link>${SITE}/posts/${p.slug}/</link>
       <guid>${SITE}/posts/${p.slug}/</guid>
       <pubDate>${p.date.toUTCString()}</pubDate>
-      <description>${escape(p.html)}</description>
+      <description>${escape(absolute(p))}</description>
     </item>`);
   return `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
@@ -155,6 +189,10 @@ await writeFile(`${OUT}/index.html`, homePage(layout, posts));
 for (const post of posts) {
   await mkdir(`${OUT}/posts/${post.slug}`, { recursive: true });
   await writeFile(`${OUT}/posts/${post.slug}/index.html`, postPage(layout, post));
+  for (const file of post.files) {
+    await mkdir(`${OUT}/posts/${post.slug}/files`, { recursive: true });
+    await writeFile(`${OUT}/posts/${post.slug}/${file.name}`, file.data);
+  }
 }
 await writeFile(`${OUT}/rss.xml`, rss(posts));
 await writeFile(`${OUT}/sitemap.xml`, sitemap(posts));
