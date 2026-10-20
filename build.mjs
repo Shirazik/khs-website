@@ -53,6 +53,16 @@ async function loadFilePosts() {
   return posts;
 }
 
+// Gives each rehosted image its width and height, so the page doesn't jump
+// as images load. style.css scales them down to the column.
+function sizeImages(html, files) {
+  const sizes = new Map(files.filter((f) => f.width).map((f) => [f.name, f]));
+  return html.replace(/<img src="(files\/[^"]+)"([^>]*)>/g, (tag, src, rest) => {
+    const file = sizes.get(src);
+    return file ? `<img src="${src}"${rest} width="${file.width}" height="${file.height}">` : tag;
+  });
+}
+
 async function loadLinearPosts() {
   if (!hasKey()) {
     // A deploy without the key would quietly take every Linear post offline.
@@ -74,7 +84,7 @@ async function loadLinearPosts() {
         date: new Date(`${meta.date}T00:00:00Z`),
         description: meta.description,
         draft,
-        html: marked.parse(markdown),
+        html: sizeImages(marked.parse(markdown), files),
         files,
       });
     }

@@ -5,8 +5,9 @@
 Personal site for Kareem Shirazi / KHS Consulting. A single page of plain text in the
 style of karrisaarinen.com: about, notes on building, work history, AI projects,
 contact, plus a Writing section of posts. No framework, no separate mobile layout; one
-small build script (`build.mjs`, one dependency: `marked`) turns posts into pages. Posts
-are written as Linear documents and published by asking an agent (see Publishing).
+small build script (`build.mjs`; dependencies: `marked`, and `sharp` for images) turns
+posts into pages. Posts are written as Linear documents and published by asking an agent
+(see Publishing).
 
 ## Files
 
@@ -17,6 +18,7 @@ posts/*.md   — optional Markdown posts, with front matter (see Writing below).
 build.mjs    — builds the site into _site/ (gitignored). Nothing else is generated.
 lib/linear.mjs — the only code that talks to Linear (read posts, move documents).
 lib/posts.mjs  — front matter, slugs, and Linear document metadata.
+lib/images.mjs — shrinks images pulled from Linear (sharp).
 scripts/publish.mjs — publish / unpublish / redeploy; what an agent runs.
 .claude/skills/publish/ — tells Claude how to publish on request.
 .github/workflows/deploy.yml — builds and deploys to GitHub Pages.
@@ -61,8 +63,15 @@ description: One line for search and link previews.
 ```
 
 Images and files uploaded into a document are private to Linear, so the build downloads
-each one into `posts/<slug>/files/` and links to that copy. Override the project names
-with `LINEAR_PUBLISHED_PROJECT` / `LINEAR_DRAFTS_PROJECT` if they're ever renamed.
+each one into `posts/<slug>/files/` and links to that copy. On the way, JPEG, PNG and
+WebP images are resized to at most 1600px wide (2x the column) and re-encoded: JPEG and
+WebP at quality 80, PNG losslessly. Re-encoding also strips EXIF, including a photo's
+location. GIFs and animated WebPs are copied as they are; SVG, PDF and other files too.
+Every `<img>` of a JPEG, PNG, WebP or GIF gets `width` and `height`, so the page doesn't
+jump while images load. Upload images at full size; the build does the shrinking.
+
+Override the project names with `LINEAR_PUBLISHED_PROJECT` / `LINEAR_DRAFTS_PROJECT` if
+they're ever renamed.
 
 ## Publishing (agent on request)
 
