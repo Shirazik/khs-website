@@ -101,7 +101,7 @@ footer { color: var(--muted); font-size: 13px; }
 .posts li { margin-bottom: 14px; line-height: 1.5; }
 .posts a { text-decoration: none; }
 .posts a:hover { text-decoration: underline; text-decoration-color: var(--muted); }
-.posts time { display: block; color: var(--muted); font-size: 13px; }
+.posts time { display: block; color: var(--muted); font-size: 11px; }
 @media (max-width: 480px) { .writing .year { grid-template-columns: 48px 1fr; } }
 
 /* Post pages. Lists get their markers back, since the global reset removes them. */
