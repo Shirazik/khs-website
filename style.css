@@ -109,7 +109,7 @@ footer { color: var(--muted); font-size: 13px; }
 /* Headings step down like Linear's: title, then H1 to H4 in the body. */
 .post h1, .post h2, .post h3, .post h4, .post h5, .post h6 { font-weight: 600; line-height: 1.3; margin: 28px 0 8px; }
 .post .title { font-size: 24px; margin: 0; }
-.post .title + .muted { margin-bottom: 24px; }
+.post .title + .muted { font-size: 12px; margin-bottom: 24px; }
 .post h1 { font-size: 20px; }
 .post h2 { font-size: 17px; }
 .post h3 { font-size: 15px; }
