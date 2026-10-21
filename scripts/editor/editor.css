@@ -1,0 +1,37 @@
+/* Editor chrome, loaded only by scripts/edit.mjs. Uses the site's colour tokens. */
+
+body { padding-bottom: 120px; }
+
+main [contenteditable] { outline: none; border-radius: 3px; cursor: text; }
+main [contenteditable]:hover { background: color-mix(in srgb, var(--text) 5%, transparent); }
+main [contenteditable]:focus { background: color-mix(in srgb, var(--text) 8%, transparent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--text) 8%, transparent); }
+main summary { cursor: default; }
+
+.ed-bar, .ed-tools {
+  font: 13px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  background: var(--bg);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .12);
+  z-index: 10;
+}
+.ed-bar {
+  position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%);
+  width: calc(100% - 32px); max-width: 600px;
+  display: flex; align-items: center; gap: 8px; padding: 8px 8px 8px 14px;
+}
+.ed-status { flex: 1; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ed-status[data-kind="dirty"] { color: var(--text); }
+.ed-status[data-kind="error"] { color: #c0392b; }
+
+.ed-tools { position: absolute; display: flex; gap: 2px; padding: 3px; }
+.ed-tools[hidden] { display: none; }
+
+.ed-bar button, .ed-tools button {
+  font: inherit; color: var(--text); background: none; cursor: pointer;
+  border: 1px solid var(--rule); border-radius: 6px; padding: 7px 12px;
+}
+.ed-tools button { border-color: transparent; padding: 5px 8px; }
+.ed-bar button:hover, .ed-tools button:hover { background: color-mix(in srgb, var(--text) 6%, transparent); }
+.ed-bar .ed-primary { background: var(--text); color: var(--bg); border-color: var(--text); }
+.ed-bar .ed-primary:hover { background: var(--text); opacity: .85; }
