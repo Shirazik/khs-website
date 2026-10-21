@@ -20,6 +20,8 @@ lib/linear.mjs — the only code that talks to Linear (read posts, move document
 lib/posts.mjs  — front matter, slugs, and Linear document metadata.
 lib/images.mjs — shrinks images pulled from Linear (sharp).
 scripts/publish.mjs — publish / unpublish / redeploy; what an agent runs.
+scripts/edit.mjs     — local editor for the home copy (`npm run edit`).
+scripts/editor/      — the editor's in-page script and styles.
 .claude/skills/publish/ — tells Claude how to publish on request.
 .github/workflows/deploy.yml — builds and deploys to GitHub Pages.
 assets/
@@ -42,6 +44,17 @@ CNAME        — kareemshirazi.com
 - Theme: the OS preference is the default; the moon/sun button sets `data-theme` on `<html>`
   and saves it to `localStorage('theme')`. Dark colours are defined twice in `style.css`
   (media query and `[data-theme="dark"]`) — change both.
+
+## Editing home copy in the browser
+
+`npm run edit` serves the home page at http://localhost:4321 with every heading,
+paragraph, philosophy, row title and bullet editable in place. Click an item for
+↑ / ↓ / Duplicate / Delete (duplicate an item to add a new one); select words and press
+Link (⌘K) to add or change a link. **Save** (⌘S) writes the edited `<main>` back into
+`index.html` and touches nothing else; a save with no edits leaves the file byte-identical.
+**Publish** commits `index.html` and pushes the current branch, which deploys only when
+that branch is `main`. Adding a whole new section is still a hand edit to `index.html`.
+The server only listens on 127.0.0.1 and refuses cross-site posts.
 
 ## Writing in Linear
 

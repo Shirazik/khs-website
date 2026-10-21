@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "build": "node build.mjs",
-    "preview": "node build.mjs --drafts"
+    "preview": "node build.mjs --drafts",
+    "edit": "node scripts/edit.mjs"
   },
   "dependencies": {
     "marked": "18.0.14",
