@@ -1,4 +1,5 @@
-/* One stylesheet, two colour schemes. The OS preference picks the default;
+/* One stylesheet, two colour schemes, one accent (Pacific blue: link
+   underlines and row hover only). The OS preference picks the default;
    the ☾ button writes data-theme on <html>, which wins over it. */
 
 :root {
@@ -6,6 +7,7 @@
   --text: #292824;
   --muted: #75736c;
   --rule: #e6e4df;
+  --accent: #2b6c8c;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
@@ -14,6 +16,7 @@
     --text: #e6e4df;
     --muted: #8f8d86;
     --rule: #2c2b29;
+    --accent: #74b4d4;
     color-scheme: dark;
   }
 }
@@ -22,6 +25,7 @@
   --text: #e6e4df;
   --muted: #8f8d86;
   --rule: #2c2b29;
+  --accent: #74b4d4;
   color-scheme: dark;
 }
 
@@ -37,7 +41,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-a { color: inherit; text-decoration-color: var(--muted); text-underline-offset: 3px; }
+a { color: inherit; text-decoration-color: var(--accent); text-underline-offset: 3px; }
 a:hover { text-decoration-color: currentColor; }
 
 header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 56px; }
@@ -80,7 +84,7 @@ summary { display: flex; justify-content: space-between; gap: 16px; padding: 8px
 summary::-webkit-details-marker { display: none; }
 summary em { font-style: normal; color: var(--muted); margin-left: 6px; }
 summary time { color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
-summary:hover em, summary:hover time { color: var(--text); }
+summary:hover em, summary:hover time { color: var(--accent); }
 details[open] summary { font-weight: 500; }
 details > :not(summary) { margin-left: 0; }
 details > ul, details > p:last-child { margin-bottom: 16px; }
@@ -100,7 +104,7 @@ footer { color: var(--muted); font-size: 13px; }
 .writing h3 { font-size: 14px; font-weight: 400; color: var(--muted); margin: 0; line-height: 1.5; font-variant-numeric: tabular-nums; }
 .posts li { margin-bottom: 14px; line-height: 1.5; }
 .posts a { text-decoration: none; }
-.posts a:hover { text-decoration: underline; text-decoration-color: var(--muted); }
+.posts a:hover { text-decoration: underline; text-decoration-color: var(--accent); }
 .posts time { display: block; color: var(--muted); font-size: 11px; }
 @media (max-width: 480px) { .writing .year { grid-template-columns: 48px 1fr; } }
 
