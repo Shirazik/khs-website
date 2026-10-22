@@ -4,7 +4,7 @@
 
 Personal site for Kareem Shirazi / KHS Consulting. A single page of plain text in the
 style of karrisaarinen.com: about, philosophies, work history, AI projects,
-contact, plus a Writing section of posts. No framework, no separate mobile layout; one
+contact, plus a Writing section of posts and a Photography strip with its own page. No framework, no separate mobile layout; one
 small build script (`build.mjs`; dependencies: `marked`, and `sharp` for images) turns
 posts into pages. Posts are written as Linear documents and published by asking an agent
 (see Publishing).
@@ -15,10 +15,12 @@ posts into pages. Posts are written as Linear documents and published by asking 
 index.html   — the home page and the layout for post pages. All home copy lives here.
 style.css    — the only stylesheet: light + dark colour tokens, one column.
 posts/*.md   — optional Markdown posts, with front matter (see Writing below).
+photos/      — optional photos, "YYYY-MM-DD Caption.jpg" (see Photography below).
 build.mjs    — builds the site into _site/ (gitignored). Nothing else is generated.
 lib/linear.mjs — the only code that talks to Linear (read posts, move documents).
 lib/posts.mjs  — front matter, slugs, and Linear document metadata.
-lib/images.mjs — shrinks images pulled from Linear (sharp).
+lib/images.mjs — shrinks images pulled from Linear and photos (sharp).
+lib/photos.mjs — reads photos/ for the home strip and /photography/.
 scripts/publish.mjs — publish / unpublish / redeploy; what an agent runs.
 scripts/edit.mjs     — local editor for the home copy (`npm run edit`).
 scripts/editor/      — the editor's in-page script and styles.
@@ -33,8 +35,9 @@ CNAME        — kareemshirazi.com
 ## Conventions
 
 - **Edit home copy in `index.html`.** There is one copy of every string. The build only
-  fills the `<!-- writing: ... -->` marker with the Writing section; leave that line in
-  place (move it to move the section).
+  fills the `<!-- writing: ... -->` and `<!-- photography: ... -->` markers with the
+  Writing and Photography sections; leave those lines in place (move one to move its
+  section).
 - Work and AI projects use the same row pattern: a `<details>` whose
   `<summary>` holds `<span>Name <em>role</em></span><time>years</time>`, followed by a
   paragraph and a bullet list. Copy an existing row to add one.
@@ -136,6 +139,21 @@ Markdown body.
   the site. Keep anonymising rules (client names, figures as XX) in drafts too.
 - Markdown and Linear posts are merged by `loadPosts()`; a slug used by both fails the
   build.
+
+## Photography
+
+Drop photos into `photos/`, named `<YYYY-MM-DD> <Caption>.jpg` (or `.png`, `.webp`), for
+example `2026-09-12 Big Sur.jpg`. The date sorts them, newest first; the caption is
+shown as written. Any other file name fails the build.
+
+- The home page gets a "Photography" section after About: the four newest photos as square
+  frames, grey until hovered (in colour on phones, which can't hover), their captions,
+  and "See all N". Clicking a frame opens the large copy.
+- `/photography/` shows every photo in colour, in a square-cropped grid (three across,
+  two on a phone) with caption and month. Both appear only when there is a photo.
+- Each photo is built twice: 1600px wide (what clicking opens) and 600px wide (the
+  frames). Both are re-encoded like Linear images, which strips EXIF and location. Add
+  photos at full size; to change which four show at home, change the dates.
 
 ## Fallback
 

@@ -4,8 +4,19 @@
     {
       "name": "editor",
       "runtimeExecutable": "node",
-      "runtimeArgs": ["scripts/edit.mjs"],
+      "runtimeArgs": [
+        "scripts/edit.mjs"
+      ],
       "port": 4321
+    },
+    {
+      "name": "site",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "-e",
+        "const h=require('http'),f=require('fs'),p=require('path'),r=p.join(process.cwd(),'_site'),t={'.html':'text/html','.css':'text/css','.jpg':'image/jpeg','.png':'image/png','.xml':'application/xml'};h.createServer((q,s)=>{let u=decodeURIComponent(q.url.split('?')[0]);if(u.endsWith('/'))u+='index.html';const x=p.join(r,u);f.readFile(x,(e,b)=>{if(e){s.writeHead(404);return s.end('Not found')}s.writeHead(200,{'Content-Type':t[p.extname(x)]||'application/octet-stream'});s.end(b)})}).listen(4322,'127.0.0.1')"
+      ],
+      "port": 4322
     }
   ]
 }

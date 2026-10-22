@@ -126,3 +126,19 @@ footer { color: var(--muted); font-size: 13px; }
 .post pre { margin: 0 0 12px; padding: 12px 16px; overflow-x: auto; border: 1px solid var(--rule); border-radius: 4px; }
 .post img { max-width: 100%; height: auto; }
 .post hr { border: 0; border-top: 1px solid var(--rule); margin: 32px 0; }
+
+/* Photography: on the home page, four square frames that stay grey until
+   hovered (screens that can't hover get colour); on /photography/, a grid
+   of every photo in colour. Clicking a frame opens the large copy. */
+.strip, .grid { display: grid; }
+.strip { grid-template-columns: repeat(4, 1fr); gap: 4px; margin-bottom: 8px; }
+.grid { grid-template-columns: repeat(3, 1fr); gap: 16px 8px; }
+.strip a, .grid a { display: block; }
+.strip img, .grid img { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; }
+.strip img { filter: grayscale(1); transition: filter 0.3s; }
+.strip a:hover img, .strip a:focus-visible img { filter: none; }
+@media (hover: none) { .strip img { filter: none; } }
+.photography > p { display: flex; justify-content: space-between; gap: 16px; }
+.photography > p a { white-space: nowrap; }
+.grid p { font-size: 12px; line-height: 1.4; margin: 4px 0 0; }
+@media (max-width: 480px) { .grid { grid-template-columns: repeat(2, 1fr); } }
