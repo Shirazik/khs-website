@@ -142,6 +142,16 @@
       if (!url || !url.trim()) return;
       document.execCommand('createLink', false, url.trim());
     }
+    // Links off the site open in a new tab, like the rest of the page's.
+    main.querySelectorAll('a[href]').forEach(function (a) {
+      if (/^https?:/.test(a.getAttribute('href'))) {
+        a.setAttribute('target', '_blank');
+        a.setAttribute('rel', 'noopener');
+      } else {
+        a.removeAttribute('target');
+        a.removeAttribute('rel');
+      }
+    });
     markDirty();
   }
 
