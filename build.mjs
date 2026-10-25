@@ -148,7 +148,7 @@ function photographySection(photos) {
   <ul class="strip">
 ${shown.map((p) => `    <li><a href="photography/${photoFile(p, 'large')}">${photoImg(p, 'photography/')}</a></li>`).join('\n')}
   </ul>
-  <p class="muted"><span>${shown.map((p) => escape(p.caption)).join(' · ')}</span> <a href="photography/">See all ${photos.length}</a></p>
+  <p class="muted"><span>${[...new Set(shown.map((p) => p.caption))].map(escape).join(' · ')}</span> <a href="photography/">See all ${photos.length}</a></p>
 </section>
 
 `;

@@ -143,10 +143,14 @@ Markdown body.
 
 ## Photography
 
-Drop photos into `photos/`, named `<YYYY-MM-DD> <Caption>.jpg` (or `.png`, `.webp`), for
-example `2026-09-12 Big Sur.jpg`, then run `npm run photos` before committing. The date
-sorts them, newest first; the caption is shown as written. Any other file name fails the
-build.
+Add photos to `photos/` and run `npm run photos` before committing. Name a photo with its
+caption (`Big Sur.jpg`), or put a batch from one place in a folder named for it
+(`photos/Big Sur/`, any file names). The command dates each one from when it was taken
+and moves it to `photos/<YYYY-MM-DD> <Caption>.jpg`; when that name is taken it adds a
+number, `2026-09-12 Big Sur (2).jpg`, which the site never shows. A photo with no date
+inside is skipped and needs the date typed into its name; HEIC is skipped (export JPEG).
+The date sorts photos, newest first; the caption is shown as written. The build fails
+on any file in `photos/` not named that way.
 
 - **The repo is public, and so are the originals in `photos/`.** `npm run photos`
   (`scripts/photos.mjs`) rewrites each photo in place: upright, at most 2400px on its
