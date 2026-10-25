@@ -163,7 +163,10 @@ on any file in `photos/` not named that way.
   share a height; the build sets `--r`, width/height, on each one), with caption and
   month. Both appear only when there is a photo.
 - Both stay grey until hovered (in colour on phones, which can't hover). Clicking a
-  photo opens the large copy.
+  photo opens it in a lightbox (the last script in `index.html`, styles at the end of
+  `style.css`): the large copy as big as fits, on a dark background in both themes, with
+  its caption and month bottom left and × top right. ×, Esc or a click off the photo
+  closes it; ⌘-click or no JS opens the image file itself.
 - Each photo is built twice: 1600px wide (what clicking opens) and 600px wide (the
   frames and grid). To change which four show at home, change the dates.
 

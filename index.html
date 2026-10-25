@@ -223,5 +223,38 @@
     try { localStorage.setItem('theme', root.dataset.theme); } catch (e) {}
   });
 </script>
+<script>
+  // Photos (the home strip and /photography/) open in a lightbox: the photo
+  // as large as fits, its caption bottom left, × top right. ×, Esc or a click
+  // off the photo closes it. Without JS, or with ⌘-click, the link opens the
+  // image itself.
+  var lightbox;
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('.strip a, .grid a');
+    if (!a || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    e.preventDefault();
+    if (!lightbox) {
+      lightbox = document.createElement('dialog');
+      lightbox.className = 'lightbox';
+      lightbox.innerHTML = '<img alt=""><p></p><button type="button" aria-label="Close" title="Close">'
+        + '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M5 5l14 14M19 5 5 19"/></svg></button>';
+      lightbox.addEventListener('click', function (e) {
+        if (e.target.tagName !== 'IMG') lightbox.close();
+      });
+      document.body.appendChild(lightbox);
+    }
+    var img = lightbox.querySelector('img');
+    var thumb = a.querySelector('img');
+    // Show the small copy at once, then swap in the large one when it's loaded.
+    img.src = thumb.currentSrc || thumb.src;
+    img.alt = thumb.alt;
+    var href = lightbox.dataset.href = a.href;
+    var large = new Image();
+    large.onload = function () { if (lightbox.dataset.href === href) img.src = href; };
+    large.src = href;
+    lightbox.querySelector('p').textContent = a.dataset.caption || thumb.alt;
+    lightbox.showModal();
+  });
+</script>
 </body>
 </html>

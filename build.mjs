@@ -137,6 +137,9 @@ ${groups.join('\n')}
 
 const STRIP = 4;
 const photoFile = (photo, size) => `${photo.slug}${size === 'small' ? '-sm' : ''}.${photo.ext}`;
+// The lightbox (index.html's last script) shows this under the photo.
+const photoLink = (photo, dir) =>
+  `<a href="${dir}${photoFile(photo, 'large')}" data-caption="${escape(`${photo.caption} · ${fmt(photo.date, { month: 'short', year: 'numeric' })}`)}">`;
 const photoImg = (photo, dir) =>
   `<img src="${dir}${photoFile(photo, 'small')}" alt="${escape(photo.caption)}" width="${photo.small.width}" height="${photo.small.height}" loading="lazy">`;
 
@@ -146,7 +149,7 @@ function photographySection(photos) {
   return `<section class="photography">
   <h2>Photography</h2>
   <ul class="strip">
-${shown.map((p) => `    <li><a href="photography/${photoFile(p, 'large')}">${photoImg(p, 'photography/')}</a></li>`).join('\n')}
+${shown.map((p) => `    <li>${photoLink(p, 'photography/')}${photoImg(p, 'photography/')}</a></li>`).join('\n')}
   </ul>
   <p class="muted"><span>${[...new Set(shown.map((p) => p.caption))].map(escape).join(' · ')}</span> <a href="photography/">See all ${photos.length}</a></p>
 </section>
@@ -197,7 +200,7 @@ function photographyPage(layout, photos) {
     main: `<section>
   <h2>Photography</h2>
   <ul class="grid">
-${photos.map((p) => `    <li style="--r: ${(p.small.width / p.small.height).toFixed(3)}"><a href="${photoFile(p, 'large')}">${photoImg(p, '')}</a><p class="muted">${escape(p.caption)} · <time datetime="${p.date.toISOString().slice(0, 10)}">${fmt(p.date, { month: 'short', year: 'numeric' })}</time></p></li>`).join('\n')}
+${photos.map((p) => `    <li style="--r: ${(p.small.width / p.small.height).toFixed(3)}">${photoLink(p, '')}${photoImg(p, '')}</a><p class="muted">${escape(p.caption)} · <time datetime="${p.date.toISOString().slice(0, 10)}">${fmt(p.date, { month: 'short', year: 'numeric' })}</time></p></li>`).join('\n')}
   </ul>
 </section>
 `,
