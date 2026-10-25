@@ -23,6 +23,7 @@ lib/images.mjs — shrinks images pulled from Linear and photos (sharp).
 lib/photos.mjs — reads photos/ for the home strip and /photography/.
 scripts/publish.mjs — publish / unpublish / redeploy; what an agent runs.
 scripts/edit.mjs     — local editor for the home copy (`npm run edit`).
+scripts/photos.mjs   — strips location from and shrinks photos/ (`npm run photos`).
 scripts/editor/      — the editor's in-page script and styles.
 .claude/skills/publish/ — tells Claude how to publish on request.
 .github/workflows/deploy.yml — builds and deploys to GitHub Pages.
@@ -143,17 +144,24 @@ Markdown body.
 ## Photography
 
 Drop photos into `photos/`, named `<YYYY-MM-DD> <Caption>.jpg` (or `.png`, `.webp`), for
-example `2026-09-12 Big Sur.jpg`. The date sorts them, newest first; the caption is
-shown as written. Any other file name fails the build.
+example `2026-09-12 Big Sur.jpg`, then run `npm run photos` before committing. The date
+sorts them, newest first; the caption is shown as written. Any other file name fails the
+build.
 
-- The home page gets a "Photography" section after About: the four newest photos as square
-  frames, grey until hovered (in colour on phones, which can't hover), their captions,
-  and "See all N". Clicking a frame opens the large copy.
-- `/photography/` shows every photo in colour, in a square-cropped grid (three across,
-  two on a phone) with caption and month. Both appear only when there is a photo.
+- **The repo is public, and so are the originals in `photos/`.** `npm run photos`
+  (`scripts/photos.mjs`) rewrites each photo in place: upright, at most 2400px on its
+  long side, without EXIF/XMP/IPTC (camera data, including where it was taken). Photos
+  already done are left alone. The build fails on any photo that still has camera data,
+  but by then a push has already published it, so run the command before committing.
+- The home page gets a "Photography" section after Writing: the four newest photos as
+  square frames, their captions, and "See all N".
+- `/photography/` shows every photo uncropped, in justified rows (each row's photos
+  share a height; the build sets `--r`, width/height, on each one), with caption and
+  month. Both appear only when there is a photo.
+- Both stay grey until hovered (in colour on phones, which can't hover). Clicking a
+  photo opens the large copy.
 - Each photo is built twice: 1600px wide (what clicking opens) and 600px wide (the
-  frames). Both are re-encoded like Linear images, which strips EXIF and location. Add
-  photos at full size; to change which four show at home, change the dates.
+  frames and grid). To change which four show at home, change the dates.
 
 ## Fallback
 

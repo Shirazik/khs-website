@@ -127,18 +127,22 @@ footer { color: var(--muted); font-size: 13px; }
 .post img { max-width: 100%; height: auto; }
 .post hr { border: 0; border-top: 1px solid var(--rule); margin: 32px 0; }
 
-/* Photography: on the home page, four square frames that stay grey until
-   hovered (screens that can't hover get colour); on /photography/, a grid
-   of every photo in colour. Clicking a frame opens the large copy. */
-.strip, .grid { display: grid; }
-.strip { grid-template-columns: repeat(4, 1fr); gap: 4px; margin-bottom: 8px; }
-.grid { grid-template-columns: repeat(3, 1fr); gap: 16px 8px; }
+/* Photography: on the home page, four square frames; on /photography/, every
+   photo uncropped, in rows that line up like justified text: each photo's
+   share of a row is its width/height (--r, set by the build), so a row's
+   photos come out the same height. The ::after spacer keeps the last row
+   from stretching. Both stay grey until hovered (screens that can't hover
+   get colour). Clicking a photo opens the large copy. */
+.strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-bottom: 8px; }
+.grid { display: flex; flex-wrap: wrap; gap: 16px 8px; }
+.grid li { flex: calc(var(--r) * 100) 1 calc(var(--r) * 160px); min-width: 0; }
+.grid::after { content: ""; flex-grow: 1000000; }
 .strip a, .grid a { display: block; }
-.strip img, .grid img { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; }
-.strip img { filter: grayscale(1); transition: filter 0.3s; }
-.strip a:hover img, .strip a:focus-visible img { filter: none; }
-@media (hover: none) { .strip img { filter: none; } }
+.strip img, .grid img { display: block; width: 100%; height: auto; filter: grayscale(1); transition: filter 0.3s; }
+.strip img { aspect-ratio: 1; object-fit: cover; }
+.strip a:hover img, .grid a:hover img, .strip a:focus-visible img, .grid a:focus-visible img { filter: none; }
+@media (hover: none) { .strip img, .grid img { filter: none; } }
 .photography > p { display: flex; justify-content: space-between; gap: 16px; }
 .photography > p a { white-space: nowrap; }
 .grid p { font-size: 12px; line-height: 1.4; margin: 4px 0 0; }
-@media (max-width: 480px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { .grid li { flex-basis: calc(var(--r) * 110px); } }

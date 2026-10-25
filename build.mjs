@@ -197,7 +197,7 @@ function photographyPage(layout, photos) {
     main: `<section>
   <h2>Photography</h2>
   <ul class="grid">
-${photos.map((p) => `    <li><a href="${photoFile(p, 'large')}">${photoImg(p, '')}</a><p class="muted">${escape(p.caption)} · <time datetime="${p.date.toISOString().slice(0, 10)}">${fmt(p.date, { month: 'short', year: 'numeric' })}</time></p></li>`).join('\n')}
+${photos.map((p) => `    <li style="--r: ${(p.small.width / p.small.height).toFixed(3)}"><a href="${photoFile(p, 'large')}">${photoImg(p, '')}</a><p class="muted">${escape(p.caption)} · <time datetime="${p.date.toISOString().slice(0, 10)}">${fmt(p.date, { month: 'short', year: 'numeric' })}</time></p></li>`).join('\n')}
   </ul>
 </section>
 `,
